@@ -1673,7 +1673,24 @@ async function loadForVal() {
   if (btn) { btn.textContent = 'Devam →'; btn.disabled = false; }
 }
 
-// DESKTOP EVENTS// DESKTOP EVENTS
+// TAB EVENTLERİ
+function switchTab(tab) {
+  const isVal = tab === 'val';
+  document.getElementById('tab-list').classList.toggle('on', !isVal);
+  document.getElementById('tab-val').classList.toggle('on', isVal);
+  document.getElementById('page-val').style.display = isVal ? 'block' : 'none';
+  document.getElementById('main-wrap').style.display = isVal ? 'none' : 'block';
+  const ms = document.getElementById('mob-search');
+  if(ms) ms.style.display = isVal ? 'none' : 'block';
+}
+document.getElementById('tab-list').addEventListener('click', () => switchTab('list'));
+document.getElementById('tab-val').addEventListener('click', () => {
+  switchTab('val');
+  if (all.length === 0) loadForVal();
+  else populateValDistricts();
+});
+
+// DESKTOP EVENTS
 document.getElementById('ov').addEventListener('click',closeDrawer);
 document.getElementById('dclose').addEventListener('click',closeDrawer);
 document.getElementById('sbtn').addEventListener('click',()=>{F.min=parseInt(document.getElementById('mnp').value)||null;F.max=parseInt(document.getElementById('mxp').value)||null;load();});
