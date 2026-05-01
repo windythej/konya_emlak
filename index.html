@@ -141,7 +141,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--dark);color:var(--tx);min
 .ctas{padding:13px 16px;border:1px solid var(--bd);border-radius:var(--rs);color:var(--txm);font-size:13px;font-family:'DM Sans',sans-serif;cursor:pointer;background:transparent;transition:all .2s;}
 .ctas:hover{border-color:var(--bdh);color:var(--tx);}
 /* AUTH EKRANI */
-.auth-overlay{position:fixed;inset:0;background:var(--dark);z-index:500;display:flex;align-items:center;justify-content:center;padding:20px;}
+.auth-overlay{position:fixed;inset:0;background:#000;z-index:500;display:flex;align-items:center;justify-content:center;padding:20px;}
 .auth-card{background:var(--d2);border:1px solid var(--bd);border-radius:var(--r);padding:36px;width:100%;max-width:420px;}
 .auth-logo{text-align:center;margin-bottom:28px;}
 .auth-logo-icon{font-size:36px;margin-bottom:8px;}
@@ -1203,90 +1203,122 @@ function closeDrawer(){
 // ===== AUTH SİSTEMİ =====
 let currentUser = null;
 let authSmsCode = null;
-let authMode = 'login';
+let authPhone = null;
+
+// Token yönetimi
+function generateToken(user) {
+  const payload = { id: user.id, phone: user.phone, name: user.first_name, exp: Date.now() + 86400000 };
+  return btoa(JSON.stringify(payload));
+}
+function parseToken(token) {
+  try {
+    const payload = JSON.parse(atob(token));
+    if (payload.exp < Date.now()) { localStorage.removeItem('emlak_token'); return null; }
+    return payload;
+  } catch { return null; }
+}
+function getToken() { return localStorage.getItem('emlak_token'); }
+function setToken(token) { localStorage.setItem('emlak_token', token); }
+function removeToken() { localStorage.removeItem('emlak_token'); }
+
+// Auth header - token varsa ekle
+function authHeaders() {
+  return { 'apikey': SK, 'Authorization': 'Bearer ' + SK, 'Content-Type': 'application/json' };
+}
+
+// Giriş kontrolü - sayfa açılınca
+function checkAuth() {
+  const token = getToken();
+  if (token) {
+    const user = parseToken(token);
+    if (user) {
+      currentUser = user;
+      onLoginSuccess(user);
+      return;
+    }
+  }
+  document.getElementById('auth-overlay').style.display = 'flex';
+}
+
+function onLoginSuccess(user) {
+  document.getElementById('auth-overlay').style.display = 'none';
+  document.getElementById('user-bar').style.display = 'flex';
+  document.getElementById('user-name-display').textContent = user.name;
+  currentUser = user;
+}
 
 function switchAuthTab(tab) {
-  authMode = tab;
   document.getElementById('atab-login').classList.toggle('on', tab === 'login');
   document.getElementById('atab-register').classList.toggle('on', tab === 'register');
-  // Tüm adımları gizle
   document.querySelectorAll('.auth-step').forEach(s => s.classList.remove('on'));
-  // İlgili adımı göster
   if (tab === 'login') document.getElementById('astep-login-tel').classList.add('on');
   else document.getElementById('astep-register-info').classList.add('on');
-  // Hataları temizle
-  document.querySelectorAll('.auth-error').forEach(e => { e.style.display='none'; e.textContent=''; });
-}
-
-function showAuthError(id, msg) {
-  const el = document.getElementById(id);
-  el.textContent = msg;
-  el.style.display = 'block';
-}
-
-function genCode() {
-  return String(Math.floor(1000 + Math.random() * 9000));
-}
-
-function showCode(tel, code) {
-  // Simülasyon - gerçekte SMS gönderilir
-  showSMSCode(authSmsCode, authPhone);
 }
 
 // GİRİŞ
 async function loginSend() {
   const tel = document.getElementById('login-tel').value.trim();
-  if (tel.length < 10 || !tel.startsWith('0')) { showAuthError('login-error', 'Geçerli bir telefon numarası girin.'); return; }
-
+  if (!tel || tel.length < 10 || !tel.startsWith('0')) {
+    showError('Geçerli bir telefon numarası girin (05xx ile başlamalı).', 'Geçersiz Numara'); return;
+  }
+  const phone = '+9' + tel.substring(1);
   const btn = document.getElementById('login-send-btn');
   btn.textContent = 'Kontrol ediliyor...'; btn.disabled = true;
 
-  // Kullanıcı var mı kontrol et
-  const res = await fetch(`${SU}/rest/v1/users?phone=eq.${encodeURIComponent(tel)}&select=id,first_name,last_name`, {
-    headers: { 'apikey': SK, 'Authorization': `Bearer ${SK}` }
-  });
-  const users = await res.json();
-
-  if (!users.length) {
-    showAuthError('login-error', 'Bu numara kayıtlı değil. Lütfen önce hesap oluşturun.');
-    btn.textContent = 'KOD GÖNDER'; btn.disabled = false;
-    return;
+  try {
+    // Kullanıcı var mı kontrol et
+    const res = await fetch(`${SU}/rest/v1/users?phone=eq.${encodeURIComponent(phone)}&select=id,first_name,phone`, {
+      headers: authHeaders()
+    });
+    const users = await res.json();
+    if (!users.length) {
+      showError('Bu telefon numarası kayıtlı değil. Lütfen önce hesap oluşturun.', 'Kayıt Bulunamadı');
+      btn.textContent = 'KOD GÖNDER'; btn.disabled = false; return;
+    }
+    authPhone = phone;
+    authSmsCode = String(Math.floor(1000 + Math.random() * 9000));
+    showSMSCode(authSmsCode, tel);
+    document.querySelectorAll('.auth-step').forEach(s => s.classList.remove('on'));
+    document.getElementById('astep-login-code').classList.add('on');
+    document.getElementById('login-code-sub').textContent = tel + ' numarasına kod gönderildi.';
+  } catch(e) {
+    showError('Bağlantı hatası: ' + e.message, 'Hata');
   }
-
-  authSmsCode = genCode();
-  showCode(tel, authSmsCode);
-  document.getElementById('login-code-sub').textContent = tel + ' numarasına gönderilen 4 haneli kodu girin.';
-  document.getElementById('astep-login-tel').classList.remove('on');
-  document.getElementById('astep-login-code').classList.add('on');
   btn.textContent = 'KOD GÖNDER'; btn.disabled = false;
 }
 
 async function loginVerify() {
-  const tel = document.getElementById('login-tel').value.trim();
   const code = document.getElementById('login-code').value;
-  if (code !== authSmsCode) { showAuthError('login-code-error', 'Hatalı kod. Tekrar deneyin.'); return; }
+  if (!code || code.length < 4) { showError('Lütfen doğrulama kodunu girin.', 'Eksik Kod'); return; }
+  if (code !== authSmsCode) { showError('Girdiğiniz kod hatalı. Tekrar deneyin.', 'Hatalı Kod'); return; }
 
-  // Kullanıcı bilgilerini çek
-  const res = await fetch(`${SU}/rest/v1/users?phone=eq.${encodeURIComponent(tel)}&select=*`, {
-    headers: { 'apikey': SK, 'Authorization': `Bearer ${SK}` }
-  });
-  const users = await res.json();
-  if (users.length) {
-    currentUser = users[0];
-    // Last login güncelle
-    await fetch(`${SU}/rest/v1/users?id=eq.${currentUser.id}`, {
+  try {
+    const res = await fetch(`${SU}/rest/v1/users?phone=eq.${encodeURIComponent(authPhone)}&select=*`, {
+      headers: authHeaders()
+    });
+    const users = await res.json();
+    if (!users.length) { showError('Kullanıcı bulunamadı.', 'Hata'); return; }
+    const user = users[0];
+
+    // Son giriş güncelle
+    await fetch(`${SU}/rest/v1/users?id=eq.${user.id}`, {
       method: 'PATCH',
-      headers: { 'apikey': SK, 'Authorization': `Bearer ${SK}`, 'Content-Type': 'application/json' },
+      headers: authHeaders(),
       body: JSON.stringify({ last_login: new Date().toISOString() })
     });
-    onLoginSuccess();
+
+    const token = generateToken(user);
+    setToken(token);
+    onLoginSuccess({ id: user.id, phone: user.phone, name: user.first_name });
+    showSuccess('Hoş geldiniz, ' + user.first_name + '!', 'Giriş Başarılı');
+  } catch(e) {
+    showError('Giriş hatası: ' + e.message, 'Hata');
   }
 }
 
 function loginResend() {
-  document.getElementById('astep-login-code').classList.remove('on');
-  document.getElementById('astep-login-tel').classList.add('on');
-  document.getElementById('login-code').value = '';
+  authSmsCode = String(Math.floor(1000 + Math.random() * 9000));
+  showSMSCode(authSmsCode, document.getElementById('login-tel').value);
 }
 
 // KAYIT
@@ -1295,101 +1327,84 @@ async function registerSend() {
   const last = document.getElementById('reg-last').value.trim();
   const tel = document.getElementById('reg-tel').value.trim();
 
-  if (!first || !last) { showAuthError('register-error', 'Ad ve soyad alanlarını doldurun.'); return; }
-  if (tel.length < 10 || !tel.startsWith('0')) { showAuthError('register-error', 'Geçerli bir telefon numarası girin.'); return; }
+  if (!first) { showError('Lütfen adınızı girin.', 'Eksik Alan'); return; }
+  if (!last) { showError('Lütfen soyadınızı girin.', 'Eksik Alan'); return; }
+  if (!tel || tel.length < 10 || !tel.startsWith('0')) {
+    showError('Geçerli bir telefon numarası girin.', 'Geçersiz Numara'); return;
+  }
 
-  // Numara daha önce kayıtlı mı?
-  const res = await fetch(`${SU}/rest/v1/users?phone=eq.${encodeURIComponent(tel)}&select=id`, {
-    headers: { 'apikey': SK, 'Authorization': `Bearer ${SK}` }
-  });
-  const existing = await res.json();
-  if (existing.length) { showAuthError('register-error', 'Bu numara zaten kayıtlı. Giriş yapın.'); return; }
+  const phone = '+9' + tel.substring(1);
+  const btn = document.querySelector('#astep-register-info .abtn');
+  btn.textContent = 'Kontrol ediliyor...'; btn.disabled = true;
 
-  authSmsCode = genCode();
-  showCode(tel, authSmsCode);
-  document.getElementById('register-code-sub').textContent = tel + ' numarasına gönderilen 4 haneli kodu girin.';
-  document.getElementById('astep-register-info').classList.remove('on');
-  document.getElementById('astep-register-code').classList.add('on');
+  try {
+    // Numara kayıtlı mı?
+    const res = await fetch(`${SU}/rest/v1/users?phone=eq.${encodeURIComponent(phone)}&select=id`, {
+      headers: authHeaders()
+    });
+    const existing = await res.json();
+    if (existing.length) {
+      showError('Bu telefon numarası zaten kayıtlı. Giriş yapmayı deneyin.', 'Numara Kayıtlı');
+      btn.textContent = 'KOD GÖNDER'; btn.disabled = false; return;
+    }
+
+    authPhone = phone;
+    authSmsCode = String(Math.floor(1000 + Math.random() * 9000));
+    showSMSCode(authSmsCode, tel);
+    document.querySelectorAll('.auth-step').forEach(s => s.classList.remove('on'));
+    document.getElementById('astep-register-code').classList.add('on');
+    document.getElementById('register-code-sub').textContent = tel + ' numarasına kod gönderildi.';
+  } catch(e) {
+    showError('Bağlantı hatası: ' + e.message, 'Hata');
+  }
+  btn.textContent = 'KOD GÖNDER'; btn.disabled = false;
 }
 
 async function registerVerify() {
   const code = document.getElementById('register-code').value;
-  if (code !== authSmsCode) { showAuthError('register-code-error', 'Hatalı kod. Tekrar deneyin.'); return; }
+  if (!code || code.length < 4) { showError('Lütfen doğrulama kodunu girin.', 'Eksik Kod'); return; }
+  if (code !== authSmsCode) { showError('Girdiğiniz kod hatalı. Tekrar deneyin.', 'Hatalı Kod'); return; }
 
   const first = document.getElementById('reg-first').value.trim();
   const last = document.getElementById('reg-last').value.trim();
-  const tel = document.getElementById('reg-tel').value.trim();
 
-  const res = await fetch(`${SU}/rest/v1/users`, {
-    method: 'POST',
-    headers: { 'apikey': SK, 'Authorization': `Bearer ${SK}`, 'Content-Type': 'application/json', 'Prefer': 'return=representation' },
-    body: JSON.stringify({ first_name: first, last_name: last, phone: tel, last_login: new Date().toISOString() })
-  });
-  const data = await res.json();
-  if (data[0]) {
-    currentUser = data[0];
-    onLoginSuccess();
-  } else {
-    showAuthError('register-code-error', 'Kayıt oluşturulamadı. Tekrar deneyin.');
+  try {
+    const res = await fetch(`${SU}/rest/v1/users`, {
+      method: 'POST',
+      headers: { ...authHeaders(), 'Prefer': 'return=representation' },
+      body: JSON.stringify({ first_name: first, last_name: last, phone: authPhone, created_at: new Date().toISOString(), last_login: new Date().toISOString() })
+    });
+    const data = await res.json();
+    if (!res.ok) { showError('Kayıt hatası: ' + JSON.stringify(data), 'Hata'); return; }
+    const user = Array.isArray(data) ? data[0] : data;
+    const token = generateToken(user);
+    setToken(token);
+    onLoginSuccess({ id: user.id, phone: user.phone, name: user.first_name });
+    showSuccess('Hesabınız oluşturuldu! Hoş geldiniz, ' + first + '!', 'Kayıt Başarılı');
+  } catch(e) {
+    showError('Kayıt hatası: ' + e.message, 'Hata');
   }
 }
 
 function registerResend() {
-  document.getElementById('astep-register-code').classList.remove('on');
-  document.getElementById('astep-register-info').classList.add('on');
-  document.getElementById('register-code').value = '';
-}
-
-function onLoginSuccess() {
-  // Auth ekranı kapat
-  document.getElementById('auth-overlay').style.display = 'none';
-  // User bar göster
-  document.getElementById('user-bar').classList.add('show');
-  document.getElementById('user-name-display').textContent = currentUser.first_name + ' ' + currentUser.last_name;
-  // LocalStorage'a kaydet
-  localStorage.setItem('konya_emlak_user', JSON.stringify(currentUser));
+  authSmsCode = String(Math.floor(1000 + Math.random() * 9000));
+  showSMSCode(authSmsCode, document.getElementById('reg-tel').value);
 }
 
 function logout() {
+  removeToken();
   currentUser = null;
-  localStorage.removeItem('konya_emlak_user');
+  document.getElementById('user-bar').style.display = 'none';
   document.getElementById('auth-overlay').style.display = 'flex';
-  document.getElementById('user-bar').classList.remove('show');
-  // Formu sıfırla
-  switchAuthTab('login');
+  document.querySelectorAll('.auth-step').forEach(s => s.classList.remove('on'));
+  document.getElementById('astep-login-tel').classList.add('on');
   document.getElementById('login-tel').value = '';
   document.getElementById('login-code').value = '';
+  showInfo('Çıkış yapıldı. Görüşmek üzere!', 'Çıkış');
 }
 
-// Sayfa açılınca oturumu kontrol et
-(function checkSession() {
-  const saved = localStorage.getItem('konya_emlak_user');
-  if (saved) {
-    try {
-      currentUser = JSON.parse(saved);
-      document.getElementById('auth-overlay').style.display = 'none';
-      document.getElementById('user-bar').classList.add('show');
-      document.getElementById('user-name-display').textContent = currentUser.first_name + ' ' + currentUser.last_name;
-    } catch(e) { localStorage.removeItem('konya_emlak_user'); }
-  }
-})();
-
-// TAB SİSTEMİ
-function switchTab(tab) {
-  const isVal = tab === 'val';
-  document.getElementById('tab-list').classList.toggle('on', !isVal);
-  document.getElementById('tab-val').classList.toggle('on', isVal);
-  document.getElementById('page-val').style.display = isVal ? 'block' : 'none';
-  document.getElementById('main-wrap').style.display = isVal ? 'none' : 'block';
-  // mobil nav
-  const ms=document.getElementById('mob-search'); if(ms) ms.style.display = isVal ? 'none' : 'block';
-}
-document.getElementById('tab-list').addEventListener('click', () => switchTab('list'));
-document.getElementById('tab-val').addEventListener('click', () => {
-  switchTab('val');
-  if (all.length === 0) loadForVal();
-  else { populateValDistricts(); }
-});
+// Sayfa açılınca auth kontrol
+window.addEventListener('DOMContentLoaded', checkAuth);
 
 // ===== DEĞERLEME SİSTEMİ =====
 
