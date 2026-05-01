@@ -262,6 +262,92 @@ body{font-family:'DM Sans',sans-serif;background:var(--dark);color:var(--tx);min
 .vr-table tr:last-child td{border-bottom:none;}
 .vr-table tr:hover td{background:var(--d3);}
 
+/* ===== MOBİL RESPONSIVE ===== */
+@media(max-width:600px){
+  /* Auth */
+  .auth-overlay{padding:12px;}
+  .auth-card{padding:24px 16px;}
+  .arow2{grid-template-columns:1fr;}
+  .auth-tabs{margin-bottom:16px;}
+
+  /* Hero */
+  .hero{padding:32px 16px 24px;}
+  .hero h1{font-size:28px;}
+  .hero p{font-size:13px;}
+  .tabs{gap:6px;margin-top:18px;}
+  .tab{padding:8px 16px;font-size:12px;}
+
+  /* User bar */
+  .user-bar{padding:8px 14px;font-size:12px;}
+
+  /* Değerleme */
+  .val-wrap{padding:0 12px 100px;margin-top:16px;}
+  .val-card{padding:18px 14px;}
+  .val-header{gap:10px;margin-bottom:18px;}
+  .val-title{font-size:17px;}
+  .vrow2{grid-template-columns:1fr;}
+  .vres-main-val{font-size:24px;}
+  .dgrid{grid-template-columns:1fr 1fr;}
+
+  /* Drawer */
+  .drawer{width:100%;top:auto;height:92vh;border-left:none;border-top:1px solid var(--bd);border-radius:20px 20px 0 0;transform:translateY(100%);}
+  .drawer.open{transform:translateY(0);}
+  .drawer::before{content:'';display:block;width:40px;height:4px;background:var(--txd);border-radius:2px;margin:10px auto 0;}
+  .gal{height:220px;}
+  .dc{padding:16px 14px;}
+  .dtitle{font-size:18px;}
+  .dprice{font-size:24px;}
+  .dgrid{gap:8px;}
+  .di{padding:10px 12px;}
+  .dmap{height:150px;}
+  .dcta{flex-direction:column;}
+
+  /* Kartlar */
+  .grid{gap:12px;}
+  .ci{grid-template-columns:1fr;display:flex;flex-direction:column;}
+  .cimg{height:180px;order:-1;}
+  .cbody{padding:14px 14px;}
+  .ctitle{font-size:14px;}
+  .cmeta{gap:5px;}
+  .mt{font-size:10px;padding:3px 8px;}
+  .cfoot{flex-direction:column;align-items:flex-start;gap:8px;}
+  .cpb{text-align:left;margin-left:0;}
+  .cp{font-size:18px;}
+
+  /* Stats */
+  .stats{grid-template-columns:repeat(3,1fr);gap:8px;}
+  .sv{font-size:15px;}
+  .sl{font-size:9px;}
+  .sc{padding:10px 6px;}
+
+  /* Harita */
+  #mapv{height:380px;border-radius:var(--rs);}
+
+  /* Wrap */
+  .wrap{padding:0 12px;}
+  .layout{padding:12px 0 100px;gap:16px;}
+
+  /* Filtre panel */
+  .panel{display:none;}
+  .mob-search{display:block;}
+  .mob-nav{display:block;}
+}
+
+@media(max-width:900px) and (min-width:601px){
+  .layout{grid-template-columns:1fr;}
+  .panel{position:static;}
+  .stats{grid-template-columns:1fr 1fr;}
+  .wrap{padding:0 20px;}
+  .ci{grid-template-columns:200px 1fr;}
+}
+
+/* ÖZEL SCROLLBAR */
+::-webkit-scrollbar{width:6px;height:6px;}
+::-webkit-scrollbar-track{background:var(--d2);}
+::-webkit-scrollbar-thumb{background:rgba(201,168,76,.3);border-radius:100px;}
+::-webkit-scrollbar-thumb:hover{background:rgba(201,168,76,.6);}
+* {scrollbar-width:thin;scrollbar-color:rgba(201,168,76,.3) var(--d2);}
+
 /* MOBILE VAL */
 @media(max-width:600px){
   .val-wrap{padding:0 12px 100px;margin-top:16px;}
