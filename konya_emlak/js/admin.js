@@ -174,7 +174,7 @@ function renderDashboard() {
   const thisMonth = new Date(); thisMonth.setDate(1); thisMonth.setHours(0,0,0,0);
   const newUsers = allUsers.filter(u => new Date(u.created_at) >= thisMonth).length;
 
-  const thisMonthSubs = allSubs.filter(s => new Date(s.created_at) >= thisMonth).length;
+  const thisMonthSubs = allSubs.filter(s => new Date(s.created_at) >= thisMonth && s.status !== 'cancelled').length;
   document.getElementById('stat-total-users').textContent = allUsers.length;
   document.getElementById('stat-active-subs').textContent = activeSubs.length;
   const subChangeEl = document.getElementById('stat-new-subs');
@@ -318,19 +318,26 @@ function renderRevenue() {
   const monthlyRev = allSubs.filter(s => new Date(s.created_at) >= monthStart && s.status !== 'cancelled').reduce((sum, s) => sum + (s.price || 0), 0);
   const activeRev = allSubs.filter(s => s.status === 'active' && new Date(s.expires_at) > now).reduce((sum, s) => sum + (s.price || 0), 0);
 
+  const cancelledRev = allSubs.filter(s => s.status === 'cancelled').reduce((s, sub) => s + (sub.price || 0), 0);
+  const netRev = totalRev - cancelledRev;
   document.getElementById('rev-total').textContent = fp(totalRev) + ' ₺';
-  document.getElementById('rev-monthly').textContent = fp(monthlyRev) + ' ₺';
-  document.getElementById('rev-active-val').textContent = fp(activeRev) + ' ₺';
+  const revCancelledEl = document.getElementById('rev-cancelled');
+  const revNetEl = document.getElementById('rev-net');
+  if (revCancelledEl) revCancelledEl.textContent = '- ' + fp(cancelledRev) + ' ₺';
+  if (revNetEl) revNetEl.textContent = fp(netRev) + ' ₺';
 
-  // Aylık chart - son 6 ay
+  // Yıl filtresi
+  const yearEl = document.getElementById('rev-year-filter');
+  const selYear = yearEl ? parseInt(yearEl.value) : new Date().getFullYear();
+  const TR_MONTHS = ['Oca','Şub','Mar','Nis','May','Haz','Tem','Ağu','Eyl','Eki','Kas','Ara'];
   const months = [];
-  for (let i = 5; i >= 0; i--) {
-    const d = new Date(); d.setMonth(d.getMonth() - i);
-    const label = d.toLocaleDateString('tr-TR', { month: 'short' });
-    const start = new Date(d.getFullYear(), d.getMonth(), 1);
-    const end = new Date(d.getFullYear(), d.getMonth() + 1, 0);
-    const rev = allSubs.filter(s => { const c = new Date(s.created_at); return c >= start && c <= end; }).reduce((sum, s) => sum + (s.price || 0), 0);
-    months.push({ label, rev });
+  for (let i = 0; i < 12; i++) {
+    const start = new Date(selYear, i, 1);
+    const end = new Date(selYear, i + 1, 0, 23, 59, 59);
+    const rev = allSubs.filter(s => s.status !== 'cancelled').filter(s => {
+      const c = new Date(s.created_at); return c >= start && c <= end;
+    }).reduce((sum, s) => sum + (s.price || 0), 0);
+    months.push({ label: TR_MONTHS[i], rev });
   }
   const maxRev = Math.max(...months.map(m => m.rev), 1);
   const chartH = 80;
@@ -505,6 +512,83 @@ function toggleSidebar() {
 
 // Global fonksiyonları window'a ata (HTML onclick için)
 // GELİR DETAY POPUP
+window.showSubDetail = function() {
+  const now = new Date();
+  const active = allSubs.filter(s => s.status === 'active' && new Date(s.expires_at) > now);
+  const cancelled = allSubs.filter(s => s.status === 'cancelled');
+  const expired = allSubs.filter(s => s.status !== 'cancelled' && new Date(s.expires_at) <= now);
+  // Benzersiz kullanıcılar
+  const uniqueTotal = [...new Set(allSubs.map(s => s.user_id))].length;
+  const uniqueActive = [...new Set(active.map(s => s.user_id))].length;
+  const uniqueCancelled = [...new Set(cancelled.map(s => s.user_id))].length;
+
+  const rows = [...allSubs].sort((a,b) => new Date(b.created_at) - new Date(a.created_at)).map(s => {
+    const user = allUsers.find(u => u.id === s.user_id);
+    const name = user ? user.first_name + ' ' + user.last_name : '—';
+    const now = new Date();
+    const isActive = s.status === 'active' && new Date(s.expires_at) > now;
+    const isCancelled = s.status === 'cancelled';
+    const remainDays = isActive ? Math.ceil((new Date(s.expires_at) - now) / 86400000) : 0;
+    const badge = isActive
+      ? '<span style="font-size:10px;background:rgba(76,175,130,.1);color:var(--ok);border:1px solid rgba(76,175,130,.3);padding:2px 7px;border-radius:100px;">Aktif · ' + remainDays + ' gün</span>'
+      : isCancelled
+        ? '<span style="font-size:10px;background:rgba(201,168,76,.1);color:var(--gold);border:1px solid rgba(201,168,76,.2);padding:2px 7px;border-radius:100px;">İptal</span>'
+        : '<span style="font-size:10px;background:rgba(224,90,75,.1);color:var(--err);border:1px solid rgba(224,90,75,.2);padding:2px 7px;border-radius:100px;">Sona Erdi</span>';
+    return '<tr style="border-bottom:1px solid rgba(201,168,76,.06);">' +
+      '<td style="padding:8px;font-size:12px;color:var(--tx);">' + name + '</td>' +
+      '<td style="padding:8px;font-size:12px;color:var(--txm);">' + s.plan + '</td>' +
+      '<td style="padding:8px;font-size:12px;color:var(--txm);">' + fdate(s.started_at) + '</td>' +
+      '<td style="padding:8px;font-size:12px;color:var(--txm);">' + fdate(s.expires_at) + '</td>' +
+      '<td style="padding:8px;">' + badge + '</td>' +
+    '</tr>';
+  }).join('');
+
+  const el2 = document.getElementById('admin-popup');
+  if (el2) el2.remove();
+
+  const div2 = document.createElement('div');
+  div2.id = 'admin-popup';
+  div2.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:9999;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(6px);padding:20px;';
+  div2.innerHTML =
+    '<div style="background:var(--d2);border:1px solid var(--bd);border-radius:14px;width:min(700px,95vw);max-height:90vh;display:flex;flex-direction:column;">' +
+      '<div style="padding:20px 24px;border-bottom:1px solid var(--bd);display:flex;align-items:center;justify-content:space-between;">' +
+        '<div style="font-family:Playfair Display,serif;font-size:18px;font-weight:700;color:var(--tx);">💳 Abonelik Detayı</div>' +
+        '<button onclick="document.getElementById('admin-popup').remove()" style="background:transparent;border:1px solid var(--bd);border-radius:50%;width:30px;height:30px;color:var(--txm);cursor:pointer;font-size:14px;">✕</button>' +
+      '</div>' +
+      '<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;padding:20px 24px;">' +
+        '<div style="background:rgba(201,168,76,.06);border:1px solid rgba(201,168,76,.2);border-radius:10px;padding:16px;text-align:center;">' +
+          '<div style="font-size:10px;color:var(--txm);letter-spacing:1px;text-transform:uppercase;margin-bottom:8px;">TOPLAM ABONE</div>' +
+          '<div style="font-size:28px;font-weight:700;font-family:Playfair Display,serif;color:var(--gold);">' + uniqueTotal + '</div>' +
+          '<div style="font-size:11px;color:var(--txm);margin-top:4px;">farklı kullanıcı</div>' +
+        '</div>' +
+        '<div style="background:rgba(224,90,75,.08);border:1px solid rgba(224,90,75,.2);border-radius:10px;padding:16px;text-align:center;">' +
+          '<div style="font-size:10px;color:var(--txm);letter-spacing:1px;text-transform:uppercase;margin-bottom:8px;">İPTAL EDİLEN</div>' +
+          '<div style="font-size:28px;font-weight:700;font-family:Playfair Display,serif;color:var(--err);">' + uniqueCancelled + '</div>' +
+          '<div style="font-size:11px;color:var(--txm);margin-top:4px;">kullanıcı</div>' +
+        '</div>' +
+        '<div style="background:rgba(76,175,130,.08);border:1px solid rgba(76,175,130,.3);border-radius:10px;padding:16px;text-align:center;">' +
+          '<div style="font-size:10px;color:var(--txm);letter-spacing:1px;text-transform:uppercase;margin-bottom:8px;">AKTİF ABONE</div>' +
+          '<div style="font-size:28px;font-weight:700;font-family:Playfair Display,serif;color:var(--ok);">' + uniqueActive + '</div>' +
+          '<div style="font-size:11px;color:var(--txm);margin-top:4px;">kullanıcı</div>' +
+        '</div>' +
+      '</div>' +
+      '<div style="overflow-y:auto;flex:1;padding:0 24px 20px;">' +
+        '<table style="width:100%;border-collapse:collapse;">' +
+          '<thead><tr style="position:sticky;top:0;background:var(--d2);">' +
+            '<th style="text-align:left;padding:8px;font-size:10px;color:var(--txm);letter-spacing:1.5px;border-bottom:1px solid var(--bd);">KULLANICI</th>' +
+            '<th style="text-align:left;padding:8px;font-size:10px;color:var(--txm);letter-spacing:1.5px;border-bottom:1px solid var(--bd);">PLAN</th>' +
+            '<th style="text-align:left;padding:8px;font-size:10px;color:var(--txm);letter-spacing:1.5px;border-bottom:1px solid var(--bd);">BAŞLANGIÇ</th>' +
+            '<th style="text-align:left;padding:8px;font-size:10px;color:var(--txm);letter-spacing:1.5px;border-bottom:1px solid var(--bd);">BİTİŞ</th>' +
+            '<th style="text-align:left;padding:8px;font-size:10px;color:var(--txm);letter-spacing:1.5px;border-bottom:1px solid var(--bd);">DURUM</th>' +
+          '</tr></thead>' +
+          '<tbody>' + rows + '</tbody>' +
+        '</table>' +
+      '</div>' +
+    '</div>';
+  document.body.appendChild(div2);
+  div2.addEventListener('click', e => { if (e.target === div2) div2.remove(); });
+};
+
 window.showRevenueDetail = function() {
   const allIncoming = allSubs.filter(s => s.status !== 'cancelled');
   const cancelled = allSubs.filter(s => s.status === 'cancelled');
@@ -557,7 +641,7 @@ window.showRevenueDetail = function() {
           '<div style="font-size:11px;color:var(--txm);margin-top:4px;">' + cancelled.length + ' iptal</div>' +
         '</div>' +
         '<div style="background:rgba(76,175,130,.08);border:1px solid rgba(76,175,130,.3);border-radius:10px;padding:16px;text-align:center;">' +
-          '<div style="font-size:10px;color:var(--txm);letter-spacing:1px;text-transform:uppercase;margin-bottom:8px;">ELİMİZDE KALAN</div>' +
+          '<div style="font-size:10px;color:var(--txm);letter-spacing:1px;text-transform:uppercase;margin-bottom:8px;">TOPLAM KAZANÇ</div>' +
           '<div style="font-size:24px;font-weight:700;font-family:Playfair Display,serif;color:var(--ok);">= ' + fp(netGelir) + ' ₺</div>' +
           '<div style="font-size:11px;color:var(--txm);margin-top:4px;">' + allIncoming.length + ' aktif</div>' +
         '</div>' +
@@ -595,16 +679,23 @@ window.filterListings = filterListings;
 window.filterLogs = filterLogs;
 
 // Plan seçince bitiş tarihi otomatik hesapla
+function addDays(dateStr, days) {
+  const [y, m, d] = dateStr.split('-').map(Number);
+  const date = new Date(Date.UTC(y, m-1, d));
+  date.setUTCDate(date.getUTCDate() + days);
+  return date.toISOString().split('T')[0];
+}
+
 function updateSubEndDate() {
   const plan = document.getElementById('sub-plan').value;
   const start = document.getElementById('sub-start').value;
-  if (!start) return;
-  const d = new Date(start);
-  if (plan === 'Aylık') d.setMonth(d.getMonth() + 1);
-  else if (plan === '3 Aylık') d.setMonth(d.getMonth() + 3);
-  else if (plan === 'Yıllık') d.setFullYear(d.getFullYear() + 1);
-  else return; // Özel - dokunma
-  document.getElementById('sub-end').value = d.toISOString().split('T')[0];
+  if (!start || !plan) return;
+  let end = start;
+  if (plan === 'Aylık') end = addDays(start, 30);
+  else if (plan === '3 Aylık') end = addDays(start, 90);
+  else if (plan === 'Yıllık') end = addDays(start, 365);
+  else return;
+  document.getElementById('sub-end').value = end;
   updateDayCount();
 }
 
@@ -614,8 +705,10 @@ function updateDayCount() {
   const el = document.getElementById('sub-day-count');
   if (!el) return;
   if (start && end) {
-    const diff = Math.round((new Date(end) - new Date(start)) / 86400000);
-    el.textContent = diff > 0 ? `${diff} gün` : '';
+    const [sy,sm,sd] = start.split('-').map(Number);
+    const [ey,em,ed] = end.split('-').map(Number);
+    const diff = Math.round((Date.UTC(ey,em-1,ed) - Date.UTC(sy,sm-1,sd)) / 86400000);
+    el.textContent = diff > 0 ? diff + ' gün' : '';
   }
 }
 

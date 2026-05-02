@@ -71,11 +71,12 @@
           <div class="stat-label">Toplam Kullanıcı</div>
           <div class="stat-change" id="stat-new-users"></div>
         </div>
-        <div class="stat-card">
+        <div class="stat-card" style="cursor:pointer;" onclick="showSubDetail()">
           <div class="stat-icon">💳</div>
           <div class="stat-val" id="stat-active-subs">—</div>
           <div class="stat-label">Aktif Abonelik</div>
           <div class="stat-change" id="stat-new-subs"></div>
+          <div style="font-size:10px;color:var(--txm);margin-top:6px;">Detay için tıkla →</div>
         </div>
         <div class="stat-card" style="cursor:pointer;" onclick="showRevenueDetail()">
           <div class="stat-icon">💰</div>
@@ -164,18 +165,25 @@
           <div style="font-size:10px;color:var(--txm);margin-top:6px;">Detay için tıkla →</div>
         </div>
         <div class="stat-card">
-          <div class="stat-icon">📅</div>
-          <div class="stat-val" id="rev-monthly">—</div>
-          <div class="stat-label">Bu Ay</div>
+          <div class="stat-icon">❌</div>
+          <div class="stat-val" id="rev-cancelled" style="color:var(--err);">—</div>
+          <div class="stat-label">İptal Edilen</div>
         </div>
         <div class="stat-card">
-          <div class="stat-icon">📈</div>
-          <div class="stat-val" id="rev-active-val">—</div>
-          <div class="stat-label">Aktif Abonelik Değeri</div>
+          <div class="stat-icon">✅</div>
+          <div class="stat-val" id="rev-net" style="color:var(--ok);">—</div>
+          <div class="stat-label">Net Kazanç</div>
         </div>
       </div>
       <div class="table-card">
-        <div class="table-header"><div class="table-title">Aylık Gelir Dağılımı</div></div>
+        <div class="table-header">
+          <div class="table-title">Aylık Gelir Dağılımı</div>
+          <select class="table-search" style="width:100px;" id="rev-year-filter" onchange="renderRevenue()">
+            <option value="2026">2026</option>
+            <option value="2025">2025</option>
+            <option value="2027">2027</option>
+          </select>
+        </div>
         <div style="padding:20px;">
           <div class="chart-bar-wrap" id="rev-chart"></div>
         </div>
