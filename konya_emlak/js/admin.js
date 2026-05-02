@@ -542,7 +542,7 @@ window.showRevenueDetail = function() {
       // Header
       '<div style="padding:20px 24px;border-bottom:1px solid var(--bd);display:flex;align-items:center;justify-content:space-between;">' +
         '<div style="font-family:Playfair Display,serif;font-size:18px;font-weight:700;color:var(--tx);">💰 Gelir Detayı</div>' +
-        '<button onclick="document.getElementById('admin-popup').remove()" style="background:transparent;border:1px solid var(--bd);border-radius:50%;width:30px;height:30px;color:var(--txm);cursor:pointer;font-size:14px;">✕</button>' +
+        '<button onclick="document.getElementById(\'admin-popup\').remove()" style="background:transparent;border:1px solid var(--bd);border-radius:50%;width:30px;height:30px;color:var(--txm);cursor:pointer;font-size:14px;">✕</button>' +
       '</div>' +
       // 3 stat kart
       '<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;padding:20px 24px;">' +
