@@ -315,7 +315,7 @@ function renderRevenue() {
   const totalRev = allSubs.filter(s => s.status !== 'cancelled').reduce((s, sub) => s + (sub.price || 0), 0);
   const now = new Date();
   const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
-  const monthlyRev = allSubs.filter(s => new Date(s.created_at) >= monthStart).reduce((sum, s) => sum + (s.price || 0), 0);
+  const monthlyRev = allSubs.filter(s => new Date(s.created_at) >= monthStart && s.status !== 'cancelled').reduce((sum, s) => sum + (s.price || 0), 0);
   const activeRev = allSubs.filter(s => s.status === 'active' && new Date(s.expires_at) > now).reduce((sum, s) => sum + (s.price || 0), 0);
 
   document.getElementById('rev-total').textContent = fp(totalRev) + ' ₺';
@@ -506,56 +506,78 @@ function toggleSidebar() {
 // Global fonksiyonları window'a ata (HTML onclick için)
 // GELİR DETAY POPUP
 window.showRevenueDetail = function() {
-  const incoming = allSubs.filter(s => s.status !== 'cancelled');
+  const allIncoming = allSubs.filter(s => s.status !== 'cancelled');
   const cancelled = allSubs.filter(s => s.status === 'cancelled');
-  const totalIn = incoming.reduce((s, sub) => s + (sub.price || 0), 0);
-  const totalOut = cancelled.reduce((s, sub) => s + (sub.price || 0), 0);
+  const totalIn = allSubs.reduce((s, sub) => s + (sub.price || 0), 0); // Tüm abonelikler toplamı
+  const totalOut = cancelled.reduce((s, sub) => s + (sub.price || 0), 0); // İptal edilenler
+  const netGelir = totalIn - totalOut; // Elimizde kalan
 
   const rows = [...allSubs].sort((a,b) => new Date(b.created_at) - new Date(a.created_at)).map(s => {
     const user = allUsers.find(u => u.id === s.user_id);
     const name = user ? user.first_name + ' ' + user.last_name : '—';
     const isCancelled = s.status === 'cancelled';
-    return '<tr>' +
-      '<td>' + name + '</td>' +
-      '<td>' + s.plan + '</td>' +
-      '<td>' + fdate(s.created_at) + '</td>' +
-      '<td style="font-weight:700;color:' + (isCancelled ? 'var(--err)' : 'var(--ok)') + ';">' +
+    return '<tr style="border-bottom:1px solid rgba(201,168,76,.06);">' +
+      '<td style="padding:8px;font-size:12px;color:var(--tx);">' + name + '</td>' +
+      '<td style="padding:8px;font-size:12px;color:var(--txm);">' + s.plan + '</td>' +
+      '<td style="padding:8px;font-size:12px;color:var(--txm);">' + fdate(s.created_at) + '</td>' +
+      '<td style="padding:8px;font-size:13px;font-weight:700;color:' + (isCancelled ? 'var(--err)' : 'var(--ok)') + ';">' +
         (isCancelled ? '- ' : '+ ') + fp(s.price) + ' ₺' +
       '</td>' +
-      '<td>' + (isCancelled
-        ? '<span style="font-size:11px;color:var(--gold);">İptal</span>'
-        : '<span style="font-size:11px;color:var(--ok);">Aktif</span>') +
+      '<td style="padding:8px;">' + (isCancelled
+        ? '<span style="font-size:10px;background:rgba(224,90,75,.1);color:var(--err);border:1px solid rgba(224,90,75,.2);padding:2px 7px;border-radius:100px;">İptal</span>'
+        : '<span style="font-size:10px;background:rgba(76,175,130,.1);color:var(--ok);border:1px solid rgba(76,175,130,.3);padding:2px 7px;border-radius:100px;">Aktif</span>') +
       '</td>' +
     '</tr>';
   }).join('');
 
-  showPopup(
-    '<div style="text-align:left;">' +
-    '<div style="display:flex;gap:16px;margin-bottom:16px;">' +
-      '<div style="flex:1;background:rgba(76,175,130,.1);border:1px solid rgba(76,175,130,.3);border-radius:8px;padding:12px;text-align:center;">' +
-        '<div style="font-size:11px;color:var(--txm);margin-bottom:4px;">TOPLAM GİREN</div>' +
-        '<div style="font-size:20px;font-weight:700;color:var(--ok);">+ ' + fp(totalIn) + ' ₺</div>' +
+  // Popup içeriği
+  const el = document.getElementById('admin-popup');
+  if (el) el.remove();
+
+  const div = document.createElement('div');
+  div.id = 'admin-popup';
+  div.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:9999;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(6px);padding:20px;';
+  div.innerHTML = 
+    '<div style="background:var(--d2);border:1px solid var(--bd);border-radius:14px;width:min(700px,95vw);max-height:90vh;display:flex;flex-direction:column;">' +
+      // Header
+      '<div style="padding:20px 24px;border-bottom:1px solid var(--bd);display:flex;align-items:center;justify-content:space-between;">' +
+        '<div style="font-family:Playfair Display,serif;font-size:18px;font-weight:700;color:var(--tx);">💰 Gelir Detayı</div>' +
+        '<button onclick="document.getElementById('admin-popup').remove()" style="background:transparent;border:1px solid var(--bd);border-radius:50%;width:30px;height:30px;color:var(--txm);cursor:pointer;font-size:14px;">✕</button>' +
       '</div>' +
-      '<div style="flex:1;background:rgba(224,90,75,.1);border:1px solid rgba(224,90,75,.2);border-radius:8px;padding:12px;text-align:center;">' +
-        '<div style="font-size:11px;color:var(--txm);margin-bottom:4px;">İPTAL EDİLEN</div>' +
-        '<div style="font-size:20px;font-weight:700;color:var(--err);">- ' + fp(totalOut) + ' ₺</div>' +
+      // 3 stat kart
+      '<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;padding:20px 24px;">' +
+        '<div style="background:rgba(201,168,76,.06);border:1px solid rgba(201,168,76,.2);border-radius:10px;padding:16px;text-align:center;">' +
+          '<div style="font-size:10px;color:var(--txm);letter-spacing:1px;text-transform:uppercase;margin-bottom:8px;">TOPLAM ABONE</div>' +
+          '<div style="font-size:24px;font-weight:700;font-family:Playfair Display,serif;color:var(--gold);">+ ' + fp(totalIn) + ' ₺</div>' +
+          '<div style="font-size:11px;color:var(--txm);margin-top:4px;">' + allSubs.length + ' abonelik</div>' +
+        '</div>' +
+        '<div style="background:rgba(224,90,75,.08);border:1px solid rgba(224,90,75,.2);border-radius:10px;padding:16px;text-align:center;">' +
+          '<div style="font-size:10px;color:var(--txm);letter-spacing:1px;text-transform:uppercase;margin-bottom:8px;">İPTAL EDİLEN</div>' +
+          '<div style="font-size:24px;font-weight:700;font-family:Playfair Display,serif;color:var(--err);">- ' + fp(totalOut) + ' ₺</div>' +
+          '<div style="font-size:11px;color:var(--txm);margin-top:4px;">' + cancelled.length + ' iptal</div>' +
+        '</div>' +
+        '<div style="background:rgba(76,175,130,.08);border:1px solid rgba(76,175,130,.3);border-radius:10px;padding:16px;text-align:center;">' +
+          '<div style="font-size:10px;color:var(--txm);letter-spacing:1px;text-transform:uppercase;margin-bottom:8px;">ELİMİZDE KALAN</div>' +
+          '<div style="font-size:24px;font-weight:700;font-family:Playfair Display,serif;color:var(--ok);">= ' + fp(netGelir) + ' ₺</div>' +
+          '<div style="font-size:11px;color:var(--txm);margin-top:4px;">' + allIncoming.length + ' aktif</div>' +
+        '</div>' +
       '</div>' +
-    '</div>' +
-    '<div style="max-height:300px;overflow-y:auto;">' +
-      '<table style="width:100%;border-collapse:collapse;font-size:12px;">' +
-        '<thead><tr>' +
-          '<th style="text-align:left;padding:6px 8px;color:var(--txm);border-bottom:1px solid var(--bd);">Kullanıcı</th>' +
-          '<th style="text-align:left;padding:6px 8px;color:var(--txm);border-bottom:1px solid var(--bd);">Plan</th>' +
-          '<th style="text-align:left;padding:6px 8px;color:var(--txm);border-bottom:1px solid var(--bd);">Tarih</th>' +
-          '<th style="text-align:left;padding:6px 8px;color:var(--txm);border-bottom:1px solid var(--bd);">Tutar</th>' +
-          '<th style="text-align:left;padding:6px 8px;color:var(--txm);border-bottom:1px solid var(--bd);">Durum</th>' +
-        '</tr></thead>' +
-        '<tbody>' + rows + '</tbody>' +
-      '</table>' +
-    '</div>' +
-    '</div>',
-    'Gelir Detayı', '💰', 'info'
-  );
+      // Tablo
+      '<div style="overflow-y:auto;flex:1;padding:0 24px 20px;">' +
+        '<table style="width:100%;border-collapse:collapse;">' +
+          '<thead><tr style="position:sticky;top:0;background:var(--d2);">' +
+            '<th style="text-align:left;padding:8px;font-size:10px;color:var(--txm);letter-spacing:1.5px;border-bottom:1px solid var(--bd);">KULLANICI</th>' +
+            '<th style="text-align:left;padding:8px;font-size:10px;color:var(--txm);letter-spacing:1.5px;border-bottom:1px solid var(--bd);">PLAN</th>' +
+            '<th style="text-align:left;padding:8px;font-size:10px;color:var(--txm);letter-spacing:1.5px;border-bottom:1px solid var(--bd);">TARİH</th>' +
+            '<th style="text-align:left;padding:8px;font-size:10px;color:var(--txm);letter-spacing:1.5px;border-bottom:1px solid var(--bd);">TUTAR</th>' +
+            '<th style="text-align:left;padding:8px;font-size:10px;color:var(--txm);letter-spacing:1.5px;border-bottom:1px solid var(--bd);">DURUM</th>' +
+          '</tr></thead>' +
+          '<tbody>' + rows + '</tbody>' +
+        '</table>' +
+      '</div>' +
+    '</div>';
+  document.body.appendChild(div);
+  div.addEventListener('click', e => { if (e.target === div) div.remove(); });
 };
 
 window.adminLogin = adminLogin;
