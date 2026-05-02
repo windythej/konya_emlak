@@ -196,10 +196,10 @@
         <div class="table-header"><div class="table-title">3 Admin</div></div>
         <table>
           <thead><tr><th>Kullanıcı Adı</th><th>Yetki</th><th>Durum</th></tr></thead>
-          <tbody>
-            <tr><td style="color:var(--gold);font-weight:600;">ziya</td><td>Tam Yetki</td><td><span class="badge active">Aktif</span></td></tr>
-            <tr><td style="color:var(--gold);font-weight:600;">ahmet</td><td>Tam Yetki</td><td><span class="badge active">Aktif</span></td></tr>
-            <tr><td style="color:var(--gold);font-weight:600;">batuhan</td><td>Tam Yetki</td><td><span class="badge active">Aktif</span></td></tr>
+          <tbody id="admins-table">
+            <tr><td style="color:var(--gold);font-weight:600;">ziya</td><td>Tam Yetki</td><td><span class="badge pending">Yükleniyor...</span></td></tr>
+            <tr><td style="color:var(--gold);font-weight:600;">ahmet</td><td>Tam Yetki</td><td><span class="badge pending">Yükleniyor...</span></td></tr>
+            <tr><td style="color:var(--gold);font-weight:600;">batuhan</td><td>Tam Yetki</td><td><span class="badge pending">Yükleniyor...</span></td></tr>
           </tbody>
         </table>
       </div>
@@ -280,6 +280,7 @@
     <div class="mfg">
       <span class="mfl">Bitiş Tarihi</span>
       <input type="date" class="minput" id="sub-end">
+      <div id="sub-day-count" style="font-size:12px;color:var(--gold);margin-top:6px;text-align:center;"></div>
     </div>
     <div class="mbtn-row">
       <button class="mbtn secondary" onclick="closeModal()">İptal</button>

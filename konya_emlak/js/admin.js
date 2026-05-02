@@ -1,4 +1,36 @@
 
+// POPUP SİSTEMİ
+function showPopup(msg, title='Bilgi', icon='ℹ️', type='info', onConfirm=null) {
+  // Mevcut popup varsa kaldır
+  const existing = document.getElementById('admin-popup');
+  if (existing) existing.remove();
+
+  const colors = { info:'var(--gold)', danger:'var(--err)', success:'var(--ok)' };
+  const btnColors = { info:'var(--gold)', danger:'var(--err)', success:'var(--ok)' };
+
+  const div = document.createElement('div');
+  div.id = 'admin-popup';
+  div.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.8);z-index:9999;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(4px);';
+  div.innerHTML = `
+    <div style="background:var(--d2);border:1px solid var(--bd);border-radius:12px;padding:28px;width:min(400px,88vw);text-align:center;">
+      <div style="font-size:36px;margin-bottom:12px;">${icon}</div>
+      <div style="font-family:'Playfair Display',serif;font-size:17px;font-weight:700;color:var(--tx);margin-bottom:8px;">${title}</div>
+      <div style="font-size:13px;color:var(--txm);line-height:1.6;margin-bottom:20px;">${msg}</div>
+      <div style="display:flex;gap:10px;justify-content:center;">
+        ${onConfirm ? `<button onclick="document.getElementById('admin-popup').remove()" style="padding:10px 20px;background:transparent;border:1px solid var(--bd);border-radius:8px;color:var(--txm);font-size:13px;cursor:pointer;font-family:'DM Sans',sans-serif;">İptal</button>` : ''}
+        <button id="popup-confirm-btn" style="padding:10px 24px;background:${btnColors[type]};border:none;border-radius:8px;color:${type==='info'?'var(--dark)':'#fff'};font-size:13px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;">Tamam</button>
+      </div>
+    </div>`;
+  document.body.appendChild(div);
+  document.getElementById('popup-confirm-btn').onclick = () => {
+    div.remove();
+    if (onConfirm) onConfirm();
+  };
+}
+function showError(msg, title='Hata') { showPopup(msg, title, '❌', 'danger'); }
+function showSuccess(msg, title='Başarılı') { showPopup(msg, title, '✅', 'success'); }
+function showConfirm(msg, title, onConfirm) { showPopup(msg, title, '⚠️', 'danger', onConfirm); }
+
 const SU = 'https://bknfjyfuzbanhoomooth.supabase.co';
 const SK = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJrbmZqeWZ1emJhbmhvb21vb3RoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc1ODczNDgsImV4cCI6MjA5MzE2MzM0OH0.7Tl3nWspqxDtnhIj2SZju_ObXtjkAsv_n-Joj7vwSx0';
 
@@ -10,14 +42,39 @@ const ADMINS = {
 };
 
 let currentAdmin = '';
+const ADMIN_HEARTBEAT = {}; // son aktivite zamanları
+
+function updateHeartbeat() {
+  if (!currentAdmin) return;
+  ADMIN_HEARTBEAT[currentAdmin] = Date.now();
+  // Supabase'e heartbeat kaydet
+  fetch(`${SU}/rest/v1/admins?username=eq.${currentAdmin}`, {
+    method: 'PATCH',
+    headers: headers(),
+    body: JSON.stringify({ last_seen: new Date().toISOString() })
+  }).catch(() => {});
+}
+
+function isAdminOnline(lastSeen) {
+  if (!lastSeen) return false;
+  return (Date.now() - new Date(lastSeen).getTime()) < 300000; // 5 dakika
+}
 
 async function logAction(action, details = '') {
   try {
-    await fetch(`${SU}/rest/v1/admin_logs`, {
+    const r = await fetch(`${SU}/rest/v1/admin_logs`, {
       method: 'POST',
-      headers: { ...headers(), 'Prefer': 'return=minimal' },
+      headers: { ...headers(), 'Prefer': 'return=representation' },
       body: JSON.stringify({ admin_username: currentAdmin, action, details })
     });
+    const newLog = await r.json();
+    if (Array.isArray(newLog) && newLog[0]) {
+      allLogs.unshift(newLog[0]);
+      // Log sayfası açıksa anlık güncelle
+      if (document.getElementById('sec-logs').classList.contains('on')) {
+        renderLogs();
+      }
+    }
   } catch(e) { console.log('Log hatası:', e); }
 }
 
@@ -44,6 +101,8 @@ function adminLogin() {
     document.getElementById('admin-page').style.display = 'block';
     err.style.display = 'none';
     logAction('Giriş yapıldı', user + ' admin paneline giriş yaptı');
+    setInterval(updateHeartbeat, 60000); // Her dakika heartbeat
+    updateHeartbeat();
     loadAll();
   } else {
     err.style.display = 'block';
@@ -195,8 +254,33 @@ function renderSubsTable(tbodyId, subs, showActions) {
   }).join('');
 }
 
+// ADMİN AKTİFLİK
+async function renderAdmins() {
+  try {
+    const r = await fetch(`${SU}/rest/v1/admins?select=username,last_seen`, { headers: headers() });
+    const admins = await r.json();
+    const tbody = document.getElementById('admins-table');
+    if (!tbody) return;
+    const adminList = ['ziya', 'ahmet', 'batuhan'];
+    tbody.innerHTML = adminList.map(name => {
+      const adminData = admins.find(a => a.username === name);
+      const online = adminData && isAdminOnline(adminData.last_seen);
+      const lastSeen = adminData?.last_seen ? fdatetime(adminData.last_seen) : 'Hiç giriş yapılmadı';
+      return `<tr>
+        <td style="color:var(--gold);font-weight:600;">${name}</td>
+        <td>Tam Yetki</td>
+        <td>
+          <span class="badge ${online ? 'active' : 'expired'}">${online ? '● Çevrimiçi' : '● Çevrimdışı'}</span>
+          <div style="font-size:10px;color:var(--txm);margin-top:3px;">Son: ${lastSeen}</div>
+        </td>
+      </tr>`;
+    }).join('');
+  } catch(e) { console.log('Admin aktiflik hatası:', e); }
+}
+
 // LOGLAR
-function renderLogs(filter = '') {
+async function renderLogs(filter = '') {
+  // Her açılışta değil, sadece direkt çağrılınca yükle
   const logs = filter ? allLogs.filter(l => l.admin_username === filter) : allLogs;
   document.getElementById('logs-count').textContent = `${logs.length} İşlem`;
   const tbody = document.getElementById('logs-table');
@@ -239,11 +323,17 @@ function renderRevenue() {
     months.push({ label, rev });
   }
   const maxRev = Math.max(...months.map(m => m.rev), 1);
-  document.getElementById('rev-chart').innerHTML = months.map(m => `
-    <div class="chart-bar-item">
-      <div class="chart-bar" style="height:${Math.max((m.rev/maxRev)*100, 4)}%" title="${fp(m.rev)} ₺"></div>
-      <div class="chart-bar-label">${m.label}</div>
-    </div>`).join('');
+  const chartH = 100;
+  document.getElementById('rev-chart').innerHTML = months.map(m => {
+    const h = Math.max(Math.round((m.rev/maxRev)*chartH), 4);
+    return '<div class="chart-bar-item">' +
+      '<div style="width:100%;background:rgba(201,168,76,.15);border-radius:4px 4px 0 0;height:' + h + 'px;cursor:pointer;position:relative;" ' +
+      'onmouseover="this.style.background=\'var(--gold)\'" onmouseout="this.style.background=\'rgba(201,168,76,.15)\'" title="' + fp(m.rev) + ' ₺">' +
+      (m.rev > 0 ? '<div style="position:absolute;top:-18px;left:50%;transform:translateX(-50%);font-size:9px;color:var(--gold);white-space:nowrap;">' + fp(m.rev) + '₺</div>' : '') +
+      '</div>' +
+      '<div style="font-size:10px;color:var(--txm);margin-top:6px;text-align:center;">' + m.label + '</div>' +
+      '</div>';
+  }).join('');
 
   // Plan bazlı
   const plans = {};
@@ -298,7 +388,11 @@ function showSection(name) {
   if (name === 'subscriptions') renderSubscriptions();
   if (name === 'revenue') renderRevenue();
   if (name === 'listings') renderListingsPage();
-  if (name === 'logs') renderLogs();
+  if (name === 'admins') renderAdmins();
+  if (name === 'logs') {
+    await loadLogs(); // Sayfaya geçince taze veri çek
+    renderLogs();
+  }
   if (window.innerWidth <= 600) {
     document.getElementById('sidebar').classList.remove('open');
     document.getElementById('sidebar-overlay').classList.remove('show');
@@ -343,8 +437,8 @@ async function saveSub() {
   const start = document.getElementById('sub-start').value;
   const end = document.getElementById('sub-end').value;
 
-  if (!userId) { alert('Kullanıcı seçin.'); return; }
-  if (!price || !start || !end) { alert('Tüm alanları doldurun.'); return; }
+  if (!userId) { showError('Lütfen kullanıcı seçin.', 'Eksik Alan'); return; }
+  if (!price || !start || !end) { showError('Lütfen tüm alanları doldurun.', 'Eksik Alan'); return; }
 
   const r = await fetch(`${SU}/rest/v1/subscriptions`, {
     method: 'POST',
@@ -361,20 +455,22 @@ async function saveSub() {
     if (document.getElementById('sec-subscriptions').classList.contains('on')) renderSubscriptions();
     if (document.getElementById('sec-revenue').classList.contains('on')) renderRevenue();
   } else {
-    alert('Hata: ' + await r.text());
+    showError('Kayıt sırasında hata oluştu.', 'Hata');
   }
 }
 
 async function cancelSub(id) {
-  if (!confirm('Bu aboneliği iptal etmek istediğinize emin misiniz?')) return;
-  await fetch(`${SU}/rest/v1/subscriptions?id=eq.${id}`, {
-    method: 'PATCH',
-    headers: headers(),
-    body: JSON.stringify({ status: 'cancelled' })
+  showConfirm('Bu aboneliği iptal etmek istediğinize emin misiniz?', 'Abonelik İptal', async () => {
+    await fetch(`${SU}/rest/v1/subscriptions?id=eq.${id}`, {
+      method: 'PATCH',
+      headers: headers(),
+      body: JSON.stringify({ status: 'cancelled' })
+    });
+    logAction('Abonelik iptal edildi', `Abonelik ID: ${id}`);
+    await loadSubs();
+    renderSubscriptions();
+    showSuccess('Abonelik iptal edildi.', 'İptal Edildi');
   });
-  logAction('Abonelik iptal edildi', `Abonelik ID: ${id}`);
-  await loadSubs();
-  renderSubscriptions();
 }
 
 // MOBİL MENÜ
@@ -384,14 +480,41 @@ function toggleSidebar() {
 }
 
 // Plan seçince bitiş tarihi otomatik hesapla
+function updateSubEndDate() {
+  const plan = document.getElementById('sub-plan').value;
+  const start = document.getElementById('sub-start').value;
+  if (!start) return;
+  const d = new Date(start);
+  if (plan === 'Aylık') d.setMonth(d.getMonth() + 1);
+  else if (plan === '3 Aylık') d.setMonth(d.getMonth() + 3);
+  else if (plan === 'Yıllık') d.setFullYear(d.getFullYear() + 1);
+  else return; // Özel - dokunma
+  document.getElementById('sub-end').value = d.toISOString().split('T')[0];
+  updateDayCount();
+}
+
+function updateDayCount() {
+  const start = document.getElementById('sub-start').value;
+  const end = document.getElementById('sub-end').value;
+  const el = document.getElementById('sub-day-count');
+  if (!el) return;
+  if (start && end) {
+    const diff = Math.round((new Date(end) - new Date(start)) / 86400000);
+    el.textContent = diff > 0 ? `${diff} gün` : '';
+  }
+}
+
 document.addEventListener('DOMContentLoaded', () => {
-  document.getElementById('sub-plan').addEventListener('change', function() {
-    const start = document.getElementById('sub-start').value;
-    if (!start) return;
-    const d = new Date(start);
-    if (this.value === 'Aylık') d.setMonth(d.getMonth() + 1);
-    else if (this.value === '3 Aylık') d.setMonth(d.getMonth() + 3);
-    else if (this.value === 'Yıllık') d.setFullYear(d.getFullYear() + 1);
-    document.getElementById('sub-end').value = d.toISOString().split('T')[0];
+  document.getElementById('sub-plan').addEventListener('change', updateSubEndDate);
+  document.getElementById('sub-start').addEventListener('change', () => {
+    updateSubEndDate();
+  });
+  document.getElementById('sub-end').addEventListener('change', () => {
+    // Bitiş tarihi elle değiştirilince özele geç
+    const plan = document.getElementById('sub-plan').value;
+    if (plan !== 'Özel') {
+      document.getElementById('sub-plan').value = 'Özel';
+    }
+    updateDayCount();
   });
 });
