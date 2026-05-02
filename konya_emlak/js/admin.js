@@ -318,9 +318,10 @@ function renderRevenue() {
   const monthlyRev = allSubs.filter(s => new Date(s.created_at) >= monthStart && s.status !== 'cancelled').reduce((sum, s) => sum + (s.price || 0), 0);
   const activeRev = allSubs.filter(s => s.status === 'active' && new Date(s.expires_at) > now).reduce((sum, s) => sum + (s.price || 0), 0);
 
+  const allRevTotal = allSubs.reduce((s, sub) => s + (sub.price || 0), 0);
   const cancelledRev = allSubs.filter(s => s.status === 'cancelled').reduce((s, sub) => s + (sub.price || 0), 0);
-  const netRev = totalRev - cancelledRev;
-  document.getElementById('rev-total').textContent = fp(totalRev) + ' ₺';
+  const netRev = allRevTotal - cancelledRev;
+  document.getElementById('rev-total').textContent = fp(allRevTotal) + ' ₺';
   const revCancelledEl = document.getElementById('rev-cancelled');
   const revNetEl = document.getElementById('rev-net');
   if (revCancelledEl) revCancelledEl.textContent = '- ' + fp(cancelledRev) + ' ₺';
@@ -553,11 +554,11 @@ window.showSubDetail = function() {
     '<div style="background:var(--d2);border:1px solid var(--bd);border-radius:14px;width:min(700px,95vw);max-height:90vh;display:flex;flex-direction:column;">' +
       '<div style="padding:20px 24px;border-bottom:1px solid var(--bd);display:flex;align-items:center;justify-content:space-between;">' +
         '<div style="font-family:Playfair Display,serif;font-size:18px;font-weight:700;color:var(--tx);">💳 Abonelik Detayı</div>' +
-        '<button onclick="document.getElementById(\"admin-popup\").remove()" style="background:transparent;border:1px solid var(--bd);border-radius:50%;width:30px;height:30px;color:var(--txm);cursor:pointer;font-size:14px;">✕</button>' +
+        '<button class="popup-close-btn" style="background:transparent;border:1px solid var(--bd);border-radius:50%;width:30px;height:30px;color:var(--txm);cursor:pointer;font-size:14px;">✕</button>' +
       '</div>' +
       '<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;padding:20px 24px;">' +
         '<div style="background:rgba(201,168,76,.06);border:1px solid rgba(201,168,76,.2);border-radius:10px;padding:16px;text-align:center;">' +
-          '<div style="font-size:10px;color:var(--txm);letter-spacing:1px;text-transform:uppercase;margin-bottom:8px;">TOPLAM ABONE</div>' +
+          '<div style="font-size:10px;color:var(--txm);letter-spacing:1px;text-transform:uppercase;margin-bottom:8px;">TOPLAM GELİR</div>' +
           '<div style="font-size:28px;font-weight:700;font-family:Playfair Display,serif;color:var(--gold);">' + uniqueTotal + '</div>' +
           '<div style="font-size:11px;color:var(--txm);margin-top:4px;">farklı kullanıcı</div>' +
         '</div>' +
@@ -587,6 +588,7 @@ window.showSubDetail = function() {
     '</div>';
   document.body.appendChild(div2);
   div2.addEventListener('click', e => { if (e.target === div2) div2.remove(); });
+  div2.querySelector('.popup-close-btn').addEventListener('click', () => div2.remove());
 };
 
 window.showRevenueDetail = function() {
@@ -641,7 +643,7 @@ window.showRevenueDetail = function() {
           '<div style="font-size:11px;color:var(--txm);margin-top:4px;">' + cancelled.length + ' iptal</div>' +
         '</div>' +
         '<div style="background:rgba(76,175,130,.08);border:1px solid rgba(76,175,130,.3);border-radius:10px;padding:16px;text-align:center;">' +
-          '<div style="font-size:10px;color:var(--txm);letter-spacing:1px;text-transform:uppercase;margin-bottom:8px;">TOPLAM KAZANÇ</div>' +
+          '<div style="font-size:10px;color:var(--txm);letter-spacing:1px;text-transform:uppercase;margin-bottom:8px;">NET KAZANÇ</div>' +
           '<div style="font-size:24px;font-weight:700;font-family:Playfair Display,serif;color:var(--ok);">= ' + fp(netGelir) + ' ₺</div>' +
           '<div style="font-size:11px;color:var(--txm);margin-top:4px;">' + allIncoming.length + ' aktif</div>' +
         '</div>' +
@@ -662,6 +664,7 @@ window.showRevenueDetail = function() {
     '</div>';
   document.body.appendChild(div);
   div.addEventListener('click', e => { if (e.target === div) div.remove(); });
+  div.querySelector('.popup-close-btn').addEventListener('click', () => div.remove());
 };
 
 window.adminLogin = adminLogin;
