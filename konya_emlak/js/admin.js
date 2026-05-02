@@ -17,7 +17,7 @@ function showPopup(msg, title='Bilgi', icon='ℹ️', type='info', onConfirm=nul
       <div style="font-family:'Playfair Display',serif;font-size:17px;font-weight:700;color:var(--tx);margin-bottom:8px;">${title}</div>
       <div style="font-size:13px;color:var(--txm);line-height:1.6;margin-bottom:20px;">${msg}</div>
       <div style="display:flex;gap:10px;justify-content:center;">
-        ${onConfirm ? `<button onclick="document.getElementById('admin-popup').remove()" style="padding:10px 20px;background:transparent;border:1px solid var(--bd);border-radius:8px;color:var(--txm);font-size:13px;cursor:pointer;font-family:'DM Sans',sans-serif;">İptal</button>` : ''}
+        ${onConfirm ? `<button onclick="document.getElementById(\"admin-popup\").remove()" style="padding:10px 20px;background:transparent;border:1px solid var(--bd);border-radius:8px;color:var(--txm);font-size:13px;cursor:pointer;font-family:'DM Sans',sans-serif;">İptal</button>` : ''}
         <button id="popup-confirm-btn" style="padding:10px 24px;background:${btnColors[type]};border:none;border-radius:8px;color:${type==='info'?'var(--dark)':'#fff'};font-size:13px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;">Tamam</button>
       </div>
     </div>`;
@@ -553,7 +553,7 @@ window.showSubDetail = function() {
     '<div style="background:var(--d2);border:1px solid var(--bd);border-radius:14px;width:min(700px,95vw);max-height:90vh;display:flex;flex-direction:column;">' +
       '<div style="padding:20px 24px;border-bottom:1px solid var(--bd);display:flex;align-items:center;justify-content:space-between;">' +
         '<div style="font-family:Playfair Display,serif;font-size:18px;font-weight:700;color:var(--tx);">💳 Abonelik Detayı</div>' +
-        '<button onclick="document.getElementById('admin-popup').remove()" style="background:transparent;border:1px solid var(--bd);border-radius:50%;width:30px;height:30px;color:var(--txm);cursor:pointer;font-size:14px;">✕</button>' +
+        '<button onclick="document.getElementById(\"admin-popup\").remove()" style="background:transparent;border:1px solid var(--bd);border-radius:50%;width:30px;height:30px;color:var(--txm);cursor:pointer;font-size:14px;">✕</button>' +
       '</div>' +
       '<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;padding:20px 24px;">' +
         '<div style="background:rgba(201,168,76,.06);border:1px solid rgba(201,168,76,.2);border-radius:10px;padding:16px;text-align:center;">' +
