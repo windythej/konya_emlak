@@ -533,7 +533,7 @@ window.showSubDetail = function() {
     const badge = isActive
       ? '<span style="font-size:10px;background:rgba(76,175,130,.1);color:var(--ok);border:1px solid rgba(76,175,130,.3);padding:2px 7px;border-radius:100px;">Aktif · ' + remainDays + ' gün</span>'
       : isCancelled
-        ? '<span style="font-size:10px;background:rgba(201,168,76,.1);color:var(--gold);border:1px solid rgba(201,168,76,.2);padding:2px 7px;border-radius:100px;">İptal</span>'
+        ? '<span style="font-size:10px;background:rgba(224,90,75,.1);color:var(--err);border:1px solid rgba(224,90,75,.2);padding:2px 7px;border-radius:100px;">İptal</span>'
         : '<span style="font-size:10px;background:rgba(224,90,75,.1);color:var(--err);border:1px solid rgba(224,90,75,.2);padding:2px 7px;border-radius:100px;">Sona Erdi</span>';
     return '<tr style="border-bottom:1px solid rgba(201,168,76,.06);">' +
       '<td style="padding:8px;font-size:12px;color:var(--tx);">' + name + '</td>' +
@@ -558,7 +558,7 @@ window.showSubDetail = function() {
       '</div>' +
       '<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;padding:20px 24px;">' +
         '<div style="background:rgba(201,168,76,.06);border:1px solid rgba(201,168,76,.2);border-radius:10px;padding:16px;text-align:center;">' +
-          '<div style="font-size:10px;color:var(--txm);letter-spacing:1px;text-transform:uppercase;margin-bottom:8px;">TOPLAM GELİR</div>' +
+          '<div style="font-size:10px;color:var(--txm);letter-spacing:1px;text-transform:uppercase;margin-bottom:8px;">TOPLAM ABONE</div>' +
           '<div style="font-size:28px;font-weight:700;font-family:Playfair Display,serif;color:var(--gold);">' + uniqueTotal + '</div>' +
           '<div style="font-size:11px;color:var(--txm);margin-top:4px;">farklı kullanıcı</div>' +
         '</div>' +
@@ -633,7 +633,7 @@ window.showRevenueDetail = function() {
       // 3 stat kart
       '<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;padding:20px 24px;">' +
         '<div style="background:rgba(201,168,76,.06);border:1px solid rgba(201,168,76,.2);border-radius:10px;padding:16px;text-align:center;">' +
-          '<div style="font-size:10px;color:var(--txm);letter-spacing:1px;text-transform:uppercase;margin-bottom:8px;">TOPLAM ABONE</div>' +
+          '<div style="font-size:10px;color:var(--txm);letter-spacing:1px;text-transform:uppercase;margin-bottom:8px;">TOPLAM GELİR</div>' +
           '<div style="font-size:24px;font-weight:700;font-family:Playfair Display,serif;color:var(--gold);">+ ' + fp(totalIn) + ' ₺</div>' +
           '<div style="font-size:11px;color:var(--txm);margin-top:4px;">' + allSubs.length + ' abonelik</div>' +
         '</div>' +
