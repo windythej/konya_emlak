@@ -101,8 +101,8 @@ function adminLogin() {
     document.getElementById('admin-page').style.display = 'block';
     err.style.display = 'none';
     logAction('Giriş yapıldı', user + ' admin paneline giriş yaptı');
-    setInterval(updateHeartbeat, 60000); // Her dakika heartbeat
-    updateHeartbeat();
+    updateHeartbeat(); // Hemen güncelle
+    setInterval(updateHeartbeat, 60000);
     loadAll();
   } else {
     err.style.display = 'block';
@@ -123,6 +123,8 @@ window.addEventListener('DOMContentLoaded', () => {
     if (Date.now() - s.time < 86400000 && ADMINS[s.user]) {
       currentAdmin = s.user;
       document.getElementById('admin-name-display').textContent = '👤 ' + s.user;
+      updateHeartbeat();
+      setInterval(updateHeartbeat, 60000);
       document.getElementById('login-page').style.display = 'none';
       document.getElementById('admin-page').style.display = 'block';
       loadAll();
@@ -172,8 +174,11 @@ function renderDashboard() {
   const thisMonth = new Date(); thisMonth.setDate(1); thisMonth.setHours(0,0,0,0);
   const newUsers = allUsers.filter(u => new Date(u.created_at) >= thisMonth).length;
 
+  const thisMonthSubs = allSubs.filter(s => new Date(s.created_at) >= monthStart).length;
   document.getElementById('stat-total-users').textContent = allUsers.length;
   document.getElementById('stat-active-subs').textContent = activeSubs.length;
+  const subChangeEl = document.getElementById('stat-new-subs');
+  if (subChangeEl) subChangeEl.textContent = thisMonthSubs > 0 ? '+' + thisMonthSubs + ' bu ay' : '';
   document.getElementById('stat-total-rev').textContent = fp(totalRev) + ' ₺';
   document.getElementById('stat-listings').textContent = allListings.length;
   document.getElementById('stat-new-users').textContent = newUsers > 0 ? `+${newUsers} bu ay` : '';
@@ -237,10 +242,15 @@ function renderSubsTable(tbodyId, subs, showActions) {
   if (!subs.length) { tbody.innerHTML = `<tr><td colspan="${showActions?8:6}"><div class="empty-state"><p>Abonelik bulunamadı</p></div></td></tr>`; return; }
   tbody.innerHTML = subs.map(s => {
     const user = allUsers.find(u => u.id === s.user_id);
-    const isActive = s.status === 'active' && new Date(s.expires_at) > new Date();
+    const now = new Date();
+    const isActive = s.status === 'active' && new Date(s.expires_at) > now;
+    const isCancelled = s.status === 'cancelled';
+    const isExpired = !isActive && !isCancelled;
     const statusBadge = isActive
       ? '<span class="badge active">Aktif</span>'
-      : '<span class="badge expired">Sona Erdi</span>';
+      : isCancelled
+        ? '<span class="badge" style="background:rgba(201,168,76,.1);color:var(--gold);border:1px solid rgba(201,168,76,.3);">İptal Edildi</span>'
+        : '<span class="badge expired">Sona Erdi</span>';
     return `<tr>
       <td>${user ? user.first_name + ' ' + user.last_name : '—'}</td>
       ${showActions ? `<td>${user ? user.phone : '—'}</td>` : ''}
@@ -249,7 +259,7 @@ function renderSubsTable(tbodyId, subs, showActions) {
       <td>${fdate(s.started_at)}</td>
       <td>${fdate(s.expires_at)}</td>
       <td>${statusBadge}</td>
-      ${showActions ? `<td><button onclick="cancelSub('${s.id}')" style="background:transparent;border:1px solid var(--err);border-radius:6px;color:var(--err);font-size:11px;padding:3px 8px;cursor:pointer;">İptal</button></td>` : ''}
+      ${showActions ? `<td>${isActive ? `<button onclick="cancelSub('${s.id}')" style="background:transparent;border:1px solid var(--err);border-radius:6px;color:var(--err);font-size:11px;padding:3px 8px;cursor:pointer;">İptal</button>` : '—'}</td>` : ''}
     </tr>`;
   }).join('');
 }
@@ -440,6 +450,18 @@ async function saveSub() {
   if (!userId) { showError('Lütfen kullanıcı seçin.', 'Eksik Alan'); return; }
   if (!price || !start || !end) { showError('Lütfen tüm alanları doldurun.', 'Eksik Alan'); return; }
 
+  // Aynı kullanıcıda aktif abonelik var mı kontrol et
+  const existingActive = allSubs.find(s => s.user_id === userId && s.status === 'active' && new Date(s.expires_at) > new Date());
+  if (existingActive) {
+    const expUser = allUsers.find(u => u.id === userId);
+    const remainDays = Math.ceil((new Date(existingActive.expires_at) - new Date()) / 86400000);
+    showError(
+      (expUser ? expUser.first_name + ' ' + expUser.last_name : 'Bu kullanıcı') + ' adlı kullanıcının ' + remainDays + ' gün süresi kalan aktif bir aboneliği bulunuyor. Mevcut abonelik bitmeden yeni abonelik eklenemez.',
+      'Aktif Abonelik Mevcut'
+    );
+    return;
+  }
+
   const r = await fetch(`${SU}/rest/v1/subscriptions`, {
     method: 'POST',
     headers: { ...headers(), 'Prefer': 'return=representation' },
@@ -466,7 +488,10 @@ async function cancelSub(id) {
       headers: headers(),
       body: JSON.stringify({ status: 'cancelled' })
     });
-    logAction('Abonelik iptal edildi', `Abonelik ID: ${id}`);
+    const cancelledSub = allSubs.find(s => s.id === id);
+  const cancelledUser = cancelledSub ? allUsers.find(u => u.id === cancelledSub.user_id) : null;
+  const cancelName = cancelledUser ? cancelledUser.first_name + ' ' + cancelledUser.last_name : 'Bilinmiyor';
+  logAction('Abonelik iptal edildi', cancelName + ' adlı kullanıcının aboneliği iptal edildi');
     await loadSubs();
     renderSubscriptions();
     showSuccess('Abonelik iptal edildi.', 'İptal Edildi');
