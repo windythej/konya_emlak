@@ -87,7 +87,7 @@ tr:hover td{background:var(--d3);}
 .mbtn.secondary{background:var(--d3);border:1px solid var(--bd);color:var(--txm);}
 
 /* REVENUE CHART */
-.chart-bar-wrap{display:flex;align-items:flex-end;gap:8px;height:120px;padding:0 4px;}
+.chart-bar-wrap{display:flex;align-items:flex-end;gap:8px;height:110px;padding:0 4px;overflow:hidden;}
 .chart-bar-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;}
 .chart-bar{width:100%;background:rgba(201,168,76,.2);border-radius:4px 4px 0 0;transition:background .2s;cursor:pointer;min-height:4px;}
 .chart-bar:hover{background:var(--gold);}
@@ -101,6 +101,8 @@ tr:hover td{background:var(--d3);}
 /* EMPTY */
 .empty-state{text-align:center;padding:40px;color:var(--txm);}
 .empty-state p{font-size:13px;}
+
+.mob-menu-btn{display:none;position:fixed;top:14px;left:14px;z-index:200;width:38px;height:38px;background:var(--d2);border:1px solid var(--bd);border-radius:var(--rs);align-items:center;justify-content:center;cursor:pointer;font-size:16px;color:var(--tx);}
 
 /* MOBILE */
 @media(max-width:900px){
@@ -157,4 +159,4 @@ tr:hover td{background:var(--d3);}
 .sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:99;}
 .sidebar-overlay.show{display:block;}
 
-.mob-menu-btn{display:none;position:fixed;top:14px;left:14px;z-index:200;width:38px;height:38px;background:var(--d2);border:1px solid var(--bd);border-radius:var(--rs);align-items:center;justify-content:center;cursor:pointer;font-size:16px;color:var(--tx);}
+

@@ -170,11 +170,11 @@ async function loadListings() {
 function renderDashboard() {
   // Stats
   const activeSubs = allSubs.filter(s => s.status === 'active' && new Date(s.expires_at) > new Date());
-  const totalRev = allSubs.reduce((sum, s) => sum + (s.price || 0), 0);
+  const totalRev = allSubs.filter(s => s.status !== 'cancelled').reduce((sum, s) => sum + (s.price || 0), 0);
   const thisMonth = new Date(); thisMonth.setDate(1); thisMonth.setHours(0,0,0,0);
   const newUsers = allUsers.filter(u => new Date(u.created_at) >= thisMonth).length;
 
-  const thisMonthSubs = allSubs.filter(s => new Date(s.created_at) >= monthStart).length;
+  const thisMonthSubs = allSubs.filter(s => new Date(s.created_at) >= thisMonth).length;
   document.getElementById('stat-total-users').textContent = allUsers.length;
   document.getElementById('stat-active-subs').textContent = activeSubs.length;
   const subChangeEl = document.getElementById('stat-new-subs');
@@ -312,7 +312,7 @@ function filterLogs(admin) {
 
 // GELİR RAPORU
 function renderRevenue() {
-  const totalRev = allSubs.reduce((s, sub) => s + (sub.price || 0), 0);
+  const totalRev = allSubs.filter(s => s.status !== 'cancelled').reduce((s, sub) => s + (sub.price || 0), 0);
   const now = new Date();
   const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
   const monthlyRev = allSubs.filter(s => new Date(s.created_at) >= monthStart).reduce((sum, s) => sum + (s.price || 0), 0);
@@ -333,15 +333,14 @@ function renderRevenue() {
     months.push({ label, rev });
   }
   const maxRev = Math.max(...months.map(m => m.rev), 1);
-  const chartH = 100;
+  const chartH = 80;
   document.getElementById('rev-chart').innerHTML = months.map(m => {
-    const h = Math.max(Math.round((m.rev/maxRev)*chartH), 4);
-    return '<div class="chart-bar-item">' +
-      '<div style="width:100%;background:rgba(201,168,76,.15);border-radius:4px 4px 0 0;height:' + h + 'px;cursor:pointer;position:relative;" ' +
-      'onmouseover="this.style.background=\'var(--gold)\'" onmouseout="this.style.background=\'rgba(201,168,76,.15)\'" title="' + fp(m.rev) + ' ₺">' +
-      (m.rev > 0 ? '<div style="position:absolute;top:-18px;left:50%;transform:translateX(-50%);font-size:9px;color:var(--gold);white-space:nowrap;">' + fp(m.rev) + '₺</div>' : '') +
-      '</div>' +
-      '<div style="font-size:10px;color:var(--txm);margin-top:6px;text-align:center;">' + m.label + '</div>' +
+    const h = Math.max(Math.round((m.rev/maxRev)*chartH), 2);
+    return '<div class="chart-bar-item" style="display:flex;flex-direction:column;align-items:center;flex:1;justify-content:flex-end;gap:4px;">' +
+      (m.rev > 0 ? '<div style="font-size:9px;color:var(--gold);white-space:nowrap;">' + fp(m.rev) + '₺</div>' : '<div style="font-size:9px;"> </div>') +
+      '<div style="width:80%;background:rgba(201,168,76,.2);border-radius:4px 4px 0 0;height:' + h + 'px;cursor:pointer;transition:background .2s;" ' +
+      'onmouseover="this.style.background=\'var(--gold)\'" onmouseout="this.style.background=\'rgba(201,168,76,.2)\'" title="' + fp(m.rev) + ' ₺"></div>' +
+      '<div style="font-size:10px;color:var(--txm);text-align:center;">' + m.label + '</div>' +
       '</div>';
   }).join('');
 
@@ -505,6 +504,60 @@ function toggleSidebar() {
 }
 
 // Global fonksiyonları window'a ata (HTML onclick için)
+// GELİR DETAY POPUP
+window.showRevenueDetail = function() {
+  const incoming = allSubs.filter(s => s.status !== 'cancelled');
+  const cancelled = allSubs.filter(s => s.status === 'cancelled');
+  const totalIn = incoming.reduce((s, sub) => s + (sub.price || 0), 0);
+  const totalOut = cancelled.reduce((s, sub) => s + (sub.price || 0), 0);
+
+  const rows = [...allSubs].sort((a,b) => new Date(b.created_at) - new Date(a.created_at)).map(s => {
+    const user = allUsers.find(u => u.id === s.user_id);
+    const name = user ? user.first_name + ' ' + user.last_name : '—';
+    const isCancelled = s.status === 'cancelled';
+    return '<tr>' +
+      '<td>' + name + '</td>' +
+      '<td>' + s.plan + '</td>' +
+      '<td>' + fdate(s.created_at) + '</td>' +
+      '<td style="font-weight:700;color:' + (isCancelled ? 'var(--err)' : 'var(--ok)') + ';">' +
+        (isCancelled ? '- ' : '+ ') + fp(s.price) + ' ₺' +
+      '</td>' +
+      '<td>' + (isCancelled
+        ? '<span style="font-size:11px;color:var(--gold);">İptal</span>'
+        : '<span style="font-size:11px;color:var(--ok);">Aktif</span>') +
+      '</td>' +
+    '</tr>';
+  }).join('');
+
+  showPopup(
+    '<div style="text-align:left;">' +
+    '<div style="display:flex;gap:16px;margin-bottom:16px;">' +
+      '<div style="flex:1;background:rgba(76,175,130,.1);border:1px solid rgba(76,175,130,.3);border-radius:8px;padding:12px;text-align:center;">' +
+        '<div style="font-size:11px;color:var(--txm);margin-bottom:4px;">TOPLAM GİREN</div>' +
+        '<div style="font-size:20px;font-weight:700;color:var(--ok);">+ ' + fp(totalIn) + ' ₺</div>' +
+      '</div>' +
+      '<div style="flex:1;background:rgba(224,90,75,.1);border:1px solid rgba(224,90,75,.2);border-radius:8px;padding:12px;text-align:center;">' +
+        '<div style="font-size:11px;color:var(--txm);margin-bottom:4px;">İPTAL EDİLEN</div>' +
+        '<div style="font-size:20px;font-weight:700;color:var(--err);">- ' + fp(totalOut) + ' ₺</div>' +
+      '</div>' +
+    '</div>' +
+    '<div style="max-height:300px;overflow-y:auto;">' +
+      '<table style="width:100%;border-collapse:collapse;font-size:12px;">' +
+        '<thead><tr>' +
+          '<th style="text-align:left;padding:6px 8px;color:var(--txm);border-bottom:1px solid var(--bd);">Kullanıcı</th>' +
+          '<th style="text-align:left;padding:6px 8px;color:var(--txm);border-bottom:1px solid var(--bd);">Plan</th>' +
+          '<th style="text-align:left;padding:6px 8px;color:var(--txm);border-bottom:1px solid var(--bd);">Tarih</th>' +
+          '<th style="text-align:left;padding:6px 8px;color:var(--txm);border-bottom:1px solid var(--bd);">Tutar</th>' +
+          '<th style="text-align:left;padding:6px 8px;color:var(--txm);border-bottom:1px solid var(--bd);">Durum</th>' +
+        '</tr></thead>' +
+        '<tbody>' + rows + '</tbody>' +
+      '</table>' +
+    '</div>' +
+    '</div>',
+    'Gelir Detayı', '💰', 'info'
+  );
+};
+
 window.adminLogin = adminLogin;
 window.adminLogout = adminLogout;
 window.showSection = showSection;
