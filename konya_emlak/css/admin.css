@@ -104,6 +104,11 @@ tr:hover td{background:var(--d3);}
 
 .mob-menu-btn{display:none;position:fixed;top:14px;left:14px;z-index:200;width:38px;height:38px;background:var(--d2);border:1px solid var(--bd);border-radius:var(--rs);align-items:center;justify-content:center;cursor:pointer;font-size:16px;color:var(--tx);}
 
+/* GELİR RAPORU STAT */
+.rev-stat-grid{grid-template-columns:repeat(3,1fr);}
+@media(max-width:900px){.rev-stat-grid{grid-template-columns:repeat(3,1fr);}}
+@media(max-width:600px){.rev-stat-grid{grid-template-columns:1fr;}}
+
 /* MOBILE */
 @media(max-width:900px){
   .sidebar{width:200px;}
