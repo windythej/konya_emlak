@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Konya Emlak — Akıllı Fiyat Karşılaştırma</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<!-- POPUP -->
+<div class="popup-overlay" id="popup-overlay">
+  <div class="popup-box">
+    <div class="popup-icon" id="popup-icon">ℹ️</div>
+    <div class="popup-title" id="popup-title">Bilgi</div>
+    <div class="popup-msg" id="popup-msg"></div>
+    <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;">
+      <button class="popup-btn" id="popup-ok" onclick="closePopup()">Tamam</button>
+    </div>
+  </div>
+</div>
+
+<!-- AUTH EKRANI -->
+<div class="auth-overlay" id="auth-overlay">
+  <div class="auth-card">
+    <div class="auth-logo">
+      <div class="auth-logo-icon">◎</div>
+      <div class="auth-logo-title">Konya Emlak</div>
+      <div class="auth-logo-sub">Akıllı Piyasa Analizi Platformu</div>
+    </div>
+
+    <div class="auth-tabs">
+      <button class="auth-tab on" id="atab-login" onclick="switchAuthTab('login')">Giriş Yap</button>
+      <button class="auth-tab" id="atab-register" onclick="switchAuthTab('register')">Hesap Oluştur</button>
+    </div>
+
+    <!-- GİRİŞ -->
+    <div class="auth-step on" id="astep-login-tel">
+      <div class="auth-title">Hoş Geldiniz</div>
+      <div class="auth-sub">Telefon numaranızı girin, size doğrulama kodu gönderelim.</div>
+      <div class="auth-error" id="login-error"></div>
+      <div class="afg">
+        <label class="afl">Telefon Numarası</label>
+        <input type="tel" class="ainput" id="login-tel" placeholder="05xx xxx xx xx" maxlength="11">
+      </div>
+      <button class="abtn" id="login-send-btn" onclick="loginSend()">KOD GÖNDER</button>
+    </div>
+
+    <div class="auth-step" id="astep-login-code">
+      <div class="auth-title">Doğrulama Kodu</div>
+      <div class="auth-sub" id="login-code-sub">Numaranıza gönderilen 4 haneli kodu girin.</div>
+      <div class="auth-error" id="login-code-error"></div>
+      <div class="afg">
+        <input type="number" class="ainput auth-code-input" id="login-code" placeholder="0000" maxlength="4">
+        <div class="auth-hint">Kodu almadıysanız tekrar gönderebilirsiniz.</div>
+      </div>
+      <button class="abtn" onclick="loginVerify()">GİRİŞ YAP</button>
+      <button class="auth-resend" onclick="loginResend()">Tekrar gönder</button>
+    </div>
+
+    <!-- KAYIT -->
+    <div class="auth-step" id="astep-register-info">
+      <div class="auth-title">Hesap Oluştur</div>
+      <div class="auth-sub">Bilgilerinizi girin, SMS ile doğrulayın.</div>
+      <div class="auth-error" id="register-error"></div>
+      <div class="arow2">
+        <div class="afg">
+          <label class="afl">Ad</label>
+          <input type="text" class="ainput" id="reg-first" placeholder="Adınız">
+        </div>
+        <div class="afg">
+          <label class="afl">Soyad</label>
+          <input type="text" class="ainput" id="reg-last" placeholder="Soyadınız">
+        </div>
+      </div>
+      <div class="afg">
+        <label class="afl">Telefon Numarası</label>
+        <input type="tel" class="ainput" id="reg-tel" placeholder="05xx xxx xx xx" maxlength="11">
+      </div>
+      <button class="abtn" onclick="registerSend()">KOD GÖNDER</button>
+    </div>
+
+    <div class="auth-step" id="astep-register-code">
+      <div class="auth-title">Doğrulama Kodu</div>
+      <div class="auth-sub" id="register-code-sub">Numaranıza gönderilen 4 haneli kodu girin.</div>
+      <div class="auth-error" id="register-code-error"></div>
+      <div class="afg">
+        <input type="number" class="ainput auth-code-input" id="register-code" placeholder="0000" maxlength="4">
+        <div class="auth-hint">Kodu almadıysanız tekrar gönderebilirsiniz.</div>
+      </div>
+      <button class="abtn" onclick="registerVerify()">HESABI OLUŞTUR</button>
+      <button class="auth-resend" onclick="registerResend()">Tekrar gönder</button>
+    </div>
+
+  </div>
+</div>
+
+<!-- KULLANICI BAR -->
+<div class="user-bar" id="user-bar">
+  <div class="user-info">Hoş geldin, <span id="user-name-display">—</span></div>
+  <button class="logout-btn" onclick="logout()">Çıkış Yap</button>
+</div>
+
+<div class="site-content" id="site-content">
+
+<!-- MOBİL SEARCH BAR -->
+<div class="mob-search">
+  <div class="mob-search-inner">
+    <button class="mob-filter-btn" id="mob-filter-btn">Filtreler &amp; Ara <span id="mob-filter-count"></span></button>
+    <button class="mob-go-btn" id="mob-go-btn">Getir</button>
+  </div>
+</div>
+
+<!-- MOBİL FİLTRE SHEET -->
+<div class="fsheet" id="fsheet">
+  <div class="fsheet-ov" id="fsheet-ov"></div>
+  <div class="fsheet-body">
+    <div class="fsheet-handle"></div>
+    <div class="fsheet-title">Filtreler <button class="fsheet-close" id="fsheet-close">✕</button></div>
+    <div class="fsheet-content">
+      <div class="fg"><span class="fl">İlçe</span><div class="chips" id="dc-m"><button class="chip on" data-value="">Tümü</button></div></div>
+      <div class="fg"><span class="fl">Mahalle</span><div class="chips" id="qc-m"><button class="chip on" data-value="">Tümü</button></div></div>
+      <div class="fg"><span class="fl">Oda Sayısı</span>
+        <div class="chips" id="rc-m">
+          <button class="chip on" data-value="">Tümü</button>
+          <button class="chip" data-value="1+1">1+1</button>
+          <button class="chip" data-value="2+1">2+1</button>
+          <button class="chip" data-value="3+1">3+1</button>
+          <button class="chip" data-value="4+1">4+1</button>
+          <button class="chip" data-value="5+1">5+1</button>
+        </div>
+      </div>
+      <div class="fg"><span class="fl">Isıtma</span>
+        <div class="chips" id="hc-m">
+          <button class="chip on" data-value="">Tümü</button>
+          <button class="chip" data-value="Kombi">Kombi</button>
+          <button class="chip" data-value="Merkezi">Merkezi</button>
+          <button class="chip" data-value="Yerden">Yerden</button>
+          <button class="chip" data-value="Soba">Soba</button>
+        </div>
+      </div>
+      <div class="fg"><span class="fl">Özellikler</span>
+        <div class="togs" id="togs-m">
+          <div class="tog" data-feat="Ebeveyn Banyosu"><span class="tname">Ebeveyn Banyosu</span><div class="tdot"></div></div>
+          <div class="tog" data-feat="balcony"><span class="tname">Balkon</span><div class="tdot"></div></div>
+          <div class="tog" data-feat="elevator"><span class="tname">Asansör</span><div class="tdot"></div></div>
+          <div class="tog" data-feat="parking"><span class="tname">Otopark</span><div class="tdot"></div></div>
+          <div class="tog" data-feat="inComplex"><span class="tname">Site İçi</span><div class="tdot"></div></div>
+        </div>
+      </div>
+      <div class="fg"><span class="fl">Fiyat Aralığı (TL)</span>
+        <div class="prow">
+          <input type="number" class="pi" id="mnp-m" placeholder="Min" step="100000">
+          <input type="number" class="pi" id="mxp-m" placeholder="Max" step="100000">
+        </div>
+      </div>
+    </div>
+    <button class="fsheet-sbtn" id="fsheet-apply">İlanları Getir</button>
+  </div>
+</div>
+
+<!-- MOBİL NAV BAR -->
+<nav class="mob-nav">
+  <div class="mob-nav-inner">
+    <button class="mnb on" id="mnb-list"><div class="mico">☰</div>Liste</button>
+    <button class="mnb" id="mnb-map"><div class="mico">⊙</div>Harita</button>
+    <button class="mnb" id="mnb-filter"><div class="mico">⚙</div>Filtreler</button>
+  </div>
+</nav>
+
+<div class="hero">
+  <p class="ey">Konya Emlak Platformu</p>
+  <h1>Akıllı Emlak<br>Platformu</h1>
+  <p>Sahibinden.com verisiyle piyasa analizi ve evinizin tahmini değerini öğrenin.</p>
+  <div class="tabs">
+    <button class="tab on" id="tab-list">☰ Piyasa Karşılaştırma</button>
+    <button class="tab" id="tab-val">◎ Değerleme Aracı</button>
+  </div>
+</div>
+
+<!-- DEĞERLEME SAYFASI -->
+<div id="page-val" style="display:none;">
+<div class="val-wrap">
+  <div class="val-card">
+
+    <div class="val-header">
+      <div class="val-icon">◎</div>
+      <div>
+        <div class="val-title">Piyasa Değerleme</div>
+        <div class="val-sub">Evinizin bilgilerini girin, Konya piyasasına göre tahmini değer öğrenin</div>
+      </div>
+    </div>
+
+    <!-- ADIM 1: KONUM -->
+    <div class="vstep" id="vstep-1">
+      <div class="vstep-label">1 / 4 — Konum</div>
+      <div class="vfg">
+        <label class="vfl">İlçe</label>
+        <select class="vsel" id="v-district">
+          <option value="">İlçe seçin...</option>
+          <option value="Selçuklu">Selçuklu</option>
+          <option value="Meram">Meram</option>
+          <option value="Karatay">Karatay</option>
+          <option value="Akşehir">Akşehir</option>
+          <option value="Beyşehir">Beyşehir</option>
+          <option value="Cihanbeyli">Cihanbeyli</option>
+          <option value="Çumra">Çumra</option>
+          <option value="Ereğli">Ereğli</option>
+          <option value="Ilgın">Ilgın</option>
+          <option value="Kadınhanı">Kadınhanı</option>
+          <option value="Kulu">Kulu</option>
+          <option value="Sarayönü">Sarayönü</option>
+          <option value="Seydişehir">Seydişehir</option>
+          <option value="Yunak">Yunak</option>
+          <option value="Ahırlı">Ahırlı</option>
+          <option value="Akören">Akören</option>
+          <option value="Altınekin">Altınekin</option>
+          <option value="Bozkır">Bozkır</option>
+          <option value="Derbent">Derbent</option>
+          <option value="Derebucak">Derebucak</option>
+          <option value="Doğanhisar">Doğanhisar</option>
+          <option value="Emirgazi">Emirgazi</option>
+          <option value="Güneysınır">Güneysınır</option>
+          <option value="Hadim">Hadim</option>
+          <option value="Halkapınar">Halkapınar</option>
+          <option value="Hüyük">Hüyük</option>
+          <option value="Korkuteli">Korkuteli</option>
+          <option value="Taşkent">Taşkent</option>
+          <option value="Tuzlukçu">Tuzlukçu</option>
+          <option value="Yalıhüyük">Yalıhüyük</option>
+          <option value="Çeltik">Çeltik</option>
+        </select>
+      </div>
+      <div class="vfg">
+        <label class="vfl">Mahalle / Semt</label>
+        <select class="vsel" id="v-quarter">
+          <option value="">Önce ilçe seçin</option>
+        </select>
+      </div>
+      <button class="vstep-next" onclick="vstepNext(2)">Devam →</button>
+    </div>
+
+    <!-- ADIM 2: EV BİLGİLERİ -->
+    <div class="vstep" id="vstep-2" style="display:none;">
+      <div class="vstep-label">2 / 4 — Ev Bilgileri</div>
+      <div class="vfg">
+        <label class="vfl">Oda Sayısı</label>
+        <div class="vchips" id="v-rooms-chips">
+          <button class="vchip" data-value="1+1">1+1</button>
+          <button class="vchip" data-value="2+1">2+1</button>
+          <button class="vchip" data-value="3+1">3+1</button>
+          <button class="vchip" data-value="4+1">4+1</button>
+          <button class="vchip" data-value="5+1">5+1</button>
+          <button class="vchip" data-value="6+1">6+1</button>
+        </div>
+      </div>
+      <div class="vrow2">
+        <div class="vfg">
+          <label class="vfl">Net m²</label>
+          <input type="number" class="vinput" id="v-m2" placeholder="örn. 120" min="20" max="2000">
+        </div>
+        <div class="vfg">
+          <label class="vfl">Bina Yaşı</label>
+          <input type="number" class="vinput" id="v-age" placeholder="örn. 10" min="0" max="100">
+        </div>
+      </div>
+      <div class="vfg">
+        <label class="vfl">Isıtma Tipi</label>
+        <div class="vchips" id="v-heat-chips">
+          <button class="vchip" data-value="Kombi">Kombi</button>
+          <button class="vchip" data-value="Merkezi">Merkezi</button>
+          <button class="vchip" data-value="Yerden">Yerden Isıtma</button>
+          <button class="vchip" data-value="Soba">Soba</button>
+        </div>
+      </div>
+      <div style="display:flex;gap:10px;">
+        <button class="vstep-back" onclick="vstepNext(1)">← Geri</button>
+        <button class="vstep-next" style="flex:1;" onclick="vstepNext(3)">Devam →</button>
+      </div>
+    </div>
+
+    <!-- ADIM 3: ÖZELLİKLER -->
+    <div class="vstep" id="vstep-3" style="display:none;">
+      <div class="vstep-label">3 / 4 — Özellikler</div>
+      <div class="vfg">
+        <label class="vfl">Mevcut Özellikler</label>
+        <div class="vtogs">
+          <div class="vtog" data-feat="Ebeveyn Banyosu"><span>Ebeveyn Banyosu</span><div class="vtdot"></div></div>
+          <div class="vtog" data-feat="balcony"><span>Balkon</span><div class="vtdot"></div></div>
+          <div class="vtog" data-feat="elevator"><span>Asansör</span><div class="vtdot"></div></div>
+          <div class="vtog" data-feat="parking"><span>Otopark</span><div class="vtdot"></div></div>
+          <div class="vtog" data-feat="inComplex"><span>Site İçi</span><div class="vtdot"></div></div>
+          <div class="vtog" data-feat="Jakuzi"><span>Jakuzi</span><div class="vtdot"></div></div>
+          <div class="vtog" data-feat="Ankastre Fırın"><span>Ankastre Fırın</span><div class="vtdot"></div></div>
+          <div class="vtog" data-feat="24 Saat Güvenlik"><span>24 Saat Güvenlik</span><div class="vtdot"></div></div>
+        </div>
+      </div>
+      <div style="display:flex;gap:10px;">
+        <button class="vstep-back" onclick="vstepNext(2)">← Geri</button>
+        <button class="vstep-next" style="flex:1;" onclick="vstepNext(4)">Devam →</button>
+      </div>
+    </div>
+
+    <!-- ADIM 4: SMS DOĞRULAMA -->
+    <div class="vstep" id="vstep-4" style="display:none;">
+      <div class="vstep-label">4 / 4 — Raporu Görüntüle</div>
+      <div class="sms-box">
+        <div class="sms-icon">📱</div>
+        <div class="sms-title">Raporunuz Hazır!</div>
+        <div class="sms-sub">Fiyat analizini görmek için telefon numaranızı doğrulayın</div>
+      </div>
+      <div id="sms-tel-step">
+        <div class="vfg">
+          <label class="vfl">Telefon Numarası</label>
+          <input type="tel" class="vinput" id="v-tel" placeholder="05xx xxx xx xx" maxlength="11">
+        </div>
+        <div style="display:flex;gap:10px;">
+          <button class="vstep-back" onclick="vstepNext(3)">← Geri</button>
+          <button class="vstep-next" style="flex:1;" id="sms-send-btn" onclick="smsSend()">KOD GÖNDER</button>
+        </div>
+      </div>
+      <div id="sms-code-step" style="display:none;">
+        <div class="vfg">
+          <label class="vfl">Doğrulama Kodu</label>
+          <input type="number" class="vinput sms-code-input" id="v-code" placeholder="0000" maxlength="4">
+          <div class="sms-hint">Numaranıza gönderilen 4 haneli kodu girin</div>
+        </div>
+        <button class="vstep-next" id="sms-verify-btn" onclick="smsVerify()">RAPORU GÖRÜNTÜLE</button>
+        <button class="sms-resend" onclick="smsResend()">Tekrar gönder</button>
+      </div>
+    </div>
+
+    <!-- SONUÇ -->
+    <div id="v-result" style="display:none;">
+      <div class="vres-source">📊 VERİ KAYNAĞI: SAHİBİNDEN</div>
+      <div class="vres-row">
+        <span class="vres-label">Eşleşen İlan</span>
+        <span class="vres-val" id="vr-count">—</span>
+      </div>
+      <div class="vres-row">
+        <span class="vres-label">Piyasa Ortalaması</span>
+        <span class="vres-val" id="vr-avg">—</span>
+      </div>
+      <div class="vres-row">
+        <span class="vres-label">Ortalama m² Fiyatı</span>
+        <span class="vres-val" id="vr-m2">—</span>
+      </div>
+      <div class="vres-main">
+        <div class="vres-main-label">TAHMİNİ PİYASA DEĞERİ</div>
+        <div class="vres-main-val" id="vr-est">—</div>
+        <div class="vres-main-note" id="vr-note"></div>
+      </div>
+      <div class="vres-row">
+        <span class="vres-label">Gerçek Satış Fiyatı</span>
+        <span class="vres-val vres-green" id="vr-real">—</span>
+      </div>
+      <div class="vres-range" id="vr-range"></div>
+      <div class="vres-footer">
+        * Mahalle, oda sayısı ve m² verileri Konya 2026 piyasa ilanlarına göre analiz edilmiştir.<br>
+        * Tahmini değer, benzer ilanların istatistiksel ortalamasına dayanmaktadır. Gerçek satış fiyatı piyasa koşullarına göre <strong style="color:var(--gold)">±%15 farklılık</strong> gösterebilir.
+      </div>
+
+      <!-- AI ANALİZİ -->
+      <div id="vr-ai" class="vr-ai-box" style="display:none;">
+        <div class="vr-ai-header">
+          <span class="vr-ai-badge">▲ AI ANALİZİ · CLAUDE</span>
+        </div>
+        <p id="vr-ai-text" class="vr-ai-text"></p>
+      </div>
+
+      <!-- BENZER İLANLAR -->
+      <div class="vr-similar-box">
+        <div class="vr-similar-title">BENZER İLANLAR</div>
+        <table class="vr-table">
+          <thead>
+            <tr>
+              <th>Konum</th>
+              <th>Alan</th>
+              <th>Yaş</th>
+              <th>Fiyat</th>
+            </tr>
+          </thead>
+          <tbody id="vr-similar"></tbody>
+        </table>
+      </div>
+
+      <button class="vbtn" style="margin-top:16px;" onclick="valReset()">Yeni Değerleme</button>
+    </div>
+
+    <div id="v-empty" class="v-empty-msg" style="display:none;">
+      Bu kriterlere uyan yeterli ilan bulunamadı. Daha geniş bir bölge veya farklı oda sayısı deneyin.
+      <br><button class="vstep-back" style="margin-top:12px;width:auto;padding:8px 20px;" onclick="valReset()">Tekrar Dene</button>
+    </div>
+
+  </div>
+</div>
+</div>
+
+<div class="wrap" id="main-wrap">
+<div class="layout">
+
+<aside class="panel">
+  <div class="ptitle">Filtreler</div>
+  <div class="fg"><span class="fl">İlçe</span><div class="chips" id="dc"><button class="chip on" data-value="">Tümü</button></div></div>
+  <div class="fg"><span class="fl">Mahalle / Semt</span><div class="chips" id="qc"><button class="chip on" data-value="">Tümü</button></div></div>
+  <div class="fg"><span class="fl">Oda Sayısı</span>
+    <div class="chips" id="rc">
+      <button class="chip on" data-value="">Tümü</button>
+      <button class="chip" data-value="1+1">1+1</button>
+      <button class="chip" data-value="2+1">2+1</button>
+      <button class="chip" data-value="3+1">3+1</button>
+      <button class="chip" data-value="4+1">4+1</button>
+      <button class="chip" data-value="5+1">5+1</button>
+    </div>
+  </div>
+  <div class="fg"><span class="fl">Isıtma Tipi</span>
+    <div class="chips" id="hc">
+      <button class="chip on" data-value="">Tümü</button>
+      <button class="chip" data-value="Kombi">Kombi</button>
+      <button class="chip" data-value="Merkezi">Merkezi</button>
+      <button class="chip" data-value="Yerden">Yerden</button>
+      <button class="chip" data-value="Soba">Soba</button>
+    </div>
+  </div>
+  <div class="fg"><span class="fl">Özellikler</span>
+    <div class="togs">
+      <div class="tog" data-feat="Ebeveyn Banyosu"><span class="tname">Ebeveyn Banyosu</span><div class="tdot"></div></div>
+      <div class="tog" data-feat="balcony"><span class="tname">Balkon</span><div class="tdot"></div></div>
+      <div class="tog" data-feat="elevator"><span class="tname">Asansör</span><div class="tdot"></div></div>
+      <div class="tog" data-feat="parking"><span class="tname">Otopark</span><div class="tdot"></div></div>
+      <div class="tog" data-feat="inComplex"><span class="tname">Site İçi</span><div class="tdot"></div></div>
+    </div>
+  </div>
+  <div class="fg"><span class="fl">Fiyat Aralığı (TL)</span>
+    <div class="prow">
+      <input type="number" class="pi" id="mnp" placeholder="Min" step="100000">
+      <input type="number" class="pi" id="mxp" placeholder="Max" step="100000">
+    </div>
+  </div>
+  <button class="sbtn" id="sbtn">İlanları Getir</button>
+</aside>
+
+<main>
+  <div id="stats" class="stats" style="display:none;">
+    <div class="sc"><div class="sv" id="sc">—</div><div class="sl">İlan</div></div>
+    <div class="sc"><div class="sv" id="sa">—</div><div class="sl">Ortalama Fiyat</div></div>
+    <div class="sc"><div class="sv" id="sm">—</div><div class="sl">Ort. m² Fiyatı</div></div>
+  </div>
+  <div id="rh" class="rhead" style="display:none;">
+    <div class="rcnt"><span id="rcnt">0</span> ilan</div>
+    <div style="display:flex;gap:8px;align-items:center;">
+      <div class="vtg">
+        <button class="vb on" id="vl">☰ Liste</button>
+        <button class="vb" id="vm">⊙ Harita</button>
+      </div>
+      <select class="ss" id="sort">
+        <option value="price_asc">Fiyat ↑</option>
+        <option value="price_desc">Fiyat ↓</option>
+        <option value="m2_asc">m²  ↑</option>
+        <option value="m2_desc">m² ↓</option>
+      </select>
+    </div>
+  </div>
+  <div id="mapv"></div>
+  <div id="listv" class="grid">
+    <div class="empty"><h3>Filtrelerinizi seçin</h3><p>Özellikleri belirleyip "İlanları Getir" butonuna basın.</p></div>
+  </div>
+</main>
+</div>
+</div>
+
+<div class="ov" id="ov"></div>
+<div class="drawer" id="drawer">
+  <button class="dclose" id="dclose">✕</button>
+  <div class="gal" id="dgal"></div>
+  <div class="thumbs" id="dthumbs"></div>
+  <div class="dc">
+    <div class="dloc" id="dloc"></div>
+    <div class="dline"></div>
+    <div class="dtitle" id="dtitle"></div>
+    <div class="dpr"><div class="dprice" id="dpr"></div><div class="dm2" id="dm2p"></div></div>
+    <div class="dgrid" id="dgrid"></div>
+    <div class="dst">Özellikler</div>
+    <div class="dfeats" id="dfeats"></div>
+    <div class="dst">Satıcı</div>
+    <div class="dsel" id="dsel"></div>
+    <div class="dst">Konum</div>
+    <div class="dmap" id="dmap"></div>
+    <div class="dcta" id="dcta"></div>
+  </div>
+</div>
+
+<script src="js/main.js"></script>
+</div><!-- /site-content -->
+</body>
+</html>
