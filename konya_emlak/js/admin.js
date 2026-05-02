@@ -379,7 +379,7 @@ function filterListings(q) {
 }
 
 // SECTION GEÇİŞİ
-function showSection(name) {
+async function showSection(name) {
   document.querySelectorAll('.section').forEach(s => s.classList.remove('on'));
   document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('on'));
   document.getElementById('sec-' + name).classList.add('on');
@@ -478,6 +478,21 @@ function toggleSidebar() {
   document.getElementById('sidebar').classList.toggle('open');
   document.getElementById('sidebar-overlay').classList.toggle('show');
 }
+
+// Global fonksiyonları window'a ata (HTML onclick için)
+window.adminLogin = adminLogin;
+window.adminLogout = adminLogout;
+window.showSection = showSection;
+window.toggleSidebar = toggleSidebar;
+window.openAddSub = openAddSub;
+window.closeModal = closeModal;
+window.saveSub = saveSub;
+window.cancelSub = cancelSub;
+window.searchUserForSub = searchUserForSub;
+window.selectUser = selectUser;
+window.filterUsers = filterUsers;
+window.filterListings = filterListings;
+window.filterLogs = filterLogs;
 
 // Plan seçince bitiş tarihi otomatik hesapla
 function updateSubEndDate() {
