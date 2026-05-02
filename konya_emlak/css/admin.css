@@ -107,12 +107,54 @@ tr:hover td{background:var(--d3);}
   .sidebar{width:200px;}
   .main{margin-left:200px;padding:20px;}
   .stat-grid{grid-template-columns:1fr 1fr;}
+  .table-header{flex-wrap:wrap;gap:10px;}
+  .table-search{width:100%;}
 }
 @media(max-width:600px){
-  .sidebar{transform:translateX(-100%);transition:transform .3s;}
-  .sidebar.open{transform:translateX(0);}
-  .main{margin-left:0;padding:16px;}
-  .stat-grid{grid-template-columns:1fr 1fr;}
+  /* Sidebar */
+  .sidebar{transform:translateX(-100%);transition:transform .3s;width:260px;z-index:100;}
+  .sidebar.open{transform:translateX(0);box-shadow:4px 0 20px rgba(0,0,0,.5);}
+
+  /* Main */
+  .main{margin-left:0;padding:14px;padding-top:60px;}
+
+  /* Stats */
+  .stat-grid{grid-template-columns:1fr 1fr;gap:10px;}
+  .stat-card{padding:14px 12px;}
+  .stat-val{font-size:20px;}
+  .stat-label{font-size:9px;}
+
+  /* Tablo */
+  .table-card{overflow-x:auto;}
+  table{min-width:500px;}
+  th,td{padding:10px 12px;font-size:12px;}
+  .table-header{flex-wrap:wrap;gap:8px;padding:14px;}
+  .table-search{width:100%;}
+  .table-title{font-size:13px;}
+
+  /* Page header */
+  .page-header{margin-bottom:18px;}
+  .page-title{font-size:20px;}
+
+  /* Modal */
+  .modal-box{padding:20px 16px;}
+  .mbtn-row{flex-direction:column;}
+
+  /* Login */
+  .login-card{padding:28px 20px;}
+
+  /* Mob menu */
   .mob-menu-btn{display:flex;}
+
+  /* Revenue chart */
+  .chart-bar-wrap{height:80px;}
+
+  /* Sidebar overlay */
+  .sidebar-overlay{display:block;}
 }
-.mob-menu-btn{display:none;position:fixed;top:16px;left:16px;z-index:60;width:36px;height:36px;background:var(--d2);border:1px solid var(--bd);border-radius:var(--rs);align-items:center;justify-content:center;cursor:pointer;font-size:16px;}
+
+/* Sidebar overlay - mobilde sidebar açıkken arka planı karart */
+.sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:99;}
+.sidebar-overlay.show{display:block;}
+
+.mob-menu-btn{display:none;position:fixed;top:14px;left:14px;z-index:200;width:38px;height:38px;background:var(--d2);border:1px solid var(--bd);border-radius:var(--rs);align-items:center;justify-content:center;cursor:pointer;font-size:16px;color:var(--tx);}

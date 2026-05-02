@@ -299,7 +299,10 @@ function showSection(name) {
   if (name === 'revenue') renderRevenue();
   if (name === 'listings') renderListingsPage();
   if (name === 'logs') renderLogs();
-  if (window.innerWidth <= 600) document.getElementById('sidebar').classList.remove('open');
+  if (window.innerWidth <= 600) {
+    document.getElementById('sidebar').classList.remove('open');
+    document.getElementById('sidebar-overlay').classList.remove('show');
+  }
 }
 
 // ABONELİK EKLE
@@ -377,6 +380,7 @@ async function cancelSub(id) {
 // MOBİL MENÜ
 function toggleSidebar() {
   document.getElementById('sidebar').classList.toggle('open');
+  document.getElementById('sidebar-overlay').classList.toggle('show');
 }
 
 // Plan seçince bitiş tarihi otomatik hesapla
