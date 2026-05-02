@@ -4,9 +4,22 @@ const SK = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI
 
 // Adminler - buraya istediğin adminleri ekle
 const ADMINS = {
-  'admin': 'Admin2026!',
-  'batuhan': 'Batuhan2026!'
+  'ziya': 'gokalp',
+  'ahmet': 'guler',
+  'batuhan': 'Y1'
 };
+
+let currentAdmin = '';
+
+async function logAction(action, details = '') {
+  try {
+    await fetch(`${SU}/rest/v1/admin_logs`, {
+      method: 'POST',
+      headers: { ...headers(), 'Prefer': 'return=minimal' },
+      body: JSON.stringify({ admin_username: currentAdmin, action, details })
+    });
+  } catch(e) { console.log('Log hatası:', e); }
+}
 
 let allUsers = [], allSubs = [], allListings = [];
 const fp = n => new Intl.NumberFormat('tr-TR').format(n);
@@ -24,11 +37,13 @@ function adminLogin() {
   const err = document.getElementById('login-err');
 
   if (ADMINS[user] && ADMINS[user] === pass) {
+    currentAdmin = user;
     localStorage.setItem('admin_session', JSON.stringify({ user, time: Date.now() }));
     document.getElementById('admin-name-display').textContent = '👤 ' + user;
     document.getElementById('login-page').style.display = 'none';
     document.getElementById('admin-page').style.display = 'block';
     err.style.display = 'none';
+    logAction('Giriş yapıldı', user + ' admin paneline giriş yaptı');
     loadAll();
   } else {
     err.style.display = 'block';
@@ -47,6 +62,7 @@ window.addEventListener('DOMContentLoaded', () => {
   if (session) {
     const s = JSON.parse(session);
     if (Date.now() - s.time < 86400000 && ADMINS[s.user]) {
+      currentAdmin = s.user;
       document.getElementById('admin-name-display').textContent = '👤 ' + s.user;
       document.getElementById('login-page').style.display = 'none';
       document.getElementById('admin-page').style.display = 'block';
@@ -62,9 +78,16 @@ window.addEventListener('DOMContentLoaded', () => {
 });
 
 // VERİ YÜKLEMELERİ
+let allLogs = [];
+
 async function loadAll() {
-  await Promise.all([loadUsers(), loadSubs(), loadListings()]);
+  await Promise.all([loadUsers(), loadSubs(), loadListings(), loadLogs()]);
   renderDashboard();
+}
+
+async function loadLogs() {
+  const r = await fetch(`${SU}/rest/v1/admin_logs?select=*&order=created_at.desc&limit=200`, { headers: headers() });
+  allLogs = await r.json();
 }
 
 async function loadUsers() {
@@ -107,6 +130,9 @@ function renderDashboard() {
       </tr>`).join('')
     : '<tr><td colspan="4"><div class="empty-state"><p>Henüz kullanıcı yok</p></div></td></tr>';
 
+  // Son loglar - dashboard'da göster
+  const recentLogs = allLogs.slice(0, 3);
+  
   // Son abonelikler
   renderSubsTable('dash-recent-subs', allSubs.slice(0, 5), false);
 }
@@ -167,6 +193,27 @@ function renderSubsTable(tbodyId, subs, showActions) {
       ${showActions ? `<td><button onclick="cancelSub('${s.id}')" style="background:transparent;border:1px solid var(--err);border-radius:6px;color:var(--err);font-size:11px;padding:3px 8px;cursor:pointer;">İptal</button></td>` : ''}
     </tr>`;
   }).join('');
+}
+
+// LOGLAR
+function renderLogs(filter = '') {
+  const logs = filter ? allLogs.filter(l => l.admin_username === filter) : allLogs;
+  document.getElementById('logs-count').textContent = `${logs.length} İşlem`;
+  const tbody = document.getElementById('logs-table');
+  if (!logs.length) {
+    tbody.innerHTML = '<tr><td colspan="4"><div class="empty-state"><p>Henüz işlem yok</p></div></td></tr>';
+    return;
+  }
+  tbody.innerHTML = logs.map(l => `<tr>
+    <td style="color:var(--gold);font-weight:600;">${l.admin_username}</td>
+    <td>${l.action}</td>
+    <td style="color:var(--txm);font-size:12px;">${l.details || '—'}</td>
+    <td style="color:var(--txm);font-size:12px;">${fdatetime(l.created_at)}</td>
+  </tr>`).join('');
+}
+
+function filterLogs(admin) {
+  renderLogs(admin);
 }
 
 // GELİR RAPORU
@@ -251,6 +298,7 @@ function showSection(name) {
   if (name === 'subscriptions') renderSubscriptions();
   if (name === 'revenue') renderRevenue();
   if (name === 'listings') renderListingsPage();
+  if (name === 'logs') renderLogs();
   if (window.innerWidth <= 600) document.getElementById('sidebar').classList.remove('open');
 }
 
@@ -302,6 +350,8 @@ async function saveSub() {
   });
 
   if (r.ok) {
+    const user = allUsers.find(u => u.id === userId);
+    logAction('Abonelik eklendi', `${user ? user.first_name + ' ' + user.last_name : userId} - ${plan} - ${fp(price)} ₺`);
     closeModal();
     await loadSubs();
     renderDashboard();
@@ -319,6 +369,7 @@ async function cancelSub(id) {
     headers: headers(),
     body: JSON.stringify({ status: 'cancelled' })
   });
+  logAction('Abonelik iptal edildi', `Abonelik ID: ${id}`);
   await loadSubs();
   renderSubscriptions();
 }

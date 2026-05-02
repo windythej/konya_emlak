@@ -44,6 +44,8 @@
       <div class="nav-item" onclick="showSection('subscriptions')"><span class="nav-icon">💳</span> Abonelikler</div>
       <div class="nav-item" onclick="showSection('revenue')"><span class="nav-icon">💰</span> Gelir Raporu</div>
       <div class="nav-item" onclick="showSection('listings')"><span class="nav-icon">🏠</span> İlanlar</div>
+      <div class="nav-item" onclick="showSection('admins')"><span class="nav-icon">👤</span> Adminler</div>
+      <div class="nav-item" onclick="showSection('logs')"><span class="nav-icon">📋</span> İşlem Logları</div>
     </nav>
     <div class="sidebar-footer">
       <a href="/" style="display:flex;align-items:center;gap:8px;padding:10px;background:rgba(201,168,76,.06);border:1px solid var(--bd);border-radius:var(--rs);color:var(--txm);text-decoration:none;font-size:12px;margin-bottom:8px;transition:all .2s;" onmouseover="this.style.borderColor='var(--gold)';this.style.color='var(--gold)'" onmouseout="this.style.borderColor='var(--bd)';this.style.color='var(--txm)'">🏠 Ana Siteye Dön</a>
@@ -179,6 +181,48 @@
         <table>
           <thead><tr><th>Plan</th><th>Abone Sayısı</th><th>Toplam Gelir</th><th>Ortalama Fiyat</th></tr></thead>
           <tbody id="rev-plans"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ADMİNLER -->
+    <div class="section" id="sec-admins">
+      <div class="page-header">
+        <div class="page-title">Adminler</div>
+        <div class="page-sub">Sisteme erişim yetkisi olan adminler</div>
+      </div>
+      <div class="table-card">
+        <div class="table-header"><div class="table-title">3 Admin</div></div>
+        <table>
+          <thead><tr><th>Kullanıcı Adı</th><th>Yetki</th><th>Durum</th></tr></thead>
+          <tbody>
+            <tr><td style="color:var(--gold);font-weight:600;">ziya</td><td>Tam Yetki</td><td><span class="badge active">Aktif</span></td></tr>
+            <tr><td style="color:var(--gold);font-weight:600;">ahmet</td><td>Tam Yetki</td><td><span class="badge active">Aktif</span></td></tr>
+            <tr><td style="color:var(--gold);font-weight:600;">batuhan</td><td>Tam Yetki</td><td><span class="badge active">Aktif</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- İŞLEM LOGLARI -->
+    <div class="section" id="sec-logs">
+      <div class="page-header">
+        <div class="page-title">İşlem Logları</div>
+        <div class="page-sub">Adminlerin yaptığı tüm işlemler</div>
+      </div>
+      <div class="table-card">
+        <div class="table-header">
+          <div class="table-title" id="logs-count">Yükleniyor...</div>
+          <select class="table-search" style="width:160px;" onchange="filterLogs(this.value)">
+            <option value="">Tüm Adminler</option>
+            <option value="ziya">ziya</option>
+            <option value="ahmet">ahmet</option>
+            <option value="batuhan">batuhan</option>
+          </select>
+        </div>
+        <table>
+          <thead><tr><th>Admin</th><th>İşlem</th><th>Detay</th><th>Tarih</th></tr></thead>
+          <tbody id="logs-table"></tbody>
         </table>
       </div>
     </div>
