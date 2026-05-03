@@ -272,15 +272,13 @@ function checkAuth() {
       return;
     }
   }
-  document.getElementById('auth-overlay').style.display = 'flex';
+  // Yeni tasarımda giriş zorunlu değil; auth overlay kapalı kalır
 }
 
 function onLoginSuccess(user) {
   document.getElementById('auth-overlay').style.display = 'none';
-  document.getElementById('site-content').style.display = 'block';
-  document.getElementById('user-bar').style.display = 'flex';
-  document.getElementById('user-name-display').textContent = user.name;
   currentUser = user;
+  if (typeof updateNavForUser === 'function') updateNavForUser(user);
 }
 
 function switchAuthTab(tab) {
@@ -430,13 +428,11 @@ function registerResend() {
 function logout() {
   removeToken();
   currentUser = null;
-  document.getElementById('site-content').style.display = 'none';
-  document.getElementById('user-bar').style.display = 'none';
-  document.getElementById('auth-overlay').style.display = 'flex';
+  if (typeof updateNavForUser === 'function') updateNavForUser(null);
   document.querySelectorAll('.auth-step').forEach(s => s.classList.remove('on'));
   document.getElementById('astep-login-tel').classList.add('on');
-  document.getElementById('login-tel').value = '';
-  document.getElementById('login-code').value = '';
+  if(document.getElementById('login-tel')) document.getElementById('login-tel').value = '';
+  if(document.getElementById('login-code')) document.getElementById('login-code').value = '';
   showInfo('Çıkış yapıldı. Görüşmek üzere!', 'Çıkış');
 }
 
@@ -481,6 +477,133 @@ function populateValQuarters(district) {
   sel.innerHTML = '<option value="">Mahalle seçin (isteğe bağlı)</option>';
   combined.forEach(q => { const o = document.createElement('option'); o.value = q; o.textContent = q; sel.appendChild(o); });
 }
+
+// TAB EVENTLERİ
+function switchTab(tab) {
+  const isVal = tab === 'val';
+  document.getElementById('tab-list').classList.toggle('on', !isVal);
+  document.getElementById('tab-val').classList.toggle('on', isVal);
+  document.getElementById('page-val').style.display = isVal ? 'block' : 'none';
+  document.getElementById('main-wrap').style.display = isVal ? 'none' : 'block';
+  const ms = document.getElementById('mob-search');
+  if(ms) ms.style.display = isVal ? 'none' : 'block';
+  if (isVal) {
+    setTimeout(() => {
+      if (typeof initValuation === 'function') initValuation();
+    }, 50);
+  }
+}
+document.getElementById('tab-list').addEventListener('click', () => switchTab('list'));
+document.getElementById('tab-val').addEventListener('click', () => {
+  switchTab('val');
+  if (all.length === 0) loadForVal();
+  else populateValDistricts();
+});
+
+// DESKTOP EVENTS
+document.getElementById('ov').addEventListener('click',closeDrawer);
+document.getElementById('dclose').addEventListener('click',closeDrawer);
+document.getElementById('sbtn').addEventListener('click',()=>{F.min=parseInt(document.getElementById('mnp').value)||null;F.max=parseInt(document.getElementById('mxp').value)||null;load();});
+document.getElementById('sort').addEventListener('change',()=>{if(all.length)sortRender();});
+document.getElementById('rc').addEventListener('click',e=>{if(!e.target.matches('.chip'))return;document.getElementById('rc').querySelectorAll('.chip').forEach(x=>x.classList.remove('on'));e.target.classList.add('on');F.rooms=e.target.dataset.value;if(all.length)apply();});
+document.getElementById('hc').addEventListener('click',e=>{if(!e.target.matches('.chip'))return;document.getElementById('hc').querySelectorAll('.chip').forEach(x=>x.classList.remove('on'));e.target.classList.add('on');F.heating=e.target.dataset.value;if(all.length)apply();});
+document.querySelectorAll('#dc .chip, #qc .chip').forEach(b=>{}); // handled by buildD/buildQ
+document.querySelectorAll('.panel .tog').forEach(t=>t.addEventListener('click',()=>{t.classList.toggle('on');const f=t.dataset.feat;if(F.features.includes(f))F.features=F.features.filter(x=>x!==f);else F.features.push(f);if(all.length)apply();}));
+document.getElementById('vl').addEventListener('click',()=>{document.getElementById('vl').classList.add('on');document.getElementById('vm').classList.remove('on');document.getElementById('mapv').style.display='none';document.getElementById('listv').style.display='flex';});
+document.getElementById('vm').addEventListener('click',()=>{document.getElementById('vm').classList.add('on');document.getElementById('vl').classList.remove('on');if(filtered.length)renderMap(filtered);});
+
+// MOBILE FILTER SHEET
+function openFsheet(){document.getElementById('fsheet').classList.add('open');document.body.style.overflow='hidden';}
+function closeFsheet(){document.getElementById('fsheet').classList.remove('open');document.body.style.overflow='';}
+document.getElementById('mob-filter-btn').addEventListener('click',openFsheet);
+document.getElementById('mnb-filter').addEventListener('click',openFsheet);
+document.getElementById('fsheet-close').addEventListener('click',closeFsheet);
+document.getElementById('fsheet-ov').addEventListener('click',closeFsheet);
+
+// Sync mobile chip groups with F state
+function syncMobChips(cid, field, val){
+  document.querySelectorAll('#'+cid+' .chip').forEach(x=>x.classList.remove('on'));
+  const found=document.querySelector('#'+cid+' .chip[data-value="'+val+'"]');
+  if(found)found.classList.add('on');
+}
+document.getElementById('rc-m').addEventListener('click',e=>{
+  if(!e.target.matches('.chip'))return;
+  document.getElementById('rc-m').querySelectorAll('.chip').forEach(x=>x.classList.remove('on'));
+  e.target.classList.add('on');F.rooms=e.target.dataset.value;
+  syncMobChips('rc',null,F.rooms);
+});
+document.getElementById('hc-m').addEventListener('click',e=>{
+  if(!e.target.matches('.chip'))return;
+  document.getElementById('hc-m').querySelectorAll('.chip').forEach(x=>x.classList.remove('on'));
+  e.target.classList.add('on');F.heating=e.target.dataset.value;
+  syncMobChips('hc',null,F.heating);
+});
+document.querySelectorAll('#togs-m .tog').forEach(t=>t.addEventListener('click',()=>{
+  t.classList.toggle('on');
+  const f=t.dataset.feat;
+  if(F.features.includes(f))F.features=F.features.filter(x=>x!==f);else F.features.push(f);
+  // sync desktop
+  document.querySelector('.panel .tog[data-feat="'+f+'"]')?.classList.toggle('on',F.features.includes(f));
+  updateMobFilterCount();
+}));
+
+function updateMobFilterCount(){
+  const cnt=[F.district,F.quarter,F.rooms,F.heating].filter(Boolean).length + F.features.length;
+  const el=document.getElementById('mob-filter-count');
+  el.textContent=cnt?cnt+' filtre aktif':'';
+}
+
+document.getElementById('fsheet-apply').addEventListener('click',()=>{
+  F.min=parseInt(document.getElementById('mnp-m').value)||null;
+  F.max=parseInt(document.getElementById('mxp-m').value)||null;
+  closeFsheet();
+  load();
+  updateMobFilterCount();
+});
+document.getElementById('mob-go-btn').addEventListener('click',()=>{
+  F.min=parseInt(document.getElementById('mnp-m').value)||null;
+  F.max=parseInt(document.getElementById('mxp-m').value)||null;
+  load();
+});
+
+// MOBILE NAV BAR
+document.getElementById('mnb-list').addEventListener('click',()=>{
+  ['mnb-list','mnb-map','mnb-filter'].forEach(id=>document.getElementById(id).classList.remove('on'));
+  document.getElementById('mnb-list').classList.add('on');
+  document.getElementById('vl').click();
+});
+document.getElementById('mnb-map').addEventListener('click',()=>{
+  ['mnb-list','mnb-map','mnb-filter'].forEach(id=>document.getElementById(id).classList.remove('on'));
+  document.getElementById('mnb-map').classList.add('on');
+  document.getElementById('vm').click();
+});
+
+// Mobile district & quarter chips
+function buildD_m(){
+  const ds=[...new Set(all.map(l=>l.district).filter(Boolean))].sort();
+  const cm=document.getElementById('dc-m');
+  cm.innerHTML='<button class="chip on" data-value="">Tümü</button>';
+  ds.forEach(d=>{const b=document.createElement('button');b.className='chip';b.dataset.value=d;b.textContent=d;cm.appendChild(b);});
+  cm.querySelectorAll('.chip').forEach(b=>b.addEventListener('click',()=>{cm.querySelectorAll('.chip').forEach(x=>x.classList.remove('on'));b.classList.add('on');F.district=b.dataset.value;F.quarter='';buildQ_m();updateMobFilterCount();}));
+}
+function buildQ_m(){
+  const src=F.district?all.filter(l=>l.district===F.district):all;
+  const qs=[...new Set(src.map(l=>l.quarter).filter(Boolean))].sort();
+  const cm=document.getElementById('qc-m');
+  cm.innerHTML='<button class="chip on" data-value="">Tümü</button>';
+  qs.forEach(q=>{const b=document.createElement('button');b.className='chip';b.dataset.value=q;b.textContent=q;cm.appendChild(b);});
+  cm.querySelectorAll('.chip').forEach(b=>b.addEventListener('click',()=>{cm.querySelectorAll('.chip').forEach(x=>x.classList.remove('on'));b.classList.add('on');F.quarter=b.dataset.value;updateMobFilterCount();}));
+}
+
+// SWIPE TO CLOSE DRAWER on mobile
+(function(){
+  let sy=0;
+  document.getElementById('drawer').addEventListener('touchstart',e=>{sy=e.touches[0].clientY;},{passive:true});
+  document.getElementById('drawer').addEventListener('touchend',e=>{
+    const dy=e.changedTouches[0].clientY-sy;
+    if(dy>80&&document.getElementById('drawer').scrollTop<=0)closeDrawer();
+  },{passive:true});
+})();
 
 document.getElementById('v-district').addEventListener('change', function() {
   populateValQuarters(this.value);
