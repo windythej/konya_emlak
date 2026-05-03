@@ -8,6 +8,7 @@
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/valuation.css">
 </head>
 <body>
 
@@ -183,220 +184,7 @@
 
 <!-- DEĞERLEME SAYFASI -->
 <div id="page-val" style="display:none;">
-<div class="val-wrap">
-  <div class="val-card">
-
-    <div class="val-header">
-      <div class="val-icon">◎</div>
-      <div>
-        <div class="val-title">Piyasa Değerleme</div>
-        <div class="val-sub">Evinizin bilgilerini girin, Konya piyasasına göre tahmini değer öğrenin</div>
-      </div>
-    </div>
-
-    <!-- ADIM 1: KONUM -->
-    <div class="vstep" id="vstep-1">
-      <div class="vstep-label">1 / 4 — Konum</div>
-      <div class="vfg">
-        <label class="vfl">İlçe</label>
-        <select class="vsel" id="v-district">
-          <option value="">İlçe seçin...</option>
-          <option value="Selçuklu">Selçuklu</option>
-          <option value="Meram">Meram</option>
-          <option value="Karatay">Karatay</option>
-          <option value="Akşehir">Akşehir</option>
-          <option value="Beyşehir">Beyşehir</option>
-          <option value="Cihanbeyli">Cihanbeyli</option>
-          <option value="Çumra">Çumra</option>
-          <option value="Ereğli">Ereğli</option>
-          <option value="Ilgın">Ilgın</option>
-          <option value="Kadınhanı">Kadınhanı</option>
-          <option value="Kulu">Kulu</option>
-          <option value="Sarayönü">Sarayönü</option>
-          <option value="Seydişehir">Seydişehir</option>
-          <option value="Yunak">Yunak</option>
-          <option value="Ahırlı">Ahırlı</option>
-          <option value="Akören">Akören</option>
-          <option value="Altınekin">Altınekin</option>
-          <option value="Bozkır">Bozkır</option>
-          <option value="Derbent">Derbent</option>
-          <option value="Derebucak">Derebucak</option>
-          <option value="Doğanhisar">Doğanhisar</option>
-          <option value="Emirgazi">Emirgazi</option>
-          <option value="Güneysınır">Güneysınır</option>
-          <option value="Hadim">Hadim</option>
-          <option value="Halkapınar">Halkapınar</option>
-          <option value="Hüyük">Hüyük</option>
-          <option value="Korkuteli">Korkuteli</option>
-          <option value="Taşkent">Taşkent</option>
-          <option value="Tuzlukçu">Tuzlukçu</option>
-          <option value="Yalıhüyük">Yalıhüyük</option>
-          <option value="Çeltik">Çeltik</option>
-        </select>
-      </div>
-      <div class="vfg">
-        <label class="vfl">Mahalle / Semt</label>
-        <select class="vsel" id="v-quarter">
-          <option value="">Önce ilçe seçin</option>
-        </select>
-      </div>
-      <button class="vstep-next" onclick="vstepNext(2)">Devam →</button>
-    </div>
-
-    <!-- ADIM 2: EV BİLGİLERİ -->
-    <div class="vstep" id="vstep-2" style="display:none;">
-      <div class="vstep-label">2 / 4 — Ev Bilgileri</div>
-      <div class="vfg">
-        <label class="vfl">Oda Sayısı</label>
-        <div class="vchips" id="v-rooms-chips">
-          <button class="vchip" data-value="1+1">1+1</button>
-          <button class="vchip" data-value="2+1">2+1</button>
-          <button class="vchip" data-value="3+1">3+1</button>
-          <button class="vchip" data-value="4+1">4+1</button>
-          <button class="vchip" data-value="5+1">5+1</button>
-          <button class="vchip" data-value="6+1">6+1</button>
-        </div>
-      </div>
-      <div class="vrow2">
-        <div class="vfg">
-          <label class="vfl">Net m²</label>
-          <input type="number" class="vinput" id="v-m2" placeholder="örn. 120" min="20" max="2000">
-        </div>
-        <div class="vfg">
-          <label class="vfl">Bina Yaşı</label>
-          <input type="number" class="vinput" id="v-age" placeholder="örn. 10" min="0" max="100">
-        </div>
-      </div>
-      <div class="vfg">
-        <label class="vfl">Isıtma Tipi</label>
-        <div class="vchips" id="v-heat-chips">
-          <button class="vchip" data-value="Kombi">Kombi</button>
-          <button class="vchip" data-value="Merkezi">Merkezi</button>
-          <button class="vchip" data-value="Yerden">Yerden Isıtma</button>
-          <button class="vchip" data-value="Soba">Soba</button>
-        </div>
-      </div>
-      <div style="display:flex;gap:10px;">
-        <button class="vstep-back" onclick="vstepNext(1)">← Geri</button>
-        <button class="vstep-next" style="flex:1;" onclick="vstepNext(3)">Devam →</button>
-      </div>
-    </div>
-
-    <!-- ADIM 3: ÖZELLİKLER -->
-    <div class="vstep" id="vstep-3" style="display:none;">
-      <div class="vstep-label">3 / 4 — Özellikler</div>
-      <div class="vfg">
-        <label class="vfl">Mevcut Özellikler</label>
-        <div class="vtogs">
-          <div class="vtog" data-feat="Ebeveyn Banyosu"><span>Ebeveyn Banyosu</span><div class="vtdot"></div></div>
-          <div class="vtog" data-feat="balcony"><span>Balkon</span><div class="vtdot"></div></div>
-          <div class="vtog" data-feat="elevator"><span>Asansör</span><div class="vtdot"></div></div>
-          <div class="vtog" data-feat="parking"><span>Otopark</span><div class="vtdot"></div></div>
-          <div class="vtog" data-feat="inComplex"><span>Site İçi</span><div class="vtdot"></div></div>
-          <div class="vtog" data-feat="Jakuzi"><span>Jakuzi</span><div class="vtdot"></div></div>
-          <div class="vtog" data-feat="Ankastre Fırın"><span>Ankastre Fırın</span><div class="vtdot"></div></div>
-          <div class="vtog" data-feat="24 Saat Güvenlik"><span>24 Saat Güvenlik</span><div class="vtdot"></div></div>
-        </div>
-      </div>
-      <div style="display:flex;gap:10px;">
-        <button class="vstep-back" onclick="vstepNext(2)">← Geri</button>
-        <button class="vstep-next" style="flex:1;" onclick="vstepNext(4)">Devam →</button>
-      </div>
-    </div>
-
-    <!-- ADIM 4: SMS DOĞRULAMA -->
-    <div class="vstep" id="vstep-4" style="display:none;">
-      <div class="vstep-label">4 / 4 — Raporu Görüntüle</div>
-      <div class="sms-box">
-        <div class="sms-icon">📱</div>
-        <div class="sms-title">Raporunuz Hazır!</div>
-        <div class="sms-sub">Fiyat analizini görmek için telefon numaranızı doğrulayın</div>
-      </div>
-      <div id="sms-tel-step">
-        <div class="vfg">
-          <label class="vfl">Telefon Numarası</label>
-          <input type="tel" class="vinput" id="v-tel" placeholder="05xx xxx xx xx" maxlength="11">
-        </div>
-        <div style="display:flex;gap:10px;">
-          <button class="vstep-back" onclick="vstepNext(3)">← Geri</button>
-          <button class="vstep-next" style="flex:1;" id="sms-send-btn" onclick="smsSend()">KOD GÖNDER</button>
-        </div>
-      </div>
-      <div id="sms-code-step" style="display:none;">
-        <div class="vfg">
-          <label class="vfl">Doğrulama Kodu</label>
-          <input type="number" class="vinput sms-code-input" id="v-code" placeholder="0000" maxlength="4">
-          <div class="sms-hint">Numaranıza gönderilen 4 haneli kodu girin</div>
-        </div>
-        <button class="vstep-next" id="sms-verify-btn" onclick="smsVerify()">RAPORU GÖRÜNTÜLE</button>
-        <button class="sms-resend" onclick="smsResend()">Tekrar gönder</button>
-      </div>
-    </div>
-
-    <!-- SONUÇ -->
-    <div id="v-result" style="display:none;">
-      <div class="vres-source">📊 VERİ KAYNAĞI: SAHİBİNDEN</div>
-      <div class="vres-row">
-        <span class="vres-label">Eşleşen İlan</span>
-        <span class="vres-val" id="vr-count">—</span>
-      </div>
-      <div class="vres-row">
-        <span class="vres-label">Piyasa Ortalaması</span>
-        <span class="vres-val" id="vr-avg">—</span>
-      </div>
-      <div class="vres-row">
-        <span class="vres-label">Ortalama m² Fiyatı</span>
-        <span class="vres-val" id="vr-m2">—</span>
-      </div>
-      <div class="vres-main">
-        <div class="vres-main-label">TAHMİNİ PİYASA DEĞERİ</div>
-        <div class="vres-main-val" id="vr-est">—</div>
-        <div class="vres-main-note" id="vr-note"></div>
-      </div>
-      <div class="vres-row">
-        <span class="vres-label">Gerçek Satış Fiyatı</span>
-        <span class="vres-val vres-green" id="vr-real">—</span>
-      </div>
-      <div class="vres-range" id="vr-range"></div>
-      <div class="vres-footer">
-        * Mahalle, oda sayısı ve m² verileri Konya 2026 piyasa ilanlarına göre analiz edilmiştir.<br>
-        * Tahmini değer, benzer ilanların istatistiksel ortalamasına dayanmaktadır. Gerçek satış fiyatı piyasa koşullarına göre <strong style="color:var(--gold)">±%15 farklılık</strong> gösterebilir.
-      </div>
-
-      <!-- AI ANALİZİ -->
-      <div id="vr-ai" class="vr-ai-box" style="display:none;">
-        <div class="vr-ai-header">
-          <span class="vr-ai-badge">▲ AI ANALİZİ · CLAUDE</span>
-        </div>
-        <p id="vr-ai-text" class="vr-ai-text"></p>
-      </div>
-
-      <!-- BENZER İLANLAR -->
-      <div class="vr-similar-box">
-        <div class="vr-similar-title">BENZER İLANLAR</div>
-        <table class="vr-table">
-          <thead>
-            <tr>
-              <th>Konum</th>
-              <th>Alan</th>
-              <th>Yaş</th>
-              <th>Fiyat</th>
-            </tr>
-          </thead>
-          <tbody id="vr-similar"></tbody>
-        </table>
-      </div>
-
-      <button class="vbtn" style="margin-top:16px;" onclick="valReset()">Yeni Değerleme</button>
-    </div>
-
-    <div id="v-empty" class="v-empty-msg" style="display:none;">
-      Bu kriterlere uyan yeterli ilan bulunamadı. Daha geniş bir bölge veya farklı oda sayısı deneyin.
-      <br><button class="vstep-back" style="margin-top:12px;width:auto;padding:8px 20px;" onclick="valReset()">Tekrar Dene</button>
-    </div>
-
-  </div>
-</div>
+<div id="val-content"></div>
 </div>
 
 <div class="wrap" id="main-wrap">
@@ -494,6 +282,7 @@
 </div>
 
 <script src="js/main.js"></script>
+<script src="js/valuation.js"></script>
 </div><!-- /site-content -->
 <!-- GİZLİ ADMİN BUTONU -->
 <a href="/admin" style="position:fixed;bottom:20px;right:20px;width:36px;height:36px;background:var(--d2);border:1px solid var(--bd);border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--txd);font-size:14px;text-decoration:none;z-index:999;transition:all .3s;opacity:0.3;" onmouseover="this.style.opacity='1';this.style.borderColor='var(--gold)';this.style.color='var(--gold)'" onmouseout="this.style.opacity='0.3';this.style.borderColor='var(--bd)';this.style.color='var(--txd)'">⚙</a>

@@ -713,6 +713,11 @@ function switchTab(tab) {
   document.getElementById('main-wrap').style.display = isVal ? 'none' : 'block';
   const ms = document.getElementById('mob-search');
   if(ms) ms.style.display = isVal ? 'none' : 'block';
+  if (isVal) {
+    setTimeout(() => {
+      if (typeof initValuation === 'function') initValuation();
+    }, 50);
+  }
 }
 document.getElementById('tab-list').addEventListener('click', () => switchTab('list'));
 document.getElementById('tab-val').addEventListener('click', () => {
