@@ -693,11 +693,233 @@ body { -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; 
   background: linear-gradient(90deg, transparent, var(--gold), var(--gold-l), var(--gold), transparent);
   margin-bottom: -1px;
 }
+
+/* ════════════════════════════════════════
+   RENK PALETİ — ALTIN + AMBER GRADİYAN
+════════════════════════════════════════ */
+:root {
+  --g1: #C9A84C;   /* altın */
+  --g2: #E8A020;   /* amber */
+  --g3: #F5C842;   /* sarı altın */
+  --grad: linear-gradient(135deg, var(--g1) 0%, var(--g2) 50%, var(--g3) 100%);
+  --grad-text: linear-gradient(135deg, #C9A84C 0%, #E8A020 40%, #F5C842 100%);
+}
+
+/* Altın renkleri grad ile değiştir */
+.btn-g, .pc.pop .pc-btn, .abtn, .pay-btn,
+.vre-advisor-btn, .gs-step-item.active,
+.pop-lbl, .gs-prog-step.done .gs-prog-num,
+.gs-prog-step.active .gs-prog-num {
+  background: var(--grad) !important;
+}
+.btn-g:hover { filter: brightness(1.12); }
+
+/* Grad text: başlıklar ve değerler */
+.hero-h1 em, .cta-title em, .sec-title em {
+  background: var(--grad-text);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: gradShift 4s linear infinite;
+}
+@keyframes gradShift {
+  0%   { background-position: 0% center; }
+  100% { background-position: 200% center; }
+}
+
+/* KPI değerleri */
+.hst-val, .sg-v, .stat-kpi-val, .vre-price-big,
+.pc-price, .adv-stat-val, .gs-kpi-val {
+  background: var(--grad-text);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ════════════════════════════════════════
+   SCROLL ANİMASYONLARI — YÖNLÜ GELİŞ
+════════════════════════════════════════ */
+/* Sola kayarak gelen */
+.rv.from-left  { transform: translateX(-50px); }
+/* Sağdan gelen */
+.rv.from-right { transform: translateX(50px); }
+/* Aşağıdan yukarı (default .rv) */
+.rv            { opacity: 0; transform: translateY(36px);
+                 transition: opacity .7s cubic-bezier(.4,0,.2,1),
+                             transform .7s cubic-bezier(.4,0,.2,1); }
+.rv.vis        { opacity: 1; transform: translate(0,0) !important; }
+
+/* Çıkış animasyonu (scroll edilince kaybolsun) */
+.rv-exit { transition: opacity .5s ease, transform .5s ease; }
+.rv-exit.exiting { opacity: 0; transform: translateY(20px); }
+
+/* ════════════════════════════════════════
+   STAT KPI KARTLARI
+════════════════════════════════════════ */
+.stat-kpi-card {
+  background: var(--d2);
+  border: 1px solid var(--bd);
+  border-radius: var(--r);
+  padding: 28px 24px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  cursor: default;
+  transition: all .35s cubic-bezier(.4,0,.2,1);
+}
+.stat-kpi-card::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(135deg,
+    rgba(201,168,76,.0) 0%,
+    rgba(232,160,32,.06) 50%,
+    rgba(245,200,66,.0) 100%);
+  opacity: 0;
+  transition: opacity .35s;
+}
+.stat-kpi-card::after {
+  content: '';
+  position: absolute; bottom: 0; left: 0; right: 0;
+  height: 2px;
+  background: var(--grad);
+  transform: scaleX(0);
+  transition: transform .4s ease;
+}
+.stat-kpi-card:hover { border-color: rgba(201,168,76,.35); transform: translateY(-5px); box-shadow: 0 20px 50px rgba(0,0,0,.4); }
+.stat-kpi-card:hover::before { opacity: 1; }
+.stat-kpi-card:hover::after  { transform: scaleX(1); }
+
+.stat-free {
+  border-color: rgba(201,168,76,.25);
+  background: linear-gradient(145deg, rgba(201,168,76,.06), var(--d2));
+}
+.stat-free:hover { border-color: rgba(232,160,32,.5) !important; }
+
+.stat-kpi-icon { font-size: 28px; margin-bottom: 12px; }
+.stat-kpi-val  {
+  font-family: var(--serif);
+  font-size: 46px; font-weight: 700;
+  line-height: 1; margin-bottom: 8px;
+  display: block;
+}
+.stat-kpi-lbl  {
+  font-size: 11px; color: var(--txm);
+  letter-spacing: 1.5px; text-transform: uppercase;
+}
+.stat-kpi-badge {
+  margin-top: 12px;
+  display: inline-block;
+  padding: 5px 14px;
+  background: var(--grad);
+  border-radius: 100px;
+  font-size: 11px; font-weight: 700;
+  color: var(--dark);
+  letter-spacing: .5px;
+}
+
+/* ════════════════════════════════════════
+   İLÇE KARTLARI — GELİŞMİŞ
+════════════════════════════════════════ */
+.dc-chip {
+  transition: all .28s cubic-bezier(.4,0,.2,1);
+  position: relative;
+}
+.dc-chip::after {
+  content: '';
+  position: absolute; bottom: 0; left: 0; right: 0;
+  height: 2px;
+  background: var(--grad);
+  transform: scaleX(0);
+  transition: transform .3s;
+}
+.dc-chip:hover::after { transform: scaleX(1); }
+.dc-chip:hover {
+  border-color: rgba(232,160,32,.4) !important;
+  background: var(--d4) !important;
+  transform: translateY(-3px);
+  box-shadow: 0 8px 24px rgba(0,0,0,.4);
+}
+
+/* ════════════════════════════════════════
+   PARALAKS FLOAT ELEMENTLER
+════════════════════════════════════════ */
+.float-orb {
+  position: fixed;
+  pointer-events: none;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: .04;
+  animation: floatMove 15s ease-in-out infinite;
+  z-index: 0;
+}
+.float-orb-1 {
+  width: 500px; height: 500px;
+  background: radial-gradient(circle, #C9A84C, #E8A020);
+  top: -200px; right: -100px;
+  animation-duration: 12s;
+}
+.float-orb-2 {
+  width: 400px; height: 400px;
+  background: radial-gradient(circle, #E8A020, #F5C842);
+  bottom: 20%; left: -150px;
+  animation-duration: 18s;
+  animation-delay: -6s;
+}
+@keyframes floatMove {
+  0%,100% { transform: translate(0,0) scale(1); }
+  33%      { transform: translate(30px,-40px) scale(1.05); }
+  66%      { transform: translate(-20px,30px) scale(.95); }
+}
+
+/* ════════════════════════════════════════
+   NAVİGASYON AKTİF İNDİKATÖR
+════════════════════════════════════════ */
+.nav-lnk.act {
+  background: rgba(201,168,76,.08);
+  color: var(--g2) !important;
+  position: relative;
+}
+.nav-lnk.act::after {
+  content: '';
+  position: absolute;
+  bottom: 2px; left: 30%; right: 30%;
+  height: 2px;
+  background: var(--grad);
+  border-radius: 2px;
+}
+
+/* ════════════════════════════════════════
+   MOBILE — ANA DÜZELTMELER
+════════════════════════════════════════ */
+@media(max-width:900px) {
+  .stat-band-grid { grid-template-columns: 1fr 1fr !important; }
+  .about-hero-wrap { padding: 60px 20px 50px !important; }
+  .about-deco-letter { font-size: 120px !important; right: 0 !important; opacity: .4; }
+  .gs-grid { grid-template-columns: 1fr !important; }
+  #gs-panel { position: static !important; }
+  .gs-card { margin-bottom: 24px; }
+}
+@media(max-width:600px) {
+  .stat-band-grid { grid-template-columns: 1fr 1fr !important; gap: 12px !important; }
+  .stat-kpi-val { font-size: 36px !important; }
+  .nav { padding: 0 16px !important; height: 60px !important; }
+  .sec { padding: 60px 20px !important; }
+  .hero { padding: 100px 16px 70px !important; }
+  .adv-grid { grid-template-columns: 1fr !important; padding: 0 16px 40px !important; }
+  .pay-g { grid-template-columns: 1fr !important; }
+  .analiz-card[style*="grid-column"] { grid-column: auto !important; }
+  #analiz-kpi { grid-template-columns: 1fr 1fr !important; }
+}
+
 </style>
 </head>
 <body>
 
 <!-- LOADER -->
+<div class="float-orb float-orb-1"></div>
+<div class="float-orb float-orb-2"></div>
 <div id="page-loader">
   <div class="ldr-brand">Öğren-Sat</div>
   <div class="ldr-track"><div class="ldr-bar"></div></div>
@@ -794,7 +1016,7 @@ body { -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; 
       <div class="hst-div"></div>
       <div><div class="hst-val">3</div><div class="hst-lbl">Ücretsiz Sorgu</div></div>
       <div class="hst-div"></div>
-      <div><div class="hst-val">12</div><div class="hst-lbl">İlçe</div></div>
+      <div><div class="hst-val" id="hero-ilce-cnt">31</div><div class="hst-lbl">İlçe</div></div>
       <div class="hst-div"></div>
       <div><div class="hst-val">%94</div><div class="hst-lbl">Doğruluk Oranı</div></div>
     </div>
@@ -808,14 +1030,14 @@ body { -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; 
     <h2 class="sec-title rv">İki araç, tam bir analiz</h2>
     <p class="sec-sub rv d1">Evinizin değerini öğrenin veya bölgedeki tüm piyasayı inceleyin. Yapay zeka destekli, güncel verilerle.</p>
     <div class="tools-g">
-      <div class="tc rv" onclick="goPage('valuation')">
+      <div class="tc rv from-left" onclick="goPage('valuation')">
         <div class="tc-badge">3 Ücretsiz</div>
         <div class="tc-icon">◎</div>
         <div class="tc-title">Değerleme Aracı</div>
         <div class="tc-desc">Adres ve özelliklerinizi girin, yapay zeka Konya piyasasındaki gerçek verilerden evinizin tahmini değerini hesaplasın. Kira getirisi ve yatırım skoru dahil.</div>
         <div class="tc-cta">Değerleme Yap →</div>
       </div>
-      <div class="tc rv d1" onclick="goPage('comparison')">
+      <div class="tc rv d1 from-right" onclick="goPage('comparison')">
         <div class="tc-icon">⊞</div>
         <div class="tc-title">Piyasa Karşılaştırma</div>
         <div class="tc-desc">İlçe, mahalle, oda sayısı ve onlarca filtreyle Konya'daki mevcut ilanları karşılaştırın. Harita görünümü ve detaylı ilan incelemesi.</div>
@@ -870,96 +1092,376 @@ body { -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; 
 
 <!-- ── RAKAMLAR BANDI ── -->
 <div style="background:var(--d2);border-top:1px solid var(--bd);border-bottom:1px solid var(--bd);">
-  <div style="max-width:1300px;margin:0 auto;padding:44px 48px;display:grid;grid-template-columns:repeat(4,1fr);gap:24px;text-align:center;" class="stat-band-grid">
-    <div>
-      <div style="font-family:var(--serif);font-size:42px;font-weight:700;color:var(--gold);line-height:1;" id="stat-ilan-cnt">123+</div>
-      <div style="font-size:12px;color:var(--txm);letter-spacing:1.5px;text-transform:uppercase;margin-top:8px;">Analiz Edilen İlan</div>
+  <div style="max-width:1300px;margin:0 auto;padding:44px 48px;display:grid;grid-template-columns:repeat(4,1fr);gap:20px;" class="stat-band-grid">
+    <div class="stat-kpi-card rv">
+      <div class="stat-kpi-icon">📊</div>
+      <div class="stat-kpi-val counter-anim" data-target="123" data-suffix="+">123+</div>
+      <div class="stat-kpi-lbl">Analiz Edilen İlan</div>
     </div>
-    <div>
-      <div style="font-family:var(--serif);font-size:42px;font-weight:700;color:var(--gold);line-height:1;">31</div>
-      <div style="font-size:12px;color:var(--txm);letter-spacing:1.5px;text-transform:uppercase;margin-top:8px;">Konya İlçesi</div>
+    <div class="stat-kpi-card rv d1">
+      <div class="stat-kpi-icon">📍</div>
+      <div class="stat-kpi-val counter-anim" data-target="31" data-suffix="">31</div>
+      <div class="stat-kpi-lbl">Konya İlçesi</div>
     </div>
-    <div>
-      <div style="font-family:var(--serif);font-size:42px;font-weight:700;color:var(--gold);line-height:1;">%94</div>
-      <div style="font-size:12px;color:var(--txm);letter-spacing:1.5px;text-transform:uppercase;margin-top:8px;">Doğruluk Oranı</div>
+    <div class="stat-kpi-card rv d2">
+      <div class="stat-kpi-icon">🎯</div>
+      <div class="stat-kpi-val">%94</div>
+      <div class="stat-kpi-lbl">Doğruluk Oranı</div>
     </div>
-    <div>
-      <div style="font-family:var(--serif);font-size:42px;font-weight:700;color:var(--gold);line-height:1;">3</div>
-      <div style="font-size:12px;color:var(--txm);letter-spacing:1.5px;text-transform:uppercase;margin-top:8px;">Ücretsiz Sorgu Hakkı</div>
+    <div class="stat-kpi-card rv d3 stat-free" onclick="goPage('valuation')" style="cursor:pointer;">
+      <div class="stat-kpi-icon">🎁</div>
+      <div class="stat-kpi-val counter-anim" data-target="3" data-suffix="">3</div>
+      <div class="stat-kpi-lbl">Ücretsiz Sorgu Hakkı</div>
+      <div class="stat-kpi-badge">Hemen Dene →</div>
     </div>
   </div>
 </div>
 
-<!-- ── GÜVENLE SAT ── -->
-<section class="sec" style="background:var(--d2);border-bottom:1px solid var(--bd);">
+<!-- ── GÜVENLE SAT — İNTERAKTİF AKIŞ ── -->
+<section class="sec" id="guvenle-sat-sec" style="background:var(--d2);border-bottom:1px solid var(--bd);padding-top:80px;padding-bottom:80px;">
   <div class="sec-in">
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center;" class="guvenle-sat-grid">
 
-      <!-- Sol: metin -->
+    <!-- Başlık -->
+    <div style="margin-bottom:52px;">
+      <div class="ey">Gayrimenkulünüzü Güvenle Satın</div>
+      <h2 class="sec-title rv from-left" style="margin-bottom:14px;">Zamandan kazanın,<br>stresten kurtulun, <em style="color:var(--gold);font-style:italic;">kazançlı çıkın.</em></h2>
+      <p style="font-size:15px;color:var(--txm);max-width:560px;line-height:1.75;">
+        Gayrimenkul satmak önemli ve stresli bir süreç. Öğren-Sat ile veriyi yanınıza alarak bu süreci daha kolay ve güvenli tamamlayın.
+      </p>
+    </div>
+
+    <!-- 2 kolon: Sol dinamik panel + Sağ sabit adım listesi -->
+    <div style="display:grid;grid-template-columns:420px 1fr;gap:40px;align-items:start;" class="gs-grid">
+
+      <!-- SOL: Dinamik Panel -->
+      <div id="gs-panel" style="position:sticky;top:90px;">
+
+        <!-- PANEL 1: Başlangıç -->
+        <div class="gs-pane active" id="gs-pane-1">
+          <div class="gs-card">
+            <div style="text-align:center;padding:32px 24px;">
+              <div style="font-size:48px;margin-bottom:16px;">🏠</div>
+              <div style="font-family:var(--serif);font-size:22px;font-weight:700;color:var(--tx);margin-bottom:10px;">Mülkünüzü Değerlendirin</div>
+              <p style="font-size:14px;color:var(--txm);line-height:1.7;margin-bottom:28px;">Konya'da mülkünüzü satmayı düşünüyor musunuz? Gerçek piyasa değerini saniyeler içinde öğrenin.</p>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:24px;">
+                <div style="background:rgba(201,168,76,.06);border:1px solid rgba(201,168,76,.15);border-radius:var(--rs);padding:14px;text-align:center;">
+                  <div style="font-family:var(--serif);font-size:26px;font-weight:700;color:var(--gold);">123+</div>
+                  <div style="font-size:11px;color:var(--txm);margin-top:3px;">Aktif İlan</div>
+                </div>
+                <div style="background:rgba(201,168,76,.06);border:1px solid rgba(201,168,76,.15);border-radius:var(--rs);padding:14px;text-align:center;">
+                  <div style="font-family:var(--serif);font-size:26px;font-weight:700;color:var(--gold);">%94</div>
+                  <div style="font-size:11px;color:var(--txm);margin-top:3px;">Doğruluk Oranı</div>
+                </div>
+              </div>
+              <button class="btn-g" style="width:100%;justify-content:center;" onclick="gsNextStep(2)">Hemen Başla →</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- PANEL 2: Değerleme Sonucu -->
+        <div class="gs-pane" id="gs-pane-2">
+          <div class="gs-card">
+            <div style="padding:28px 24px;">
+              <div style="font-family:var(--serif);font-size:18px;font-weight:700;color:var(--tx);margin-bottom:4px;">Değerleme Sonucu</div>
+              <div style="font-size:12px;color:var(--txm);margin-bottom:22px;">Mülkünüzün tahmini değeri</div>
+              <!-- Örnek sonuç kartı -->
+              <div style="background:linear-gradient(145deg,#1a0808,#120505);border:1px solid rgba(201,168,76,.3);border-radius:var(--rs);padding:24px;text-align:center;margin-bottom:16px;">
+                <div style="font-size:32px;margin-bottom:10px;">🏠</div>
+                <div style="font-size:11px;color:var(--txm);letter-spacing:2px;text-transform:uppercase;margin-bottom:8px;">TAHMİNİ DEĞER</div>
+                <div style="font-family:var(--serif);font-size:38px;font-weight:700;color:var(--gold);margin-bottom:12px;">6.197.455 ₺</div>
+                <div style="height:3px;background:rgba(201,168,76,.15);border-radius:100px;overflow:hidden;margin-bottom:10px;">
+                  <div style="height:100%;width:95%;background:linear-gradient(90deg,var(--gold-d),var(--gold));border-radius:100px;"></div>
+                </div>
+                <div style="font-size:12px;color:var(--gold);">⊙ 95 Güven Puanı</div>
+              </div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px;">
+                <div style="background:var(--d3);border:1px solid var(--bd);border-radius:var(--rs);padding:14px;">
+                  <div style="font-size:11px;color:var(--txm);margin-bottom:5px;">↓ Min Değer</div>
+                  <div style="font-size:15px;font-weight:700;color:var(--tx);">5.453.760 ₺</div>
+                </div>
+                <div style="background:var(--d3);border:1px solid var(--bd);border-radius:var(--rs);padding:14px;">
+                  <div style="font-size:11px;color:var(--txm);margin-bottom:5px;">↑ Maks Değer</div>
+                  <div style="font-size:15px;font-weight:700;color:var(--tx);">6.941.150 ₺</div>
+                </div>
+              </div>
+              <button class="btn-g" style="width:100%;justify-content:center;" onclick="gsNextStep(3)">Danışman Bul →</button>
+              <button class="btn-o" style="width:100%;justify-content:center;margin-top:10px;" onclick="goPage('valuation')">Kendi Mülkümü Değerle</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- PANEL 3: Danışman Listesi -->
+        <div class="gs-pane" id="gs-pane-3">
+          <div class="gs-card">
+            <div style="padding:28px 24px;">
+              <div style="font-family:var(--serif);font-size:18px;font-weight:700;color:var(--tx);margin-bottom:4px;">En İyi Danışmanı Bulduk</div>
+              <div style="font-size:12px;color:var(--txm);margin-bottom:20px;">Bölgenizdeki en iyi danışmanlar</div>
+              <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:20px;">
+                <div class="gs-advisor-row">
+                  <div class="gs-advisor-av">AY</div>
+                  <div style="flex:1;">
+                    <div style="font-size:14px;font-weight:700;color:var(--tx);">Ahmet Yılmaz</div>
+                    <div style="font-size:12px;color:var(--txm);">📍 Selçuklu</div>
+                  </div>
+                  <div style="text-align:right;">
+                    <div style="font-size:12px;color:var(--gold);font-weight:700;">★ 4.9</div>
+                    <div style="font-size:11px;color:var(--txm);">47 satış</div>
+                  </div>
+                </div>
+                <div class="gs-advisor-row">
+                  <div class="gs-advisor-av">ZA</div>
+                  <div style="flex:1;">
+                    <div style="font-size:14px;font-weight:700;color:var(--tx);">Zeynep Arslan</div>
+                    <div style="font-size:12px;color:var(--txm);">📍 Selçuklu</div>
+                  </div>
+                  <div style="text-align:right;">
+                    <div style="font-size:12px;color:var(--gold);font-weight:700;">★ 4.9</div>
+                    <div style="font-size:11px;color:var(--txm);">52 satış</div>
+                  </div>
+                </div>
+                <div class="gs-advisor-row">
+                  <div class="gs-advisor-av">HY</div>
+                  <div style="flex:1;">
+                    <div style="font-size:14px;font-weight:700;color:var(--tx);">Hasan Yıldız</div>
+                    <div style="font-size:12px;color:var(--txm);">📍 Meram</div>
+                  </div>
+                  <div style="text-align:right;">
+                    <div style="font-size:12px;color:var(--gold);font-weight:700;">★ 4.7</div>
+                    <div style="font-size:11px;color:var(--txm);">41 satış</div>
+                  </div>
+                </div>
+              </div>
+              <button class="btn-g" style="width:100%;justify-content:center;" onclick="gsNextStep(4)">Danışmanla Eşleş →</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- PANEL 4: İşlem Tamam -->
+        <div class="gs-pane" id="gs-pane-4">
+          <div class="gs-card">
+            <div style="padding:32px 24px;text-align:center;">
+              <div style="width:72px;height:72px;border-radius:50%;background:linear-gradient(135deg,#1a4a1a,#2d7a2d);border:2px solid var(--ok);display:flex;align-items:center;justify-content:center;margin:0 auto 18px;font-size:32px;">✓</div>
+              <div style="font-family:var(--serif);font-size:24px;font-weight:700;color:var(--ok);margin-bottom:8px;">İşlem Tamam</div>
+              <div style="font-size:13px;color:var(--txm);margin-bottom:28px;">Danışmanınız en kısa sürede sizinle iletişime geçecek</div>
+              <div style="display:flex;flex-direction:column;gap:10px;text-align:left;margin-bottom:24px;">
+                <div style="background:var(--d3);border:1px solid var(--bd);border-radius:var(--rs);padding:14px;display:flex;gap:12px;align-items:center;">
+                  <span style="font-size:18px;">🏠</span>
+                  <div><div style="font-size:11px;color:var(--txm);letter-spacing:1px;text-transform:uppercase;">DEĞERLEMENİZ</div><div style="font-size:15px;font-weight:700;color:var(--gold);">6.197.455 ₺</div></div>
+                </div>
+                <div style="background:var(--d3);border:1px solid var(--bd);border-radius:var(--rs);padding:14px;display:flex;gap:12px;align-items:center;">
+                  <span style="font-size:18px;">👤</span>
+                  <div><div style="font-size:11px;color:var(--txm);letter-spacing:1px;text-transform:uppercase;">ATANAN DANIŞMAN</div><div style="font-size:15px;font-weight:700;color:var(--tx);">Ahmet Yılmaz</div></div>
+                </div>
+                <div style="background:var(--d3);border:1px solid var(--bd);border-radius:var(--rs);padding:14px;display:flex;gap:12px;align-items:center;">
+                  <span style="font-size:18px;">⏱</span>
+                  <div><div style="font-size:11px;color:var(--txm);letter-spacing:1px;text-transform:uppercase;">BEKLENEN İLETİŞİM</div><div style="font-size:15px;font-weight:700;color:var(--tx);">12 Saat İçinde</div></div>
+                </div>
+              </div>
+              <button class="btn-g" style="width:100%;justify-content:center;" onclick="goPage('valuation')">Kendi Mülkümü Değerle</button>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /gs-panel -->
+
+      <!-- SAĞ: Sabit Adım Listesi -->
       <div>
-        <div class="ey">Gayrimenkulünüzü Güvenle Satın</div>
-        <h2 class="sec-title rv" style="margin-bottom:18px;">Zamandan kazanın,<br>stresten kurtulun,<br><em style="color:var(--gold);font-style:italic;">kazançlı çıkın.</em></h2>
-        <p style="font-size:15px;color:var(--txm);line-height:1.8;margin-bottom:32px;">
-          Gayrimenkul satmak önemli ve stresli bir süreç. Öğren-Sat ile veriyi yanınıza alarak bu süreci daha kolay ve güvenli tamamlayın.
-        </p>
-
-        <!-- İki sütun karşılaştırma -->
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:32px;">
-          <div style="background:var(--d3);border:1px solid var(--bd);border-radius:var(--r);padding:20px;">
-            <div style="font-size:13px;font-weight:700;color:var(--txm);margin-bottom:14px;letter-spacing:.5px;">Geleneksel Yöntem</div>
-            <ul style="list-style:none;display:flex;flex-direction:column;gap:10px;">
-              <li style="font-size:13px;color:var(--txm);display:flex;align-items:flex-start;gap:8px;"><span style="color:var(--txd);flex-shrink:0;">✕</span>Fiyatı sezgiyle belirleme</li>
-              <li style="font-size:13px;color:var(--txm);display:flex;align-items:flex-start;gap:8px;"><span style="color:var(--txd);flex-shrink:0;">✕</span>Piyasa karşılaştırması yok</li>
-              <li style="font-size:13px;color:var(--txm);display:flex;align-items:flex-start;gap:8px;"><span style="color:var(--txd);flex-shrink:0;">✕</span>Uzun satış süresi</li>
-              <li style="font-size:13px;color:var(--txm);display:flex;align-items:flex-start;gap:8px;"><span style="color:var(--txd);flex-shrink:0;">✕</span>Değerinin altında satma riski</li>
-            </ul>
+        <!-- Progress bar -->
+        <div style="display:flex;align-items:center;gap:0;margin-bottom:36px;position:relative;" id="gs-progress-bar">
+          <div class="gs-prog-step active" id="gs-prog-1">
+            <div class="gs-prog-num">1</div>
+            <div class="gs-prog-line"></div>
           </div>
-          <div style="background:rgba(201,168,76,.06);border:1px solid rgba(201,168,76,.25);border-radius:var(--r);padding:20px;">
-            <div style="font-size:13px;font-weight:700;color:var(--gold);margin-bottom:14px;letter-spacing:.5px;">Öğren-Sat ile</div>
-            <ul style="list-style:none;display:flex;flex-direction:column;gap:10px;">
-              <li style="font-size:13px;color:var(--tx);display:flex;align-items:flex-start;gap:8px;"><span style="color:var(--ok);flex-shrink:0;">✓</span>Gerçek veriye dayalı fiyat</li>
-              <li style="font-size:13px;color:var(--tx);display:flex;align-items:flex-start;gap:8px;"><span style="color:var(--ok);flex-shrink:0;">✓</span>123+ ilan analizi</li>
-              <li style="font-size:13px;color:var(--tx);display:flex;align-items:flex-start;gap:8px;"><span style="color:var(--ok);flex-shrink:0;">✓</span>Uzman danışman desteği</li>
-              <li style="font-size:13px;color:var(--tx);display:flex;align-items:flex-start;gap:8px;"><span style="color:var(--ok);flex-shrink:0;">✓</span>Doğru fiyat, hızlı satış</li>
-            </ul>
+          <div class="gs-prog-step" id="gs-prog-2">
+            <div class="gs-prog-num">2</div>
+            <div class="gs-prog-line"></div>
+          </div>
+          <div class="gs-prog-step" id="gs-prog-3">
+            <div class="gs-prog-num">3</div>
+            <div class="gs-prog-line"></div>
+          </div>
+          <div class="gs-prog-step last" id="gs-prog-4">
+            <div class="gs-prog-num">4</div>
           </div>
         </div>
 
-        <div style="display:flex;gap:12px;flex-wrap:wrap;">
-          <button class="btn-g" onclick="goPage('valuation')">◎ Ücretsiz Değerleme Yap</button>
-          <button class="btn-o" onclick="goPage('advisor')">👤 Danışman Bul</button>
+        <!-- Adım Listesi -->
+        <div style="display:flex;flex-direction:column;gap:12px;">
+          <div class="gs-step-item active" id="gs-step-1" onclick="gsNextStep(1)" style="cursor:pointer;">
+            <div class="gs-step-icon">✎</div>
+            <div class="gs-step-body">
+              <div class="gs-step-title">1 — Gayrimenkulünüzün Özelliklerini Girin</div>
+              <div class="gs-step-desc">Gayrimenkulünüzün türünü, konumunu ve detaylı özelliklerini girin.</div>
+            </div>
+            <div class="gs-step-arrow">›</div>
+          </div>
+          <div class="gs-step-item" id="gs-step-2" onclick="gsNextStep(2)" style="cursor:pointer;">
+            <div class="gs-step-icon">⊙</div>
+            <div class="gs-step-body">
+              <div class="gs-step-title">2 — Değerini Öğrenin</div>
+              <div class="gs-step-desc">Öğren-Sat yapay zeka destekli değerleme modeli ile gerçek değerini saniyeler içinde öğrenin.</div>
+            </div>
+            <div class="gs-step-arrow">›</div>
+          </div>
+          <div class="gs-step-item" id="gs-step-3" onclick="gsNextStep(3)" style="cursor:pointer;">
+            <div class="gs-step-icon">👤</div>
+            <div class="gs-step-body">
+              <div class="gs-step-title">3 — En İyi Danışmanı Bulun</div>
+              <div class="gs-step-desc">Bölgenizdeki uzman danışmanları keşfedin ve mülkünüzü en iyi fiyata satın.</div>
+            </div>
+            <div class="gs-step-arrow">›</div>
+          </div>
+          <div class="gs-step-item" id="gs-step-4" onclick="gsNextStep(4)" style="cursor:pointer;">
+            <div class="gs-step-icon">✓</div>
+            <div class="gs-step-body">
+              <div class="gs-step-title">4 — Güvenle Satın</div>
+              <div class="gs-step-desc">Doğru fiyatla, doğru danışmanla mülkünüzü kısa sürede satın.</div>
+            </div>
+            <div class="gs-step-arrow">›</div>
+          </div>
         </div>
-      </div>
 
-      <!-- Sağ: süreç adımları -->
-      <div style="display:flex;flex-direction:column;gap:14px;">
-        <div style="font-size:11px;color:var(--gold);letter-spacing:3px;text-transform:uppercase;font-weight:700;margin-bottom:6px;">Satış Süreciniz</div>
-        <div style="display:flex;flex-direction:column;gap:0;position:relative;">
-          <!-- dikey çizgi -->
-          <div style="position:absolute;left:19px;top:40px;bottom:40px;width:1px;background:linear-gradient(to bottom,var(--gold),var(--bd));"></div>
-
-          <div style="display:flex;gap:16px;align-items:flex-start;padding:0 0 24px;">
-            <div style="width:40px;height:40px;border-radius:50%;background:var(--gold);display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-size:17px;font-weight:700;color:var(--dark);flex-shrink:0;z-index:1;">1</div>
-            <div style="padding-top:8px;"><div style="font-size:14px;font-weight:700;color:var(--tx);margin-bottom:4px;">Ücretsiz Değerleme</div><div style="font-size:13px;color:var(--txm);">Mülkünüzün gerçek piyasa değerini öğrenin.</div></div>
-          </div>
-          <div style="display:flex;gap:16px;align-items:flex-start;padding:0 0 24px;">
-            <div style="width:40px;height:40px;border-radius:50%;background:var(--d3);border:1px solid var(--gold);display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-size:17px;font-weight:700;color:var(--gold);flex-shrink:0;z-index:1;">2</div>
-            <div style="padding-top:8px;"><div style="font-size:14px;font-weight:700;color:var(--tx);margin-bottom:4px;">Piyasa Analizi</div><div style="font-size:13px;color:var(--txm);">Benzer ilanları karşılaştırın, rekabetçi fiyat belirleyin.</div></div>
-          </div>
-          <div style="display:flex;gap:16px;align-items:flex-start;padding:0 0 24px;">
-            <div style="width:40px;height:40px;border-radius:50%;background:var(--d3);border:1px solid var(--bd);display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-size:17px;font-weight:700;color:var(--txm);flex-shrink:0;z-index:1;">3</div>
-            <div style="padding-top:8px;"><div style="font-size:14px;font-weight:700;color:var(--tx);margin-bottom:4px;">Danışman Desteği</div><div style="font-size:13px;color:var(--txm);">Bölgenizdeki uzman danışmanla tanışın.</div></div>
-          </div>
-          <div style="display:flex;gap:16px;align-items:flex-start;">
-            <div style="width:40px;height:40px;border-radius:50%;background:var(--d3);border:1px solid var(--bd);display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-size:17px;font-weight:700;color:var(--txm);flex-shrink:0;z-index:1;">4</div>
-            <div style="padding-top:8px;"><div style="font-size:14px;font-weight:700;color:var(--tx);margin-bottom:4px;">Güvenle Sat</div><div style="font-size:13px;color:var(--txm);">Doğru fiyat, doğru alıcı, sorunsuz kapanış.</div></div>
-          </div>
+        <!-- Hemen Başla butonu -->
+        <div style="margin-top:32px;">
+          <button class="btn-g" style="width:100%;justify-content:center;padding:16px;" onclick="goPage('valuation')">◎ Hemen Başla</button>
         </div>
       </div>
 
     </div>
   </div>
 </section>
+
+<style>
+/* ── GÜVENLE SAT STİLLERİ ── */
+.gs-card {
+  background: var(--d3);
+  border: 1px solid var(--bd);
+  border-radius: var(--r);
+  overflow: hidden;
+  transition: border-color .3s;
+}
+.gs-pane { display: none; }
+.gs-pane.active { display: block; animation: gsFadeIn .4s ease; }
+@keyframes gsFadeIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Progress bar */
+.gs-prog-step {
+  display: flex;
+  align-items: center;
+  flex: 1;
+  position: relative;
+}
+.gs-prog-step.last { flex: 0; }
+.gs-prog-num {
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  background: var(--d3);
+  border: 2px solid var(--bd);
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--serif);
+  font-size: 15px; font-weight: 700;
+  color: var(--txm);
+  flex-shrink: 0;
+  transition: all .3s;
+  z-index: 1;
+}
+.gs-prog-step.active .gs-prog-num,
+.gs-prog-step.done .gs-prog-num {
+  background: var(--gold);
+  border-color: var(--gold);
+  color: var(--dark);
+}
+.gs-prog-line {
+  flex: 1;
+  height: 2px;
+  background: var(--bd);
+  margin: 0 2px;
+  transition: background .4s;
+  position: relative;
+  overflow: hidden;
+}
+.gs-prog-step.done .gs-prog-line { background: var(--gold); }
+.gs-prog-step.active .gs-prog-line {
+  background: linear-gradient(90deg, var(--gold) 0%, var(--bd) 100%);
+}
+
+/* Adım listesi */
+.gs-step-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 18px 20px;
+  background: var(--d3);
+  border: 1px solid var(--bd);
+  border-radius: var(--rs);
+  transition: all .25s;
+  user-select: none;
+}
+.gs-step-item:hover { border-color: var(--bdh); background: var(--d4); }
+.gs-step-item.active {
+  background: rgba(201,168,76,.07);
+  border-color: rgba(201,168,76,.35);
+}
+.gs-step-icon {
+  width: 40px; height: 40px;
+  border-radius: 10px;
+  background: var(--d4);
+  border: 1px solid var(--bd);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 17px; flex-shrink: 0;
+  transition: all .25s;
+}
+.gs-step-item.active .gs-step-icon {
+  background: rgba(201,168,76,.15);
+  border-color: var(--gold);
+}
+.gs-step-item.done .gs-step-icon {
+  background: rgba(76,175,130,.1);
+  border-color: var(--ok);
+}
+.gs-step-body { flex: 1; }
+.gs-step-title {
+  font-size: 14px; font-weight: 700;
+  color: var(--txm); margin-bottom: 5px;
+  transition: color .25s;
+}
+.gs-step-item.active .gs-step-title { color: var(--gold); }
+.gs-step-item.done .gs-step-title { color: var(--ok); }
+.gs-step-desc { font-size: 13px; color: var(--txm); line-height: 1.55; }
+.gs-step-arrow {
+  font-size: 20px; color: var(--txd);
+  align-self: center;
+  transition: all .25s;
+}
+.gs-step-item.active .gs-step-arrow { color: var(--gold); transform: translateX(3px); }
+
+/* Danışman satırı */
+.gs-advisor-row {
+  display: flex; align-items: center; gap: 14px;
+  padding: 14px 16px;
+  background: var(--d4);
+  border: 1px solid var(--bd);
+  border-radius: var(--rs);
+  transition: border-color .2s;
+  cursor: pointer;
+}
+.gs-advisor-row:hover { border-color: var(--gold); }
+.gs-advisor-av {
+  width: 40px; height: 40px; border-radius: 50%;
+  background: linear-gradient(135deg,var(--gold-d),var(--gold));
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--serif); font-size: 15px; font-weight: 700;
+  color: var(--dark); flex-shrink: 0;
+}
+
+@media(max-width:900px) {
+  .gs-grid { grid-template-columns: 1fr !important; }
+  #gs-panel { position: static !important; }
+}
+</style></section>
 
 <section class="sec cta-sec">
   <div class="cta-in">
@@ -1442,7 +1944,7 @@ body { -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; 
     <div style="max-width:1300px;margin:0 auto;position:relative;z-index:1;">
       <div style="max-width:700px;">
         <div class="ey rv">Biz Kimiz?</div>
-        <h1 class="rv" style="font-family:var(--serif);font-size:clamp(42px,5.5vw,72px);font-weight:700;color:var(--tx);line-height:1.06;margin-bottom:24px;margin-top:8px;">
+        <h1 class="rv from-left" style="font-family:var(--serif);font-size:clamp(42px,5.5vw,72px);font-weight:700;color:var(--tx);line-height:1.06;margin-bottom:24px;margin-top:8px;">
           Konya&apos;nın emlak<br>kararlarına <em style="color:var(--gold);font-style:italic;">veri gücü</em>
         </h1>
         <p class="rv" style="font-size:17px;color:var(--txm);line-height:1.85;max-width:580px;margin-bottom:40px;">
@@ -1557,6 +2059,165 @@ body { -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; 
 </div>
 </div><!-- /about -->
 
+
+<!-- ═══════════════════════════════════════
+     9. ANALİZ SAYFASI
+═══════════════════════════════════════ -->
+<div class="page" id="page-analiz">
+<div style="padding-top:68px;min-height:100vh;background:var(--dark);">
+
+  <div class="pg-top" style="padding-left:48px;padding-right:48px;">
+    <button class="pg-back" onclick="goPage('landing')">← Ana Sayfa</button>
+    <div class="breadcrumb">Ana Sayfa › <span>Konya Analiz</span></div>
+  </div>
+
+  <!-- Sayfa başlık + ilçe seçici -->
+  <div style="max-width:1300px;margin:0 auto;padding:32px 48px 24px;display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:16px;">
+    <div>
+      <div class="ey">TÜİK 2023 Verilerine Dayalı</div>
+      <h1 style="font-family:var(--serif);font-size:clamp(30px,4vw,52px);font-weight:700;color:var(--tx);line-height:1.1;">Konya Piyasa Analizi</h1>
+    </div>
+    <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
+      <select id="analiz-ilce" onchange="renderAnaliz()" style="padding:10px 18px;background:var(--d2);border:1px solid var(--bd);border-radius:var(--rs);color:var(--tx);font-size:14px;font-family:var(--font);outline:none;cursor:pointer;min-width:160px;">
+        <option value="Konya">Konya Geneli</option>
+        <option>Selçuklu</option><option>Meram</option><option>Karatay</option>
+        <option>Ereğli</option><option>Akşehir</option><option>Beyşehir</option>
+        <option>Seydişehir</option><option>Kulu</option><option>Ilgın</option>
+        <option>Kadınhanı</option><option>Cihanbeyli</option><option>Çumra</option>
+        <option>Karapınar</option><option>Sarayönü</option>
+      </select>
+      <div style="font-size:12px;color:var(--txm);padding:10px 14px;background:var(--d2);border:1px solid var(--bd);border-radius:var(--rs);">📅 TÜİK 2023</div>
+    </div>
+  </div>
+
+  <!-- KPI Kartları -->
+  <div style="max-width:1300px;margin:0 auto;padding:0 48px 28px;">
+    <div id="analiz-kpi" style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;"></div>
+  </div>
+
+  <!-- Grafik Grid -->
+  <div style="max-width:1300px;margin:0 auto;padding:0 48px 60px;">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:20px;">
+
+      <!-- Yaş Dağılımı -->
+      <div class="analiz-card" style="grid-column:1/-1;">
+        <div class="analiz-card-title">Yaş Gruplarına Göre Nüfus Dağılımı</div>
+        <div class="analiz-card-sub" id="yas-sub">Konya geneli · TÜİK 2023</div>
+        <div style="position:relative;height:260px;margin-top:20px;">
+          <canvas id="chart-yas"></canvas>
+        </div>
+      </div>
+
+      <!-- Cinsiyet Donut -->
+      <div class="analiz-card">
+        <div class="analiz-card-title">Cinsiyet Dağılımı</div>
+        <div class="analiz-card-sub">Kadın / Erkek oranı</div>
+        <div style="position:relative;height:220px;margin-top:16px;display:flex;align-items:center;justify-content:center;">
+          <canvas id="chart-cinsiyet"></canvas>
+        </div>
+        <div id="cinsiyet-legend" style="display:flex;gap:16px;justify-content:center;margin-top:16px;flex-wrap:wrap;"></div>
+      </div>
+
+      <!-- Medeni Hal Donut -->
+      <div class="analiz-card">
+        <div class="analiz-card-title">Medeni Hal Dağılımı</div>
+        <div class="analiz-card-sub">Evli · Bekar · Diğer</div>
+        <div style="position:relative;height:220px;margin-top:16px;display:flex;align-items:center;justify-content:center;">
+          <canvas id="chart-medeni"></canvas>
+        </div>
+        <div id="medeni-legend" style="display:flex;gap:16px;justify-content:center;margin-top:16px;flex-wrap:wrap;"></div>
+      </div>
+
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;">
+
+      <!-- Eğitim Durumu -->
+      <div class="analiz-card">
+        <div class="analiz-card-title">Eğitim Durumu</div>
+        <div class="analiz-card-sub">Nüfus · TÜİK 2023</div>
+        <div style="position:relative;height:240px;margin-top:16px;">
+          <canvas id="chart-egitim"></canvas>
+        </div>
+      </div>
+
+      <!-- İlçe Fiyat Karşılaştırma -->
+      <div class="analiz-card">
+        <div class="analiz-card-title">İlçe Bazlı m² Fiyat Karşılaştırması</div>
+        <div class="analiz-card-sub">Ortalama satış fiyatı (TL/m²) · 2025</div>
+        <div style="position:relative;height:240px;margin-top:16px;">
+          <canvas id="chart-m2"></canvas>
+        </div>
+      </div>
+
+      <!-- İlçe Nüfus Top 10 -->
+      <div class="analiz-card" style="grid-column:1/-1;">
+        <div class="analiz-card-title">İlçe Nüfusları</div>
+        <div class="analiz-card-sub">Konya · TÜİK 2023</div>
+        <div style="position:relative;height:260px;margin-top:20px;">
+          <canvas id="chart-ilce"></canvas>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+</div><!-- /analiz -->
+
+<style>
+.analiz-card {
+  background: var(--d2);
+  border: 1px solid var(--bd);
+  border-radius: var(--r);
+  padding: 24px 28px;
+  transition: border-color .3s;
+}
+.analiz-card:hover { border-color: var(--bdh); }
+.analiz-card-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--tx);
+  margin-bottom: 4px;
+}
+.analiz-card-sub {
+  font-size: 12px;
+  color: var(--txm);
+}
+.analiz-kpi-card {
+  background: var(--d2);
+  border: 1px solid var(--bd);
+  border-radius: var(--r);
+  padding: 22px 24px;
+  transition: all .3s;
+  position: relative;
+  overflow: hidden;
+}
+.analiz-kpi-card::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--gold-d), var(--gold));
+  transform: scaleX(0);
+  transition: transform .4s;
+}
+.analiz-kpi-card:hover::after { transform: scaleX(1); }
+.analiz-kpi-card:hover { border-color: var(--bdh); transform: translateY(-3px); }
+.analiz-kpi-icon { font-size: 26px; margin-bottom: 10px; }
+.analiz-kpi-val { font-family: var(--serif); font-size: 28px; font-weight: 700; color: var(--gold); line-height: 1; margin-bottom: 5px; }
+.analiz-kpi-label { font-size: 11px; color: var(--txm); letter-spacing: 1.2px; text-transform: uppercase; }
+.legend-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+
+@media(max-width:900px) {
+  #analiz-kpi { grid-template-columns: 1fr 1fr !important; }
+  .analiz-card[style*="grid-column:1/-1"] { grid-column: auto !important; }
+}
+@media(max-width:600px) {
+  #analiz-kpi { grid-template-columns: 1fr !important; }
+}
+</style>
+
 <!-- GİZLİ ADMİN -->
 <a href="/admin" style="position:fixed;bottom:20px;right:20px;width:36px;height:36px;background:var(--d2);border:1px solid var(--bd);border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--txd);font-size:14px;text-decoration:none;z-index:997;opacity:0.2;transition:all .3s;" onmouseover="this.style.opacity='.8';this.style.borderColor='var(--gold)';this.style.color='var(--gold)'" onmouseout="this.style.opacity='.2';this.style.borderColor='var(--bd)';this.style.color='var(--txd)'">⚙</a>
 
@@ -1637,6 +2298,9 @@ function _activatePage(page, tab) {
   }
   if(page === 'advisor') {
     setTimeout(() => renderAdvisors('', ''), 80);
+  }
+  if(page === 'analiz') {
+    setTimeout(() => renderAnaliz(), 100);
   }
   if(page === 'valuation') {
     setTimeout(() => {
@@ -1799,11 +2463,21 @@ async function loadLandingData() {
 }
 
 // ── REVEAL ──
-// rvObs = advRevealObs ile birleştirildi (animasyon motorunda tanımlandı)
-// Landing data'dan eklenen chip'ler için yedek observer
+// Gelişmiş reveal observer — yönlü animasyon + exit desteği
 const rvObs = new IntersectionObserver(entries=>{
-  entries.forEach(e=>{ if(e.isIntersecting){e.target.classList.add('vis');rvObs.unobserve(e.target);} });
-},{threshold:0.1});
+  entries.forEach(e=>{
+    if(e.isIntersecting) {
+      e.target.classList.add('vis');
+      e.target.classList.remove('exiting');
+      // Sayaç varsa tetikle
+      e.target.querySelectorAll('.counter-anim').forEach(animateCounter);
+      if(e.target.classList.contains('counter-anim')) animateCounter(e.target);
+    } else if(e.target.classList.contains('rv-exit')) {
+      e.target.classList.remove('vis');
+      e.target.classList.add('exiting');
+    }
+  });
+},{threshold:0.1, rootMargin:'0px 0px -30px 0px'});
 
 // ── INIT ──
 // ═══════════════════════════════════
@@ -1918,8 +2592,13 @@ document.addEventListener('DOMContentLoaded', () => {
   // Hero istatistikleri sayaçla göster
   setTimeout(animateHeroStats, 800);
 
-  // Gelişmiş reveal observer'ı tüm .rv elementlere bağla
-  document.querySelectorAll('.rv').forEach(el => advRevealObs.observe(el));
+  // Tüm .rv elementlere observer bağla
+  document.querySelectorAll('.rv').forEach(el => {
+    rvObs.observe(el);
+    advRevealObs.observe(el);
+  });
+  // Stat KPI kartlarına observe ekle (dinamik değil, statik)
+  document.querySelectorAll('.counter-anim').forEach(el => rvObs.observe(el));
 });
 
 // ── DANIŞMAN ──
@@ -2034,6 +2713,358 @@ function renderAdvisors(distFilter, specFilter) {
     </div>
   `).join('');
 }
+
+
+// ═══════════════════════════════════════
+// ANALİZ SAYFASI — CHART.JS
+// ═══════════════════════════════════════
+let chartJsLoaded = false;
+let analizCharts = {};
+
+// Chart.js lazy-load
+function loadChartJs(cb) {
+  if(chartJsLoaded) { cb(); return; }
+  const s = document.createElement('script');
+  s.src = 'https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js';
+  s.onload = () => { chartJsLoaded = true; cb(); };
+  document.head.appendChild(s);
+}
+
+// Konya TÜİK 2023 verileri
+const KONYA_ANALIZ = {
+  nufus: 2_320_250,
+  yogunluk: 51.2,
+  yuzolcu: 40_815,
+  ilce_nufus: {
+    'Selçuklu':591840,'Meram':448920,'Karatay':299610,'Ereğli':130450,
+    'Akşehir':87320,'Beyşehir':73580,'Seydişehir':57940,'Çumra':55640,
+    'Kulu':48320,'Ilgın':46850,'Kadınhanı':43270,'Cihanbeyli':41890,
+    'Karapınar':44110,'Sarayönü':36280,'Yunak':34820,'Bozkır':23150,
+    'Hadim':22890,'Emirgazi':14670,'Doğanhisar':18640,'Güneysınır':16920,
+    'Altınekin':15780,'Hüyük':12450,'Akören':11430,'Ahırlı':10280,
+    'Tuzlukçu':10340,'Derebucak':9870,'Halkapınar':9540,'Çeltik':8430,
+    'Taşkent':8920,'Derbent':7650,'Yalıhüyük':6280
+  },
+  yas: {
+    '0-4':142380,'5-9':156240,'10-14':162880,'15-19':171450,
+    '20-24':185620,'25-29':198340,'30-34':204180,'35-39':198750,
+    '40-44':188320,'45-49':172840,'50-54':158930,'55-59':141260,
+    '60-64':112840,'65+':225180
+  },
+  cinsiyet: {Kadın:1164820,Erkek:1155430},
+  medeni: {Evli:1198340,Bekar:682450,'Boşanmış':124680,'Eşi Ölmüş':98420},
+  egitim: {
+    'Okuma-Yazma Bilmiyor':42180,'İlkokul':384620,'Ortaokul':298340,
+    'Lise':512840,'Ön Lisans':198560,'Lisans':412380,'Lisansüstü':84920
+  },
+  m2: {
+    'Selçuklu':52400,'Meram':38800,'Karatay':31200,'Beyşehir':19800,
+    'Ereğli':17400,'Akşehir':18600,'Seydişehir':15200,'Çumra':13400,
+    'Cihanbeyli':12800,'Kulu':11600,'Ilgın':12200,'Kadınhanı':10800,
+    'Karapınar':11200,'Sarayönü':10400
+  }
+};
+
+const ANALIZ_COLORS = {
+  gold:   'rgba(201,168,76,.85)',
+  goldL:  'rgba(232,201,106,.85)',
+  goldD:  'rgba(154,117,53,.85)',
+  pink:   'rgba(236,72,153,.85)',
+  blue:   'rgba(59,130,246,.85)',
+  green:  'rgba(34,197,94,.85)',
+  orange: 'rgba(249,115,22,.85)',
+  purple: 'rgba(168,85,247,.85)',
+  teal:   'rgba(20,184,166,.85)',
+  red:    'rgba(239,68,68,.85)',
+};
+const CHART_DEFAULTS = {
+  responsive: true,
+  maintainAspectRatio: false,
+  plugins: {
+    legend: { display: false },
+    tooltip: {
+      backgroundColor: 'rgba(16,16,16,.96)',
+      borderColor: 'rgba(201,168,76,.3)',
+      borderWidth: 1,
+      titleColor: '#C9A84C',
+      bodyColor: '#EDEAD2',
+      padding: 12,
+      titleFont: { family: "'Cormorant Garamond', serif", size: 15 },
+      bodyFont: { family: "'Plus Jakarta Sans', sans-serif", size: 13 },
+      callbacks: {
+        label: ctx => ' ' + new Intl.NumberFormat('tr-TR').format(ctx.parsed.y ?? ctx.parsed) + (ctx.dataset.suffix||'')
+      }
+    }
+  },
+  scales: {
+    x: {
+      grid: { color: 'rgba(201,168,76,.06)', drawBorder: false },
+      ticks: { color: '#7A7672', font: { family: "'Plus Jakarta Sans', sans-serif", size: 11 } },
+      border: { color: 'rgba(201,168,76,.1)' }
+    },
+    y: {
+      grid: { color: 'rgba(201,168,76,.06)', drawBorder: false },
+      ticks: {
+        color: '#7A7672',
+        font: { family: "'Plus Jakarta Sans', sans-serif", size: 11 },
+        callback: v => new Intl.NumberFormat('tr-TR', {notation:'compact', maximumFractionDigits:1}).format(v)
+      },
+      border: { color: 'transparent' }
+    }
+  }
+};
+
+function destroyChart(key) {
+  if(analizCharts[key]) { analizCharts[key].destroy(); delete analizCharts[key]; }
+}
+
+function renderKPI(data) {
+  const fp = n => new Intl.NumberFormat('tr-TR').format(n);
+  const nufus = data === KONYA_ANALIZ ? KONYA_ANALIZ.nufus : null;
+  const ilce = document.getElementById('analiz-ilce').value;
+  const ilceNuf = KONYA_ANALIZ.ilce_nufus[ilce];
+  const m2 = KONYA_ANALIZ.m2[ilce] || null;
+  const avgM2 = m2 || Math.round(Object.values(KONYA_ANALIZ.m2).reduce((a,b)=>a+b,0)/Object.keys(KONYA_ANALIZ.m2).length);
+
+  const kpis = ilce === 'Konya' ? [
+    { icon:'👥', val: fp(KONYA_ANALIZ.nufus)+' kişi', label: 'Konya Nüfusu' },
+    { icon:'📐', val: fp(KONYA_ANALIZ.yuzolcu)+' km²', label: 'Yüzölçümü' },
+    { icon:'🏙️', val: KONYA_ANALIZ.yogunluk+' kişi/km²', label: 'Nüfus Yoğunluğu' },
+    { icon:'🏠', val: fp(avgM2)+' ₺/m²', label: 'Ort. m² Fiyatı' }
+  ] : [
+    { icon:'👥', val: fp(ilceNuf || 0)+' kişi', label: ilce+' Nüfusu' },
+    { icon:'📊', val: '%'+((ilceNuf/KONYA_ANALIZ.nufus)*100).toFixed(1), label: 'Konya içindeki pay' },
+    { icon:'🏠', val: m2 ? fp(m2)+' ₺/m²' : '—', label: 'Ort. m² Fiyatı' },
+    { icon:'📍', val: ilce, label: 'Seçili İlçe' }
+  ];
+
+  document.getElementById('analiz-kpi').innerHTML = kpis.map(k=>`
+    <div class="analiz-kpi-card">
+      <div class="analiz-kpi-icon">${k.icon}</div>
+      <div class="analiz-kpi-val">${k.val}</div>
+      <div class="analiz-kpi-label">${k.label}</div>
+    </div>`).join('');
+}
+
+function mkLegend(containerId, labels, colors) {
+  document.getElementById(containerId).innerHTML = labels.map((l,i)=>`
+    <div style="display:flex;align-items:center;gap:6px;">
+      <div class="legend-dot" style="background:${colors[i]};"></div>
+      <span style="font-size:12px;color:var(--txm);">${l}</span>
+    </div>`).join('');
+}
+
+function renderAnaliz() {
+  loadChartJs(() => {
+    const ilce = document.getElementById('analiz-ilce')?.value || 'Konya';
+    renderKPI();
+
+    // Yaş dağılımı (bar)
+    destroyChart('yas');
+    const yasKeys = Object.keys(KONYA_ANALIZ.yas);
+    const yasVals = Object.values(KONYA_ANALIZ.yas);
+    const yasGrad = (ctx) => {
+      const g = ctx.chart.ctx.createLinearGradient(0,0,0,260);
+      g.addColorStop(0, 'rgba(201,168,76,.9)');
+      g.addColorStop(1, 'rgba(154,117,53,.4)');
+      return g;
+    };
+    document.getElementById('yas-sub').textContent = (ilce==='Konya'?'Konya geneli':'') + ' · TÜİK 2023';
+    analizCharts.yas = new Chart(document.getElementById('chart-yas'), {
+      type: 'bar',
+      data: {
+        labels: yasKeys,
+        datasets: [{
+          data: yasVals,
+          backgroundColor: yasGrad,
+          borderRadius: 4,
+          borderSkipped: false,
+          suffix: ' kişi'
+        }]
+      },
+      options: { ...CHART_DEFAULTS,
+        plugins: { ...CHART_DEFAULTS.plugins,
+          tooltip: { ...CHART_DEFAULTS.plugins.tooltip,
+            callbacks: { label: ctx => ' '+new Intl.NumberFormat('tr-TR').format(ctx.parsed.y)+' kişi' }
+          }
+        }
+      }
+    });
+
+    // Cinsiyet (donut)
+    destroyChart('cinsiyet');
+    const cinsKeys = Object.keys(KONYA_ANALIZ.cinsiyet);
+    const cinsVals = Object.values(KONYA_ANALIZ.cinsiyet);
+    const cinsColors = [ANALIZ_COLORS.pink, ANALIZ_COLORS.blue];
+    analizCharts.cinsiyet = new Chart(document.getElementById('chart-cinsiyet'), {
+      type: 'doughnut',
+      data: { labels: cinsKeys, datasets: [{ data: cinsVals, backgroundColor: cinsColors, borderWidth: 0, hoverOffset: 6 }] },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        cutout: '68%',
+        plugins: {
+          legend: { display: false },
+          tooltip: { ...CHART_DEFAULTS.plugins.tooltip,
+            callbacks: {
+              label: ctx => {
+                const total = ctx.dataset.data.reduce((a,b)=>a+b,0);
+                const pct = ((ctx.parsed/total)*100).toFixed(1);
+                return ` ${new Intl.NumberFormat('tr-TR').format(ctx.parsed)} kişi (%${pct})`;
+              }
+            }
+          }
+        }
+      }
+    });
+    mkLegend('cinsiyet-legend', cinsKeys, cinsColors);
+
+    // Medeni hal (donut)
+    destroyChart('medeni');
+    const medKeys = Object.keys(KONYA_ANALIZ.medeni);
+    const medVals = Object.values(KONYA_ANALIZ.medeni);
+    const medColors = [ANALIZ_COLORS.gold, ANALIZ_COLORS.blue, ANALIZ_COLORS.orange, ANALIZ_COLORS.teal];
+    analizCharts.medeni = new Chart(document.getElementById('chart-medeni'), {
+      type: 'doughnut',
+      data: { labels: medKeys, datasets: [{ data: medVals, backgroundColor: medColors, borderWidth: 0, hoverOffset: 6 }] },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        cutout: '68%',
+        plugins: {
+          legend: { display: false },
+          tooltip: { ...CHART_DEFAULTS.plugins.tooltip,
+            callbacks: {
+              label: ctx => {
+                const total = ctx.dataset.data.reduce((a,b)=>a+b,0);
+                const pct = ((ctx.parsed/total)*100).toFixed(1);
+                return ` ${new Intl.NumberFormat('tr-TR').format(ctx.parsed)} kişi (%${pct})`;
+              }
+            }
+          }
+        }
+      }
+    });
+    mkLegend('medeni-legend', medKeys, medColors);
+
+    // Eğitim (yatay bar)
+    destroyChart('egitim');
+    const egKeys = Object.keys(KONYA_ANALIZ.egitim);
+    const egVals = Object.values(KONYA_ANALIZ.egitim);
+    const egColors = [ANALIZ_COLORS.red,ANALIZ_COLORS.orange,ANALIZ_COLORS.gold,ANALIZ_COLORS.goldL,ANALIZ_COLORS.blue,ANALIZ_COLORS.purple,ANALIZ_COLORS.teal];
+    analizCharts.egitim = new Chart(document.getElementById('chart-egitim'), {
+      type: 'bar',
+      data: { labels: egKeys, datasets: [{ data: egVals, backgroundColor: egColors, borderRadius: 4, borderSkipped: false }] },
+      options: { ...CHART_DEFAULTS,
+        indexAxis: 'y',
+        scales: {
+          x: { ...CHART_DEFAULTS.scales.x, ticks: { ...CHART_DEFAULTS.scales.x.ticks, callback: v => new Intl.NumberFormat('tr-TR',{notation:'compact'}).format(v) } },
+          y: { grid: { display: false }, ticks: { color: '#7A7672', font: { family:"'Plus Jakarta Sans',sans-serif", size:11 } }, border: { color:'transparent' } }
+        },
+        plugins: { ...CHART_DEFAULTS.plugins,
+          tooltip: { ...CHART_DEFAULTS.plugins.tooltip,
+            callbacks: { label: ctx => ' '+new Intl.NumberFormat('tr-TR').format(ctx.parsed.x)+' kişi' }
+          }
+        }
+      }
+    });
+
+    // m² fiyatlar (bar)
+    destroyChart('m2');
+    const m2Keys = Object.keys(KONYA_ANALIZ.m2);
+    const m2Vals = Object.values(KONYA_ANALIZ.m2);
+    const m2Colors = m2Keys.map(k => k===ilce ? 'rgba(201,168,76,1)' : 'rgba(201,168,76,.45)');
+    analizCharts.m2 = new Chart(document.getElementById('chart-m2'), {
+      type: 'bar',
+      data: { labels: m2Keys, datasets: [{ data: m2Vals, backgroundColor: m2Colors, borderRadius: 4, borderSkipped: false }] },
+      options: { ...CHART_DEFAULTS,
+        scales: {
+          x: { ...CHART_DEFAULTS.scales.x, ticks: { ...CHART_DEFAULTS.scales.x.ticks, maxRotation: 45 } },
+          y: { ...CHART_DEFAULTS.scales.y, ticks: { ...CHART_DEFAULTS.scales.y.ticks, callback: v => new Intl.NumberFormat('tr-TR',{notation:'compact'}).format(v)+'₺' } }
+        },
+        plugins: { ...CHART_DEFAULTS.plugins,
+          tooltip: { ...CHART_DEFAULTS.plugins.tooltip,
+            callbacks: { label: ctx => ' '+new Intl.NumberFormat('tr-TR').format(ctx.parsed.y)+' ₺/m²' }
+          }
+        }
+      }
+    });
+
+    // İlçe nüfusu (bar - top 15)
+    destroyChart('ilce');
+    const ilceEntries = Object.entries(KONYA_ANALIZ.ilce_nufus).sort((a,b)=>b[1]-a[1]).slice(0,15);
+    const ilceKeys = ilceEntries.map(e=>e[0]);
+    const ilceVals = ilceEntries.map(e=>e[1]);
+    const ilceColors = ilceKeys.map(k => k===ilce ? 'rgba(201,168,76,1)' : 'rgba(201,168,76,.4)');
+    analizCharts.ilce = new Chart(document.getElementById('chart-ilce'), {
+      type: 'bar',
+      data: { labels: ilceKeys, datasets: [{ data: ilceVals, backgroundColor: ilceColors, borderRadius: 4, borderSkipped: false }] },
+      options: { ...CHART_DEFAULTS,
+        plugins: { ...CHART_DEFAULTS.plugins,
+          tooltip: { ...CHART_DEFAULTS.plugins.tooltip,
+            callbacks: { label: ctx => ' '+new Intl.NumberFormat('tr-TR').format(ctx.parsed.y)+' kişi' }
+          }
+        }
+      }
+    });
+
+  });
+}
+
+// ── GÜVENLE SAT — ADIM KONTROLÜ ──
+let gsCurrentStep = 1;
+
+function gsNextStep(step) {
+  const total = 4;
+  gsCurrentStep = step;
+
+  // Panelleri güncelle
+  for(let i = 1; i <= total; i++) {
+    const pane = document.getElementById('gs-pane-' + i);
+    const stepEl = document.getElementById('gs-step-' + i);
+    const progEl = document.getElementById('gs-prog-' + i);
+    if(!pane || !stepEl || !progEl) continue;
+
+    // Pane
+    pane.classList.toggle('active', i === step);
+
+    // Adım item
+    stepEl.classList.remove('active','done');
+    if(i === step) stepEl.classList.add('active');
+    else if(i < step) stepEl.classList.add('done');
+
+    // Progress
+    progEl.classList.remove('active','done');
+    if(i === step) progEl.classList.add('active');
+    else if(i < step) progEl.classList.add('done');
+  }
+}
+
+// Otomatik fragman döngüsü — her 3.5 saniyede bir adım ilerler
+function startGsDemo() {
+  let step = 1;
+  return setInterval(() => {
+    step = step >= 4 ? 1 : step + 1;
+    gsNextStep(step);
+  }, 3500);
+}
+
+// Bölüm görünür olunca başlat, gizlenince durdur
+let gsDemoInterval = null;
+const gsObs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if(e.isIntersecting && !gsDemoInterval) {
+      gsDemoInterval = startGsDemo();
+    } else if(!e.isIntersecting && gsDemoInterval) {
+      clearInterval(gsDemoInterval);
+      gsDemoInterval = null;
+      gsNextStep(1); // sıfırla
+    }
+  });
+}, { threshold: 0.3 });
+
+document.addEventListener('DOMContentLoaded', () => {
+  const sec = document.getElementById('guvenle-sat-sec');
+  if(sec) gsObs.observe(sec);
+});
 
 // ── LEGACY COMPAT ──
 function switchTab(t) { if(t==='val') goPage('valuation'); else goPage('comparison'); }
