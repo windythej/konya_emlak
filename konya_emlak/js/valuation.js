@@ -653,7 +653,10 @@ function calcAndRender() {
           <div class="vre-title">Değerleme Sonucu</div>
           <div class="vre-sub">${scopeLabel} · ${roomsStr} · ${m2}m² · ${age} yaş bina</div>
         </div>
-        <button class="vre-new-btn" onclick="goStep(1)">+ Yeni Değerleme</button>
+        <div style="display:flex;gap:10px;">
+          <button class="vre-new-btn" onclick="goBack5()">← Geri Dön</button>
+          <button class="vre-new-btn" onclick="goStep(1)">+ Yeni Değerleme</button>
+        </div>
       </div>
 
       <!-- ANA SONUÇ KARTI -->
@@ -684,37 +687,13 @@ function calcAndRender() {
         </div>
 
         <!-- Sağ: Adım listesi -->
-        <div class="vre-steps-panel">
-          <div class="vre-step-item done">
-            <div class="vre-step-icon">✎</div>
-            <div class="vre-step-body">
-              <div class="vre-step-title">1 — Gayrimenkulünüzün Özelliklerini Girin</div>
-              <div class="vre-step-desc">Gayrimenkulünüzün türünü, konumunu ve detaylı özelliklerini girin.</div>
-            </div>
-          </div>
-          <div class="vre-step-item active">
-            <div class="vre-step-icon">⊙</div>
-            <div class="vre-step-body">
-              <div class="vre-step-title">2 — Değerini Öğrenin</div>
-              <div class="vre-step-desc">Öğren-Sat'ın yapay zeka destekli değerleme modeli ile gerçek değerini saniyeler içerisinde öğrenin.</div>
-            </div>
-            <div class="vre-step-arrow">›</div>
-          </div>
-          <div class="vre-step-item">
-            <div class="vre-step-icon">👤</div>
-            <div class="vre-step-body">
-              <div class="vre-step-title">3 — En İyi Danışmanı Bulun</div>
-              <div class="vre-step-desc">Bölgenizdeki uzman danışmanları keşfedin ve mülkünüzü en iyi fiyata satın.</div>
-            </div>
-          </div>
-          <div class="vre-step-item">
-            <div class="vre-step-icon">✓</div>
-            <div class="vre-step-body">
-              <div class="vre-step-title">4 — Güvenle Satın</div>
-              <div class="vre-step-desc">Doğru fiyatla, doğru danışmanla mülkünüzü kısa sürede satın.</div>
-            </div>
-          </div>
-          <button class="vre-advisor-btn" onclick="window._goAdvisor && window._goAdvisor('${VAL.district}')">
+        <div class="vre-steps-panel" style="display:flex;flex-direction:column;gap:8px;justify-content:center;">
+          <div style="font-size:10px;color:var(--txm);letter-spacing:2px;text-transform:uppercase;margin-bottom:4px;">Sonraki Adımlar</div>
+          <div class="vre-step-item done" style="padding:11px 14px;"><div class="vre-step-icon" style="width:30px;height:30px;font-size:12px;flex-shrink:0;">✎</div><div class="vre-step-body"><div class="vre-step-title" style="font-size:12px;margin-bottom:0;">1 — Özellikler Girildi</div></div></div>
+          <div class="vre-step-item active" style="padding:11px 14px;"><div class="vre-step-icon" style="width:30px;height:30px;font-size:12px;flex-shrink:0;">⊙</div><div class="vre-step-body"><div class="vre-step-title" style="font-size:12px;margin-bottom:0;">2 — Değer Hesaplandı</div></div><div class="vre-step-arrow">›</div></div>
+          <div class="vre-step-item" style="padding:11px 14px;"><div class="vre-step-icon" style="width:30px;height:30px;font-size:12px;flex-shrink:0;">👤</div><div class="vre-step-body"><div class="vre-step-title" style="font-size:12px;margin-bottom:0;">3 — Danışman Bul</div></div></div>
+          <div class="vre-step-item" style="padding:11px 14px;"><div class="vre-step-icon" style="width:30px;height:30px;font-size:12px;flex-shrink:0;">✓</div><div class="vre-step-body"><div class="vre-step-title" style="font-size:12px;margin-bottom:0;">4 — Güvenle Sat</div></div></div>
+          <button class="vre-advisor-btn" style="margin-top:8px;padding:11px;" onclick="window._goAdvisor && window._goAdvisor(\'${VAL.district}\')">
             👤 Danışman Bul
           </button>
         </div>
@@ -788,6 +767,15 @@ function generateAIText(v, estimated, real, avgM2, count, scope, stale) {
 Satıcı için öneri: ${fp(Math.round(estimated * 1.05))} TL civarından pazarlığa başlanması, alıcıya makul bir indirim payı bırakırken hedef satış fiyatına ulaşmayı kolaylaştıracaktır.
 
 Alıcı için öneri: ${fp(real)} TL altındaki teklifler fırsat olarak değerlendirilebilir.${stale ? '\n\nNot: Bazı eski ilanlar analizden çıkarıldı, güncel piyasa fiyatları esas alındı.' : ''}`;
+}
+
+// Sonuç ekranından geri dön - freemium kullanımı geri al
+function goBack5() {
+  if(!currentUser && freeUsed > 0) {
+    freeUsed--;
+    localStorage.setItem('val_used', freeUsed);
+  }
+  goStep(4);
 }
 
 function typewriter(id, text, speed) {
@@ -899,7 +887,10 @@ Alıcı için öneri: ${fp(real)} TL altındaki teklifler fırsat olarak değerl
           <div class="vre-title">Değerleme Sonucu</div>
           <div class="vre-sub">${VAL.district} · ${catLabel} · ${typeLabel} · ${m2}m²</div>
         </div>
-        <button class="vre-new-btn" onclick="goStep(1)">+ Yeni Değerleme</button>
+        <div style="display:flex;gap:10px;">
+          <button class="vre-new-btn" onclick="goBack5()">← Geri Dön</button>
+          <button class="vre-new-btn" onclick="goStep(1)">+ Yeni Değerleme</button>
+        </div>
       </div>
       ${uyari}
       <div class="vre-main">
@@ -1120,7 +1111,8 @@ function goStep(step) {
   else if (step === 3) renderStep3();
   else if (step === 4) renderStep4();
   else if (step === 5) renderStep5();
-  window.scrollTo({ top: 0, behavior: 'smooth' });
+  const vc = document.getElementById('val-content');
+  if(vc) vc.scrollIntoView({behavior:'smooth', block:'start'});
 }
 
 // ===== FREEMIUM =====

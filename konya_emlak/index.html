@@ -1541,7 +1541,7 @@ a, button, .tc, .pc, .dc-chip, .adv-card,
   border-radius: var(--r);
   overflow: hidden;
   /* Panel 4 "İşlem Tamam" en uzun içerik — ona göre sabit yükseklik */
-  height: 520px;
+  height: 500px;
   position: relative;
   transition: border-color .3s;
 }
@@ -1629,7 +1629,11 @@ a, button, .tc, .pc, .dc-chip, .adv-card,
   border-radius: 2px;
 }
 .gs-prog-step.done .gs-prog-line::after { transform: scaleX(1); }
-.gs-prog-step.active .gs-prog-line::after { transform: scaleX(.5); }
+/* active: çizgi YOK — sadece daire dolu */
+.gs-prog-step.active .gs-prog-line::after { transform: scaleX(0); }
+/* hover: çizginin yarısı görünsün */
+.gs-prog-step.active:hover .gs-prog-line::after,
+.gs-prog-step:not(.done):not(.active):hover .gs-prog-line::after { transform: scaleX(.5); }
 
 /* Adım listesi */
 .gs-step-item {
@@ -1645,9 +1649,8 @@ a, button, .tc, .pc, .dc-chip, .adv-card,
 }
 .gs-step-item:hover { border-color: var(--bdh); background: var(--d4); }
 .gs-step-item.active {
-  background: rgba(10,10,10,.85);
-  border-color: rgba(201,168,76,.45);
-  box-shadow: inset 0 0 0 1px rgba(201,168,76,.15);
+  background: linear-gradient(135deg, #C9A84C, #E8A020, #F5C842);
+  border-color: transparent;
 }
 .gs-step-icon {
   width: 40px; height: 40px;
@@ -1659,8 +1662,9 @@ a, button, .tc, .pc, .dc-chip, .adv-card,
   transition: all .25s;
 }
 .gs-step-item.active .gs-step-icon {
-  background: rgba(201,168,76,.15);
-  border-color: var(--gold);
+  background: rgba(0,0,0,.2);
+  border-color: rgba(0,0,0,.2);
+  color: #000;
 }
 .gs-step-item.done .gs-step-icon {
   background: rgba(76,175,130,.1);
@@ -1672,17 +1676,17 @@ a, button, .tc, .pc, .dc-chip, .adv-card,
   color: var(--txm); margin-bottom: 5px;
   transition: color .25s;
 }
-.gs-step-item.active .gs-step-title { color: #F5C842; text-shadow: 0 0 20px rgba(245,200,66,.3); }
+.gs-step-item.active .gs-step-title { color: #1a1200; text-shadow: none; font-weight: 800; }
 .gs-step-item.done .gs-step-title { color: var(--ok); }
 .gs-step-desc { font-size: 13px; color: var(--txm); line-height: 1.55; }
-.gs-step-item.active .gs-step-desc { color: rgba(237,234,226,.75); }
+.gs-step-item.active .gs-step-desc { color: rgba(20,12,0,.75); }
 .gs-step-desc { font-size: 13px; color: var(--txm); line-height: 1.55; }
 .gs-step-arrow {
   font-size: 20px; color: var(--txd);
   align-self: center;
   transition: all .25s;
 }
-.gs-step-item.active .gs-step-arrow { color: var(--gold); transform: translateX(3px); }
+.gs-step-item.active .gs-step-arrow { color: rgba(0,0,0,.5); transform: translateX(3px); }
 
 /* Danışman satırı */
 .gs-advisor-row {
@@ -2306,8 +2310,8 @@ a, button, .tc, .pc, .dc-chip, .adv-card,
       <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:24px;">
 
         <!-- Batuhan - ilk sıra, kurucu & geliştirici -->
-        <div class="team-card team-card-founder rv from-left" style="padding:40px 32px;text-align:center;position:relative;">
-          <div style="position:absolute;top:-13px;left:50%;transform:translateX(-50%);padding:4px 18px;background:var(--grad);border-radius:100px;font-size:11px;font-weight:700;color:var(--dark);letter-spacing:1px;text-transform:uppercase;white-space:nowrap;">Kurucu</div>
+        <div class="team-card team-card-founder rv from-left" style="padding:52px 32px 40px;text-align:center;position:relative;overflow:visible;margin-top:18px;">
+          <div style="position:absolute;top:-14px;left:50%;transform:translateX(-50%);padding:5px 20px;background:var(--grad);border-radius:100px;font-size:11px;font-weight:700;color:var(--dark);letter-spacing:1px;text-transform:uppercase;white-space:nowrap;box-shadow:0 4px 12px rgba(201,168,76,.3);">⭐ Kurucu</div>
           <div style="position:absolute;top:-12px;left:50%;transform:translateX(-50%);padding:3px 14px;background:var(--gold);border-radius:100px;font-size:10px;font-weight:700;color:var(--dark);letter-spacing:1px;text-transform:uppercase;white-space:nowrap;">Kurucu</div>
           <div class="team-avatar" style="width:72px;height:72px;border-radius:50%;background:linear-gradient(135deg,var(--gold-d),var(--gold));display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-size:28px;font-weight:700;color:var(--dark);">B</div>
           <div style="font-family:var(--serif);font-size:20px;font-weight:700;color:var(--tx);margin-bottom:4px;">Batuhan Y.</div>
@@ -2361,7 +2365,7 @@ a, button, .tc, .pc, .dc-chip, .adv-card,
   </div>
 
   <!-- Sayfa başlık + ilçe seçici -->
-  <div style="max-width:1300px;margin:0 auto;padding:32px 48px 24px;display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:16px;">
+  <div style="max-width:100%;margin:0;padding:32px 48px 24px;display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:16px;">
     <div>
       <div class="ey">TÜİK 2023 Verilerine Dayalı</div>
       <h1 style="font-family:var(--serif);font-size:clamp(30px,4vw,52px);font-weight:700;color:var(--tx);line-height:1.1;">Konya Piyasa Analizi</h1>
@@ -2386,12 +2390,12 @@ a, button, .tc, .pc, .dc-chip, .adv-card,
   </div>
 
   <!-- KPI Kartları -->
-  <div style="max-width:1300px;margin:0 auto;padding:0 48px 28px;">
+  <div style="max-width:100%;margin:0;padding:0 48px 28px;">
     <div id="analiz-kpi" style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;"></div>
   </div>
 
   <!-- Grafik Grid -->
-  <div style="max-width:1300px;margin:0 auto;padding:0 48px 60px;">
+  <div style="max-width:100%;margin:0;padding:0 48px 60px;">
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:20px;">
 
       <!-- Yaş Dağılımı -->
