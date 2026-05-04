@@ -5,8 +5,8 @@
 
 /* Progress bar */
 .val-progress {
-  padding: 24px 0 32px;
-  max-width: 700px;
+  padding: 28px 0 36px;
+  max-width: 800px;
   margin: 0 auto;
 }
 .val-steps {
@@ -71,26 +71,26 @@
 
 /* Form container */
 .val-container {
-  max-width: 1100px;
+  max-width: 1200px;
   margin: 0 auto;
-  padding: 0 24px 80px;
+  padding: 0 32px 80px;
   display: grid;
-  grid-template-columns: 1fr 380px;
-  gap: 24px;
+  grid-template-columns: 1fr 400px;
+  gap: 28px;
   align-items: start;
 }
 .val-form-card {
   background: var(--d2);
   border: 1px solid var(--bd);
   border-radius: var(--r);
-  padding: 32px;
+  padding: 36px 40px;
 }
 .val-form-title {
-  font-family: 'Playfair Display', serif;
-  font-size: 20px;
+  font-family: var(--serif, 'Cormorant Garamond', serif);
+  font-size: 24px;
   font-weight: 700;
   color: var(--tx);
-  margin-bottom: 6px;
+  margin-bottom: 8px;
 }
 .val-form-sub {
   font-size: 13px;
@@ -133,7 +133,7 @@
 .cat-desc { font-size: 11px; color: var(--txm); line-height: 1.4; }
 
 /* Form alanları */
-.vfg { margin-bottom: 20px; }
+.vfg { margin-bottom: 24px; }
 .vfl {
   font-size: 10px;
   font-weight: 600;
@@ -161,8 +161,8 @@
 }
 .vsel:focus, .vinput:focus { border-color: var(--gold); }
 .vinput::placeholder { color: var(--txd); }
-.vrow2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
-.vrow3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+.vrow2 { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+.vrow3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
 
 /* Chip seçim */
 .chip-group { display: flex; flex-wrap: wrap; gap: 8px; }
@@ -203,8 +203,8 @@
 }
 .num-input:focus-within { border-color: var(--gold); }
 .num-btn {
-  width: 44px;
-  height: 44px;
+  width: 48px;
+  height: 48px;
   background: transparent;
   border: none;
   color: var(--txm);
@@ -268,7 +268,7 @@
   background: var(--d2);
   border: 1px solid var(--bd);
   border-radius: var(--r);
-  padding: 24px;
+  padding: 28px;
   position: sticky;
   top: 80px;
 }
