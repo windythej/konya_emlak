@@ -128,7 +128,7 @@ function selectCat(cat, el) {
 function renderStep2() {
   renderProgress();
   const districts = [...new Set(allListings.map(l => l.district).filter(Boolean))].sort();
-  const extraDistricts = ['Akşehir','Beyşehir','Cihanbeyli','Çumra','Ereğli','Ilgın','Kadınhanı','Kulu','Sarayönü','Seydişehir','Yunak'];
+  const extraDistricts = ['Ahırlı','Akören','Akşehir','Altınekin','Beyşehir','Bozkır','Cihanbeyli','Çeltik','Çumra','Derbent','Derebucak','Doğanhisar','Emirgazi','Ereğli','Güneysınır','Hadim','Halkapınar','Hüyük','Ilgın','Kadınhanı','Karapınar','Karatay','Kulu','Meram','Sarayönü','Selçuklu','Seydişehir','Taşkent','Tuzlukçu','Yalıhüyük','Yunak'];
   const allDistricts = [...new Set([...districts, ...extraDistricts])].sort();
 
   document.getElementById('val-form-area').innerHTML = `
@@ -208,8 +208,8 @@ function renderStep3() {
         <div class="vfg">
           <label class="vfl">Konut Tipi <span class="req">*</span></label>
           <div class="chip-group">
-            <button class="vchip ${VAL.housingType === 'daire' ? 'on' : ''}" onclick="setChip('housingType','daire',this)">Apartman</button>
-            <button class="vchip ${VAL.housingType === 'mustakil' ? 'on' : ''}" onclick="setChip('housingType','mustakil',this)">Müstakil</button>
+            <button class="vchip ${VAL.housingType === 'daire' ? 'on' : ''}" onclick="setChip('housingType','daire',this)" onmouseenter="hoverInfo('housingType','daire')" onmouseleave="updateInfoPanel()">Apartman</button>
+            <button class="vchip ${VAL.housingType === 'mustakil' ? 'on' : ''}" onclick="setChip('housingType','mustakil',this)" onmouseenter="hoverInfo('housingType','mustakil')" onmouseleave="updateInfoPanel()">Müstakil</button>
           </div>
         </div>
 
@@ -217,7 +217,7 @@ function renderStep3() {
           <label class="vfl">Apartman Tipi</label>
           <div class="chip-group">
             ${['Daire','Teras Dubleks','Ara Kat Dubleks','Bahçe Dubleks','Ters Dubleks'].map(t =>
-              `<button class="vchip ${VAL.apartmentType === t ? 'on' : ''}" onclick="setChip('apartmentType','${t}',this)">${t}</button>`
+              `<button class="vchip ${VAL.apartmentType === t ? 'on' : ''}" onclick="setChip('apartmentType','${t}',this)" onmouseenter="hoverInfo('apartmentType','${t}')" onmouseleave="updateInfoPanel()">${t}</button>`
             ).join('')}
           </div>
         </div>
@@ -226,7 +226,7 @@ function renderStep3() {
           <label class="vfl">Kullanım Durumu</label>
           <div class="chip-group">
             ${['Mülk Sahibi','Kiracı','Boş'].map(t =>
-              `<button class="vchip ${VAL.usageStatus === t ? 'on' : ''}" onclick="setChip('usageStatus','${t}',this)">${t}</button>`
+              `<button class="vchip ${VAL.usageStatus === t ? 'on' : ''}" onclick="setChip('usageStatus','${t}',this)" onmouseenter="hoverInfo('usageStatus','${t}')" onmouseleave="updateInfoPanel()">${t}</button>`
             ).join('')}
           </div>
         </div>
@@ -235,7 +235,7 @@ function renderStep3() {
           <label class="vfl">Yapı Durumu <span class="req">*</span></label>
           <div class="chip-group">
             ${['Bakımlı/Yenilenmiş','Standart','Tadilat İhtiyacı Var'].map(t =>
-              `<button class="vchip ${VAL.condition === t ? 'on' : ''}" onclick="setChip('condition','${t}',this)">${t}</button>`
+              `<button class="vchip ${VAL.condition === t ? 'on' : ''}" onclick="setChip('condition','${t}',this)" onmouseenter="hoverInfo('condition','${t}')" onmouseleave="updateInfoPanel()">${t}</button>`
             ).join('')}
           </div>
         </div>
@@ -474,7 +474,7 @@ function renderStep4() {
         <label class="vfl">Isıtma Sistemi <span class="req">*</span></label>
         <div class="chip-group">
           ${['Yok','Soba','Doğalgaz Sobası','Kat Kaloriferi','Doğalgaz/Kombi','Merkezi Sistem','Merkezi Isı Pay Ölçer','Yerden Isıtma','Klima Sistemi','Jeotermal','Güneş Enerjisi'].map(h =>
-            `<button class="vchip ${VAL.heating === h ? 'on' : ''}" onclick="setChip('heating','${h}',this)">${h}</button>`
+            `<button class="vchip ${VAL.heating === h ? 'on' : ''}" onclick="setChip('heating','${h}',this)" onmouseenter="hoverInfo('heating','${h}')" onmouseleave="updateInfoPanel()">${h}</button>`
           ).join('')}
         </div>
       </div>
@@ -806,16 +806,30 @@ function typewriter(id, text, speed) {
 // Supabase'de arsa/ticari ilan verisi yok; sabit bölge emsal katsayıları kullanılır
 const ARSA_M2_KATSAYILARI = {
   // TL/m² - 2025 Konya emsal değerleri (imarlı arsa)
-  'Selçuklu':   8_500, 'Meram':    6_800, 'Karatay':  5_200,
-  'Beyşehir':   2_800, 'Ereğli':   2_200, 'Akşehir':  2_500,
-  'Seydişehir': 2_100, 'Cihanbeyli':1_800,'Çumra':    1_900,
-  'Kulu':       1_700, 'Ilgın':    1_600, 'Kadınhanı':1_500,
+  'Selçuklu':3_800,'Meram':3_000,'Karatay':2_500,
+  'Beyşehir':2_000,'Ereğli':1_800,'Akşehir':1_900,
+  'Seydişehir':1_600,'Cihanbeyli':1_400,'Çumra':1_500,
+  'Kulu':1_300,'Ilgın':1_400,'Kadınhanı':1_200,
+  'Karapınar':1_300,'Sarayönü':1_200,'Bozkır':1_400,
+  'Hadim':1_200,'Doğanhisar':1_100,'Güneysınır':1_100,
+  'Halkapınar':1_000,'Taşkent':1_000,'Derebucak':1_000,
+  'Altınekin':1_100,'Akören':1_000,'Ahırlı':950,
+  'Emirgazi':1_000,'Derbent':950,'Hüyük':1_000,
+  'Tuzlukçu':1_000,'Yalıhüyük':950,'Çeltik':950,
+  'Yunak':1_100,
 };
 const TICARI_M2_KATSAYILARI = {
-  'Selçuklu':  45_000, 'Meram':   35_000, 'Karatay': 28_000,
-  'Beyşehir':  18_000, 'Ereğli':  15_000, 'Akşehir': 16_000,
-  'Seydişehir':13_000, 'Cihanbeyli':11_000,'Çumra':  12_000,
-  'Kulu':      10_000, 'Ilgın':   10_000, 'Kadınhanı':9_500,
+  'Selçuklu':45_000,'Meram':35_000,'Karatay':28_000,
+  'Beyşehir':18_000,'Ereğli':15_000,'Akşehir':16_000,
+  'Seydişehir':13_000,'Cihanbeyli':11_000,'Çumra':12_000,
+  'Kulu':10_000,'Ilgın':10_000,'Kadınhanı':9_500,
+  'Karapınar':10_000,'Sarayönü':9_000,'Bozkır':8_500,
+  'Hadim':8_000,'Doğanhisar':7_500,'Güneysınır':7_500,
+  'Halkapınar':7_000,'Taşkent':7_000,'Derebucak':7_000,
+  'Altınekin':8_000,'Akören':7_500,'Ahırlı':7_000,
+  'Emirgazi':7_500,'Derbent':7_000,'Hüyük':8_000,
+  'Tuzlukçu':8_000,'Yalıhüyük':7_000,'Çeltik':7_500,
+  'Yunak':9_000,
 };
 // Arsa tipi çarpanları
 const ZONING_MULT = {
@@ -949,6 +963,57 @@ Alıcı için öneri: ${fp(real)} TL altındaki teklifler fırsat olarak değerl
 }
 
 // ===== DİNAMİK BİLGİ PANELİ =====
+function hoverInfo(key, val) {
+  const panel = document.getElementById('val-info-area');
+  if (!panel) return;
+
+  const INFO = {
+    housingType: {
+      daire:    { icon:"🏢", title:"Apartman Dairesi", text:"Konya satıştaki konutların büyük çoğunluğu apartman dairesi. En likit segment; alıcı ve kiracı talebinin en yoğun olduğu mülk tipidir. Site içi, asansörlü ve kombi daireler prim yapar." },
+      mustakil: { icon:"🏡", title:"Müstakil Konut", text:"Müstakil evler özel bahçe ve arsa payıyla dairelerin %20-40 üzerinde değerlenir. Arz sınırlı; talep güçlü. Bakım ve tadilat maliyeti daha yüksek olabilir." },
+    },
+    apartmentType: {
+      "Daire":           { icon:"🏢", title:"Standart Daire", text:"Normal kat daireler bölge referans fiyatını oluşturur. 2-7. katlar en ideal; giriş ve çatı katı genellikle %4-7 düşük fiyatlanır." },
+      "Teras Dubleks":   { icon:"🌅", title:"Teras Dubleks", text:"Çatı teras + özel açık alan kombinasyonu. Standart dairelerin %15-25 üzerinde fiyatlanır. Yaz aylarında ısınma avantajı; kış ısı kaybı riski." },
+      "Ara Kat Dubleks": { icon:"🏠", title:"Ara Kat Dubleks", text:"İki katlı geniş yaşam hacmi. Aile segmentinin tercihi; %10-18 prim taşır. Merdiven kullanımı yaşlılar için dezavantaj sayılabilir." },
+      "Bahçe Dubleks":   { icon:"🌿", title:"Bahçe Dubleks", text:"Özel bahçe erişimi şehirde müstakil hissi yaratır. %20-30 prim olağan. Zemin kat rutubeti iyi yapılarda bertaraf edilmiştir." },
+      "Ters Dubleks":    { icon:"🔄", title:"Ters Dubleks", text:"Üst katta oturma alanı, alt katta odalar. Manzara avantajı yüksek; %8-15 prim. Alıcı kitlesi daha seçici." },
+    },
+    usageStatus: {
+      "Mülk Sahibi": { icon:"🏠", title:"Mülk Sahibi", text:"Sahibi oturan mülkler bakım kalitesi ve psikolojik değer nedeniyle genellikle %3-8 prim taşır. Hızlı satış için en avantajlı profil." },
+      "Kiracı":      { icon:"🔑", title:"Kiracı", text:"Kiracılı mülk yatırımcı için hazır gelir anlamına gelir. Kira miktarı ve sözleşme süresi değeri doğrudan etkiler. Boşaltma süreci alıcıda çekince yaratabilir." },
+      "Boş":         { icon:"🚪", title:"Boş Mülk", text:"Taşınmaya hazır mülkler alıcıların talebiyle hızlı kapanır. Ancak uzun süre boş kalan mülklerde bakımsızlık değeri düşürür." },
+    },
+    condition: {
+      "Bakımlı/Yenilenmiş": { icon:"✨", title:"Bakımlı / Yenilenmiş", text:"Mutfak, banyo veya zemin yenilenmiş mülkler bölge ortalamasının %5-15 üzerinde fiyatlanır. Alıcı tarafında ek tadilat kaygısı olmadığından pazarlık payı dar." },
+      "Standart":            { icon:"🏠", title:"Standart Yapı", text:"Rutin bakımlı, büyük sorunsuz mülkler. Bölge emsal fiyatında seyreder. Bazı kozmetik dokunuşlarla üst segmente taşınabilir." },
+      "Tadilat İhtiyacı Var":{ icon:"🔧", title:"Tadilat Gerekli", text:"Piyasa fiyatının %10-20 altında satar. Yatırımcılar bu mülkleri fırsat olarak değerlendirir. Tadilat maliyeti yapıya göre değişir; fiyata yansıtın." },
+    },
+    heating: {
+      "Yerden Isıtma":         { icon:"🌡️", title:"Yerden Isıtma", text:"En prestijli ısıtma sistemi; %3-6 değer artışı sağlar. Konfor düzeyi yüksek, enerji verimliliği iyi. Kurulum maliyeti geri dönüşü var." },
+      "Doğalgaz/Kombi":        { icon:"🔥", title:"Kombi (Doğalgaz)", text:"Konya genelinde en yaygın sistem. Bireysel kontrol imkânı değer katıcı; alıcılar tarafından standart olarak beklenir." },
+      "Merkezi Sistem":        { icon:"🏢", title:"Merkezi Isıtma", text:"Sabit gider (aidat içinde) anlamına gelir. Eski binalarda sorun kaynağı olabilir; yeni binalarda tercih edilebilir." },
+      "Merkezi Isı Pay Ölçer": { icon:"📊", title:"Merkezi + Pay Ölçer", text:"Bireysel kullanıma göre faturalandırma. Merkezi konforuyla kombi tasarrufunu birleştirir; %2-4 prim." },
+      "Soba":                  { icon:"🪵", title:"Soba", text:"Eski yapılarda görülür. Değer üzerinde %3-8 olumsuz etki yapabilir. Alıcılar doğalgaz dönüşüm maliyetini fiyata yansıtır." },
+      "Jeotermal":             { icon:"♨️", title:"Jeotermal", text:"Konya bazı ilçelerinde mevcut. Düşük işletme maliyeti ve sürdürülebilirlik avantajıyla %4-8 prim yapar." },
+      "Güneş Enerjisi":        { icon:"☀️", title:"Güneş Enerjisi", text:"Destekleyici sistem olarak kullanılır. Yeşil bina sertifikasıyla kombinasyonu en yüksek değer artışını sağlar." },
+      "Klima Sistemi":         { icon:"❄️", title:"Klima Sistemi", text:"Yazın soğutma avantajı sağlar. Isıtmada tek başına yetersiz; genellikle ek ısıtma ile birlikte kullanılır." },
+      "Yok":                   { icon:"❌", title:"Isıtma Sistemi Yok", text:"Alıcı için ek maliyet; değer üzerinde %5-10 olumsuz etki. Doğalgaz bağlantısı varsa dönüşüm nispeten kolay." },
+    },
+  };
+
+  const group = INFO[key];
+  if (!group) return;
+  const info = group[val];
+  if (!info) return;
+
+  panel.innerHTML = `<div class="val-info-panel">
+    <div class="val-info-icon">${info.icon}</div>
+    <div class="val-info-title">${info.title}</div>
+    <div class="val-info-text">${info.text}</div>
+  </div>`;
+}
+
 function updateInfoPanel() {
   const panel = document.getElementById('val-info-area');
   if (!panel) return;

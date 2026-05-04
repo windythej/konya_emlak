@@ -27,6 +27,10 @@
     {
       "source": "/danisman",
       "destination": "/index.html"
+    },
+    {
+      "source": "/hakkimizda",
+      "destination": "/index.html"
     }
   ]
 }
