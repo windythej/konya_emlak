@@ -1230,14 +1230,14 @@ a, button, .tc, .pc, .dc-chip, .adv-card,
   .stat-kpi-val { font-size: 30px !important; }
 }
 
-/* Val container: adım 1-4 dar+ortalı, adım 5 geniş */
+/* Val container: her zaman tam genişlik, grid içi dengeli */
 .val-container {
-  max-width: clamp(600px, 78%, 960px);
-  margin: 0 auto;
-}
-.val-container.val-result-wide {
   max-width: 100%;
   margin: 0;
+}
+/* Adım 1-4: form-card ortalı görünür, info-area sağda */
+.val-step-layout {
+  width: 100%;
 }
 
 /* ── BUTON SHINE EFEKTİ ── */
@@ -1252,7 +1252,8 @@ a, button, .tc, .pc, .dc-chip, .adv-card,
 .adv-contact-btn::before {
   content: '';
   position: absolute;
-  top: 0; left: -100%;
+  top: 0;
+  left: 160%;
   width: 60%;
   height: 100%;
   background: linear-gradient(
@@ -1262,14 +1263,29 @@ a, button, .tc, .pc, .dc-chip, .adv-card,
     transparent 80%
   );
   transform: skewX(-20deg);
-  transition: none;
+  transition: left .9s ease;
   pointer-events: none;
 }
 .btn-g:hover::before, .btn-o:hover::before,
 .val-next:hover::before, .vre-advisor-btn:hover::before,
 .adv-contact-btn:hover::before {
   left: 160%;
-  transition: left .55s ease;
+  transition: left .9s ease;
+  animation: shinePass .9s ease forwards;
+}
+@keyframes shinePass {
+  0%   { left: -100%; }
+  100% { left: 160%; }
+}
+/* Hover çıkışında ters yönden gelsin */
+.btn-g:not(:hover)::before, .btn-o:not(:hover)::before,
+.val-next:not(:hover)::before, .vre-advisor-btn:not(:hover)::before,
+.adv-contact-btn:not(:hover)::before {
+  animation: shinePassReverse .9s ease forwards;
+}
+@keyframes shinePassReverse {
+  0%   { left: 160%; }
+  100% { left: -100%; }
 }
 
 /* ── DEVAMINI OKU ── */
@@ -1307,6 +1323,20 @@ a, button, .tc, .pc, .dc-chip, .adv-card,
   .mv-card { padding: 24px 18px !important; }
   .mv-card p { font-size: 14px !important; line-height: 1.7 !important; }
   #page-about .stat-kpi-card { min-height: 120px !important; }
+}
+
+/* val-info-area sağ sütun — taşma engelle */
+#val-info-area {
+  min-width: 0;
+  overflow: hidden;
+}
+#val-info-area .val-info-panel {
+  word-break: break-word;
+  overflow-wrap: break-word;
+}
+#val-info-area ul li {
+  font-size: 13px;
+  word-break: break-word;
 }
 
 </style>
@@ -3572,9 +3602,10 @@ const GS_RESUME_DELAY = 12000; // tıklamadan sonra 12sn bekle
 
 function gsNextStep(step, fromUser) {
   const total = 4;
+  // Tıklamada hover state'i temizle — çizgiler gerçek state'e dönsün
+  gsHoverOut();
   if(fromUser) {
     gsUserInteracted = true;
-    // Otomatik döngüyü durdur, 12sn sonra tekrar başlat
     if(gsDemoInterval) { clearInterval(gsDemoInterval); gsDemoInterval = null; }
     clearTimeout(window._gsResumeTimer);
     window._gsResumeTimer = setTimeout(() => {

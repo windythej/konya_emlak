@@ -75,8 +75,8 @@
   margin: 0;
   padding: 0 clamp(12px,3vw,32px) 80px;
   display: grid;
-  grid-template-columns: 1fr clamp(260px,28%,380px);
-  gap: clamp(14px,2vw,24px);
+  grid-template-columns: minmax(0,1fr) clamp(220px,24%,320px);
+  gap: clamp(14px,2vw,28px);
   align-items: start;
 }
 .val-form-card {
@@ -588,13 +588,38 @@
 .val-next::before {
   content: '';
   position: absolute;
-  top: 0; left: -100%;
+  top: 0; left: 160%;
   width: 60%; height: 100%;
   background: linear-gradient(105deg, transparent 20%, rgba(255,255,255,.25) 50%, transparent 80%);
   transform: skewX(-20deg);
   pointer-events: none;
+  transition: left .9s ease;
 }
 .val-next:hover::before {
-  left: 160%;
-  transition: left .5s ease;
+  animation: shinePass .9s ease forwards;
+}
+.val-next:not(:hover)::before {
+  animation: shinePassReverse .9s ease forwards;
+}
+.val-info-panel {
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  min-width: 0;
+}
+.val-info-panel .val-info-text,
+.val-info-panel li {
+  font-size: clamp(12px, 1.4vw, 14px);
+  line-height: 1.65;
+  word-break: break-word;
+}
+/* Benzer ilanlar inline (adım 5) */
+#val-benzer-inline .val-info-panel {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 12px;
+}
+#val-benzer-inline .val-info-panel > div[style*="padding:12px"] {
+  border: 1px solid var(--bd);
+  border-radius: var(--rs);
+  padding: 12px !important;
 }
