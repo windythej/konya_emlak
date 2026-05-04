@@ -1006,12 +1006,16 @@ function _activatePage(page, tab) {
   if(page === 'valuation') {
     setTimeout(() => {
       if(typeof initValuation === 'function') {
+        // Her açılışta val-content'i sıfırla ve yeniden render et
         initValuation();
-        _valInited = true;
-        if(typeof all !== 'undefined' && all.length === 0 && typeof loadForVal === 'function') loadForVal();
-        else if(typeof populateValDistricts === 'function') populateValDistricts();
+        // Veri yoksa çek, varsa ilçeleri doldur
+        if(typeof all !== 'undefined' && all.length === 0) {
+          if(typeof loadForVal === 'function') loadForVal();
+        } else {
+          if(typeof populateValDistricts === 'function') populateValDistricts();
+        }
       }
-    }, 80);
+    }, 120);
   }
 }
 

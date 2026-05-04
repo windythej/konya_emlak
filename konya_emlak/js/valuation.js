@@ -73,22 +73,22 @@ function renderStep1() {
       <div class="val-form-title">Ne değerlendirmek istiyorsunuz?</div>
       <div class="val-form-sub">Mülk tipini seçerek başlayın. Her kategori için farklı analiz kriterleri kullanılmaktadır.</div>
       <div class="cat-grid">
-        <div class="cat-card ${VAL.category === 'konut' ? 'on' : ''}" onclick="selectCat('konut')">
+        <div class="cat-card ${VAL.category === 'konut' ? 'on' : ''}" onclick="selectCat('konut',this)">
           <div class="cat-icon">🏠</div>
           <div class="cat-name">Konut</div>
           <div class="cat-desc">Daire, müstakil ev, villa</div>
         </div>
-        <div class="cat-card ${VAL.category === 'arsa' ? 'on' : ''}" onclick="selectCat('arsa')">
+        <div class="cat-card ${VAL.category === 'arsa' ? 'on' : ''}" onclick="selectCat('arsa',this)">
           <div class="cat-icon">🌍</div>
           <div class="cat-name">Arsa / Arazi</div>
           <div class="cat-desc">İmarlı arsa, tarla, bağ bahçe</div>
         </div>
-        <div class="cat-card ${VAL.category === 'ticari' ? 'on' : ''}" onclick="selectCat('ticari')">
+        <div class="cat-card ${VAL.category === 'ticari' ? 'on' : ''}" onclick="selectCat('ticari',this)">
           <div class="cat-icon">🏢</div>
           <div class="cat-name">Ticari</div>
           <div class="cat-desc">Dükkan, ofis, depo, fabrika</div>
         </div>
-        <div class="cat-card ${VAL.category === 'kiralik' ? 'on' : ''}" onclick="selectCat('kiralik')">
+        <div class="cat-card ${VAL.category === 'kiralik' ? 'on' : ''}" onclick="selectCat('kiralik',this)">
           <div class="cat-icon">🔑</div>
           <div class="cat-name">Kiralık</div>
           <div class="cat-desc">Aylık kira değeri analizi</div>
@@ -115,11 +115,13 @@ function renderStep1() {
     </div>`;
 }
 
-function selectCat(cat) {
+function selectCat(cat, el) {
   VAL.category = cat;
   document.querySelectorAll('.cat-card').forEach(c => c.classList.remove('on'));
-  event.currentTarget.classList.add('on');
-  document.querySelector('.val-next').removeAttribute('disabled');
+  // el: tıklanan element (onclick="selectCat('konut',this)")
+  if(el) el.classList.add('on');
+  const nx = document.querySelector('.val-next');
+  if(nx) nx.removeAttribute('disabled');
 }
 
 // ===== ADIM 2: KONUM =====
@@ -838,6 +840,12 @@ function showValError(msg) {
 function initValuation() {
   const area = document.getElementById('val-content');
   if (!area) return;
+  // State sıfırla
+  VAL.category=''; VAL.district=''; VAL.quarter='';
+  VAL.rooms=3; VAL.salons=1; VAL.bathrooms=1;
+  VAL.grossM2=0; VAL.netM2=0; VAL.buildingAge=0;
+  VAL.totalFloors=0; VAL.floor=0; VAL.facades=[];
+  VAL.views=[]; VAL.amenities=[]; VAL.currentStep=1;
   area.innerHTML = `
     <div id="free-counter"></div>
     <div class="val-progress" id="val-progress"></div>
