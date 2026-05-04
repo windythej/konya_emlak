@@ -666,19 +666,7 @@
   #val-info-area { position: static; }
 }
 
-/* Adım 5 sonuç: tam genişlik */
-.val-container.val-result-wide {
-  grid-template-columns: 1fr !important;
-  justify-content: stretch;
-}
-.val-container.val-result-wide #val-info-area {
-  grid-column: 1 / -1;
-}
-.val-container.val-result-wide #val-info-area .val-info-panel {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 12px;
-}
+
 
 /* val-form-card grid kolonunu doldursun */
 .val-form-card {
@@ -700,4 +688,14 @@
     justify-content: stretch;
   }
   #val-info-area { position: static; }
+}
+
+/* Adım 5: val-info-area (benzer ilanlar) sağ kolonda sticky */
+#val-info-area .val-info-panel {
+  position: sticky;
+  top: 90px;
+  max-height: calc(100vh - 120px);
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(201,168,76,.2) transparent;
 }

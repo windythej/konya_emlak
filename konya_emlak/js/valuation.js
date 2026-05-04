@@ -550,9 +550,6 @@ function renderStep5() {
 }
 
 function calcAndRender() {
-  // Adım 5'te: container tek kolon (benzer ilanlar alt kısımda)
-  const vc = document.getElementById('val-container-inner');
-  if(vc) vc.classList.add('val-result-wide');
   // Freemium kullanım artır
   if (!currentUser) {
     freeUsed++;
@@ -778,8 +775,6 @@ function goBack5() {
     freeUsed--;
     localStorage.setItem('val_used', freeUsed);
   }
-  const vcb = document.getElementById('val-container-inner');
-  if(vcb) vcb.classList.remove('val-result-wide');
   goStep(4);
 }
 
@@ -831,8 +826,6 @@ const ZONING_MULT = {
 };
 
 function calcAndRenderNonKonut() {
-  const vcn = document.getElementById('val-container-inner');
-  if(vcn) vcn.classList.add('val-result-wide');
   const fp = n => new Intl.NumberFormat('tr-TR').format(Math.round(n));
   const isArsa = VAL.category === 'arsa';
   const m2 = isArsa ? (VAL.landM2 || 0) : (VAL.grossM2 || 0);
@@ -1113,8 +1106,6 @@ function buildInfoPanelHTML() {
 // ===== ADIM GEÇİŞİ =====
 function goStep(step) {
   // Adım değişince container dar moda dön
-  const vcw = document.getElementById('val-container-inner');
-  if(vcw) vcw.classList.remove('val-result-wide');
   VAL.currentStep = step;
   if (step === 1) renderStep1();
   else if (step === 2) renderStep2();
