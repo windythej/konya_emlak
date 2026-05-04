@@ -322,6 +322,377 @@ body{font-family:var(--font);background:var(--dark);color:var(--tx);overflow-x:h
   .ftr-in{grid-template-columns:1fr;gap:26px;}
   .p2{grid-template-columns:1fr;}
 }
+<style>
+/* ── RESPONSIVE ── */
+@media(max-width:900px){
+  .guvenle-sat-grid{grid-template-columns:1fr!important;}
+  .stat-band-grid{grid-template-columns:1fr 1fr!important;}
+}
+@media(max-width:600px){
+  .stat-band-grid{grid-template-columns:1fr 1fr!important;gap:16px!important;}
+}
+
+/* ════════════════════════════════════════
+   ÖĞREN-SAT — VİSUAL ENHANCEMENT PACK
+   GPU-accelerated, performans odaklı
+════════════════════════════════════════ */
+
+/* ── GLOBAL ── */
+*, *::before, *::after { will-change: auto; }
+
+/* ── HERO NOISE TEXTURE ── */
+.hero::before {
+  animation: gridShift 20s linear infinite;
+}
+@keyframes gridShift {
+  0%   { transform: translateX(0) translateY(0); }
+  100% { transform: translateX(64px) translateY(64px); }
+}
+
+/* ── HERO RADIAL PULSE ── */
+.hero::after {
+  animation: heroPulse 6s ease-in-out infinite;
+}
+@keyframes heroPulse {
+  0%,100% { opacity: 1; }
+  50%      { opacity: .6; }
+}
+
+/* ── PARÇACIK EFEKTI (hero bg) ── */
+.hero-particles {
+  position: absolute; inset: 0; z-index: 0;
+  overflow: hidden; pointer-events: none;
+}
+.particle {
+  position: absolute;
+  width: 2px; height: 2px;
+  background: var(--gold);
+  border-radius: 50%;
+  opacity: 0;
+  animation: particleFly var(--dur, 8s) var(--delay, 0s) ease-in infinite;
+}
+@keyframes particleFly {
+  0%   { transform: translateY(100vh) translateX(0); opacity: 0; }
+  10%  { opacity: .6; }
+  90%  { opacity: .3; }
+  100% { transform: translateY(-20px) translateX(var(--dx, 40px)); opacity: 0; }
+}
+
+/* ── HERO İÇERİK SHINE ── */
+.hero-h1 {
+  background: linear-gradient(135deg, var(--tx) 40%, var(--gold-l) 55%, var(--tx) 70%);
+  background-size: 300% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: titleShine 4s linear 1s 1 forwards;
+}
+.hero-h1 em {
+  background: linear-gradient(135deg, var(--gold) 0%, var(--gold-l) 50%, var(--gold) 100%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: goldShine 3s linear infinite;
+}
+@keyframes titleShine {
+  0%   { background-position: 100% center; }
+  100% { background-position: 0% center; }
+}
+@keyframes goldShine {
+  0%   { background-position: 0% center; }
+  100% { background-position: 200% center; }
+}
+
+/* ── STAT COUNTER ANİMASYONU ── */
+.hstat-val {
+  transition: transform .3s ease;
+}
+.hstat-val.counting {
+  transform: scale(1.05);
+}
+
+/* ── NAV GLOW ── */
+.nav.scrolled {
+  box-shadow: 0 1px 0 var(--bd), 0 4px 32px rgba(0,0,0,.6);
+}
+
+/* ── ARAÇ KARTLARI — GLOW HOVER ── */
+.tc {
+  transition: all .35s cubic-bezier(.4,0,.2,1);
+}
+.tc:hover {
+  box-shadow: 0 0 0 1px rgba(201,168,76,.3), 0 24px 70px rgba(0,0,0,.5), inset 0 1px 0 rgba(201,168,76,.1);
+}
+.tc::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse 60% 40% at 50% 0%, rgba(201,168,76,.06) 0%, transparent 70%);
+  opacity: 0;
+  transition: opacity .35s;
+  border-radius: inherit;
+  pointer-events: none;
+}
+.tc:hover::before { opacity: 1; }
+
+/* ── PRICING CARD GLOW ── */
+.pc.pop {
+  box-shadow: 0 0 0 1px rgba(201,168,76,.4), 0 20px 60px rgba(201,168,76,.1);
+}
+.pc.pop:hover {
+  box-shadow: 0 0 0 1px rgba(201,168,76,.6), 0 28px 80px rgba(201,168,76,.18);
+}
+
+/* ── STAT BAND COUNTER ── */
+.stat-band-num {
+  display: inline-block;
+  transition: all .4s ease;
+}
+
+/* ── SECTION REVEAL — GELİŞMİŞ ── */
+.rv {
+  opacity: 0;
+  transform: translateY(32px);
+  transition: opacity .7s cubic-bezier(.4,0,.2,1), transform .7s cubic-bezier(.4,0,.2,1);
+}
+.rv.vis { opacity: 1; transform: translateY(0); }
+.rv.slide-left  { transform: translateX(-40px); }
+.rv.slide-right { transform: translateX(40px); }
+.rv.slide-left.vis, .rv.slide-right.vis { transform: translateX(0); }
+.rv.scale-in    { transform: scale(.9); }
+.rv.scale-in.vis{ transform: scale(1); }
+
+/* ── HAKKIMIZDA — BÖLÜM STİLLERİ ── */
+
+/* Gradient hero banner */
+.about-hero-wrap {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(135deg, rgba(201,168,76,.04) 0%, transparent 60%);
+  border-bottom: 1px solid var(--bd);
+}
+.about-hero-wrap::before {
+  content: '';
+  position: absolute;
+  top: -50%; right: -20%;
+  width: 600px; height: 600px;
+  background: radial-gradient(circle, rgba(201,168,76,.07) 0%, transparent 65%);
+  pointer-events: none;
+  animation: floatOrb 8s ease-in-out infinite;
+}
+.about-hero-wrap::after {
+  content: '';
+  position: absolute;
+  bottom: -30%; left: 10%;
+  width: 400px; height: 400px;
+  background: radial-gradient(circle, rgba(201,168,76,.04) 0%, transparent 65%);
+  pointer-events: none;
+  animation: floatOrb 12s ease-in-out infinite reverse;
+}
+@keyframes floatOrb {
+  0%,100% { transform: translateY(0) scale(1); }
+  50%      { transform: translateY(-30px) scale(1.05); }
+}
+
+/* Büyük dekoratif harf */
+.about-deco-letter {
+  position: absolute;
+  right: 5%;
+  top: 50%;
+  transform: translateY(-50%);
+  font-family: var(--serif);
+  font-size: clamp(180px, 20vw, 320px);
+  font-weight: 700;
+  color: transparent;
+  -webkit-text-stroke: 1px rgba(201,168,76,.08);
+  line-height: 1;
+  pointer-events: none;
+  user-select: none;
+  animation: letterFloat 10s ease-in-out infinite;
+}
+@keyframes letterFloat {
+  0%,100% { transform: translateY(-50%) rotate(-2deg); }
+  50%      { transform: translateY(-53%) rotate(2deg); }
+}
+
+/* Metodoloji kart hover */
+.method-card {
+  transition: all .3s cubic-bezier(.4,0,.2,1);
+  position: relative;
+  overflow: hidden;
+}
+.method-card::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  transform: scaleX(0);
+  transition: transform .4s;
+}
+.method-card:hover::after { transform: scaleX(1); }
+.method-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 20px 50px rgba(0,0,0,.4), 0 0 0 1px rgba(201,168,76,.15);
+}
+
+/* Ekip kartı — halo efekti */
+.team-card {
+  transition: all .35s cubic-bezier(.4,0,.2,1);
+  position: relative;
+  overflow: hidden;
+}
+.team-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 80% 50% at 50% 0%, rgba(201,168,76,.06) 0%, transparent 65%);
+  opacity: 0;
+  transition: opacity .35s;
+}
+.team-card:hover::before { opacity: 1; }
+.team-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 20px 50px rgba(0,0,0,.4);
+}
+.team-avatar {
+  position: relative;
+  margin: 0 auto 18px;
+}
+.team-avatar::after {
+  content: '';
+  position: absolute;
+  inset: -3px;
+  border-radius: 50%;
+  background: conic-gradient(var(--gold), var(--gold-l), var(--gold-d), var(--gold));
+  z-index: -1;
+  opacity: 0;
+  transition: opacity .3s;
+  animation: spinGold 3s linear infinite;
+}
+.team-card:hover .team-avatar::after { opacity: 1; }
+@keyframes spinGold {
+  to { transform: rotate(360deg); }
+}
+
+/* Misyon/Vizyon kart */
+.mv-card {
+  transition: all .3s ease;
+  position: relative;
+  overflow: hidden;
+}
+.mv-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--gold-d), var(--gold-l));
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform .4s ease;
+}
+.mv-card:hover::before { transform: scaleX(1); }
+.mv-card:hover { transform: translateY(-4px); box-shadow: 0 16px 48px rgba(0,0,0,.4); }
+
+/* Rakam bandı — hover glow */
+.stat-band-item {
+  transition: all .3s ease;
+  cursor: default;
+  border-radius: var(--rs);
+  padding: 12px;
+  margin: -12px;
+}
+.stat-band-item:hover .stat-band-val {
+  text-shadow: 0 0 40px rgba(201,168,76,.6);
+  transform: scale(1.05);
+}
+.stat-band-val {
+  display: inline-block;
+  transition: all .3s ease;
+}
+
+/* Güvenle Sat — süreç adımı hover */
+.process-step {
+  transition: all .25s ease;
+  cursor: default;
+}
+.process-step:hover .process-num-active {
+  box-shadow: 0 0 0 6px rgba(201,168,76,.15), 0 0 20px rgba(201,168,76,.3);
+}
+
+/* Tüm buton pulse */
+.btn-g {
+  position: relative;
+  overflow: hidden;
+}
+.btn-g::after {
+  content: '';
+  position: absolute;
+  top: 50%; left: 50%;
+  width: 0; height: 0;
+  background: rgba(255,255,255,.15);
+  border-radius: 50%;
+  transform: translate(-50%,-50%);
+  transition: width .5s, height .5s, opacity .5s;
+  opacity: 0;
+}
+.btn-g:active::after {
+  width: 300px; height: 300px; opacity: 0;
+}
+
+/* Scroll down indicator */
+.scroll-ind-line {
+  background: linear-gradient(to bottom, var(--gold-l), transparent) !important;
+}
+
+/* Hakkımızda rakam bölümü */
+.about-stat-val {
+  position: relative;
+}
+.about-stat-val::after {
+  content: attr(data-suffix);
+  font-size: .45em;
+  vertical-align: super;
+  color: var(--gold-l);
+}
+
+/* Güvenle Sat karşılaştırma kutusu */
+.compare-box-gold {
+  position: relative;
+  overflow: hidden;
+}
+.compare-box-gold::before {
+  content: '';
+  position: absolute;
+  top: -50%; right: -20%;
+  width: 200px; height: 200px;
+  background: radial-gradient(circle, rgba(201,168,76,.12) 0%, transparent 65%);
+  pointer-events: none;
+}
+
+/* ── SMOOTH FONT RENDERING ── */
+body { -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
+
+/* ── GLASS CARD EFEKT (val-info-panel) ── */
+.val-info-panel {
+  backdrop-filter: blur(4px);
+  transition: all .3s ease;
+}
+
+/* ── KARŞILAŞTIRMA ARAÇ PANEL ── */
+.panel { 
+  scrollbar-width: thin;
+  scrollbar-color: rgba(201,168,76,.2) transparent;
+}
+
+/* ── FOOTER GRADIENT BORDER ── */
+.ftr::before {
+  content: '';
+  display: block;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--gold), var(--gold-l), var(--gold), transparent);
+  margin-bottom: -1px;
+}
 </style>
 </head>
 <body>
@@ -365,6 +736,7 @@ body{font-family:var(--font);background:var(--dark);color:var(--tx);overflow-x:h
   <button class="nav-lnk" onclick="goPage('pricing');closeMob()">Fiyatlar</button>
   <button class="nav-lnk" onclick="goPage('advisor');closeMob()">Danışman Bul</button>
   <button class="nav-lnk" onclick="goPage('about');closeMob()">Hakkımızda</button>
+  <button class="nav-lnk" onclick="goPage('analiz');closeMob()">📊 Analiz</button>
   <div style="margin-top:18px;padding-top:18px;border-top:1px solid var(--bd);">
     <button class="btn-g" style="width:100%;justify-content:center;" id="mob-login-btn" onclick="goPage('auth');closeMob()">Giriş Yap</button>
     <div id="mob-user-sec" style="display:none;text-align:center;padding:14px 0;">
@@ -386,6 +758,7 @@ body{font-family:var(--font);background:var(--dark);color:var(--tx);overflow-x:h
     <button class="nav-lnk" id="nl3" onclick="goPage('pricing')">Fiyatlar</button>
     <button class="nav-lnk" id="nl4" onclick="goPage('advisor')">Danışman Bul</button>
     <button class="nav-lnk" id="nl5" onclick="goPage('about')">Hakkımızda</button>
+    <button class="nav-lnk" id="nl6" onclick="goPage('analiz')">📊 Analiz</button>
   </div>
   <div style="display:flex;align-items:center;">
     <button class="nav-cta" id="nav-login-btn" onclick="goPage('auth')">Giriş Yap</button>
@@ -407,6 +780,7 @@ body{font-family:var(--font);background:var(--dark);color:var(--tx);overflow-x:h
 <div class="page on" id="page-landing">
 
 <section class="hero">
+  <div class="hero-particles" id="hero-particles"></div>
   <div class="hero-inner">
     <div class="hero-badge"><div class="bdot"></div>Konya'nın Akıllı Emlak Platformu</div>
     <h1 class="hero-h1">Evi <em>satmadan önce</em><br>piyasayı öğren</h1>
@@ -475,47 +849,7 @@ body{font-family:var(--font);background:var(--dark);color:var(--tx);overflow-x:h
   </div>
 </section>
 
-<!-- FİYATLANDIRMA -->
-<section class="sec">
-  <div class="sec-in">
-    <div class="ey">Fiyatlandırma</div>
-    <h2 class="sec-title rv">Sınırsız analiz için uygun fiyat</h2>
-    <p class="sec-sub rv d1">3 ücretsiz değerleme hakkı herkese açık. Daha fazlası için planlardan birini seçin.</p>
-    <div class="pc-g">
-      <div class="pc rv">
-        <div class="pc-name">Ücretsiz</div>
-        <div class="pc-price"><span>₺</span>0</div>
-        <div class="pc-period">sonsuza kadar</div>
-        <ul class="pc-feats">
-          <li>3 değerleme hakkı</li><li>Piyasa karşılaştırma</li><li>Temel filtreler</li>
-          <li class="no">Detaylı yatırım analizi</li><li class="no">Kira getiri hesabı</li><li class="no">Sınırsız sorgulama</li>
-        </ul>
-        <button class="pc-btn" onclick="goPage('valuation')">Hemen Başla</button>
-      </div>
-      <div class="pc pop rv d1">
-        <div class="pop-lbl">En Popüler</div>
-        <div class="pc-name">Aylık Plan</div>
-        <div class="pc-price"><span>₺</span>499</div>
-        <div class="pc-period">/ ay</div>
-        <ul class="pc-feats">
-          <li>Sınırsız değerleme</li><li>Piyasa karşılaştırma</li><li>Gelişmiş filtreler</li>
-          <li>Detaylı yatırım analizi</li><li>Kira getiri hesabı</li><li>Fırsat skoru & öneriler</li>
-        </ul>
-        <button class="pc-btn" onclick="handleSub('Aylık Plan','499','/ay')">Abone Ol</button>
-      </div>
-      <div class="pc rv d2">
-        <div class="pc-name">Yıllık Plan</div>
-        <div class="pc-price"><span>₺</span>3990</div>
-        <div class="pc-period">/ yıl — 2 ay ücretsiz</div>
-        <ul class="pc-feats">
-          <li>Sınırsız değerleme</li><li>Piyasa karşılaştırma</li><li>Gelişmiş filtreler</li>
-          <li>Detaylı yatırım analizi</li><li>Kira getiri hesabı</li><li>Öncelikli destek</li>
-        </ul>
-        <button class="pc-btn" onclick="handleSub('Yıllık Plan','3990','/ yıl')">Abone Ol</button>
-      </div>
-    </div>
-  </div>
-</section>
+
 
 <!-- İLÇELER -->
 <section class="sec" style="background:var(--d2);border-top:1px solid var(--bd);">
@@ -533,6 +867,100 @@ body{font-family:var(--font);background:var(--dark);color:var(--tx);overflow-x:h
 </section>
 
 <!-- CTA -->
+
+<!-- ── RAKAMLAR BANDI ── -->
+<div style="background:var(--d2);border-top:1px solid var(--bd);border-bottom:1px solid var(--bd);">
+  <div style="max-width:1300px;margin:0 auto;padding:44px 48px;display:grid;grid-template-columns:repeat(4,1fr);gap:24px;text-align:center;" class="stat-band-grid">
+    <div>
+      <div style="font-family:var(--serif);font-size:42px;font-weight:700;color:var(--gold);line-height:1;" id="stat-ilan-cnt">123+</div>
+      <div style="font-size:12px;color:var(--txm);letter-spacing:1.5px;text-transform:uppercase;margin-top:8px;">Analiz Edilen İlan</div>
+    </div>
+    <div>
+      <div style="font-family:var(--serif);font-size:42px;font-weight:700;color:var(--gold);line-height:1;">31</div>
+      <div style="font-size:12px;color:var(--txm);letter-spacing:1.5px;text-transform:uppercase;margin-top:8px;">Konya İlçesi</div>
+    </div>
+    <div>
+      <div style="font-family:var(--serif);font-size:42px;font-weight:700;color:var(--gold);line-height:1;">%94</div>
+      <div style="font-size:12px;color:var(--txm);letter-spacing:1.5px;text-transform:uppercase;margin-top:8px;">Doğruluk Oranı</div>
+    </div>
+    <div>
+      <div style="font-family:var(--serif);font-size:42px;font-weight:700;color:var(--gold);line-height:1;">3</div>
+      <div style="font-size:12px;color:var(--txm);letter-spacing:1.5px;text-transform:uppercase;margin-top:8px;">Ücretsiz Sorgu Hakkı</div>
+    </div>
+  </div>
+</div>
+
+<!-- ── GÜVENLE SAT ── -->
+<section class="sec" style="background:var(--d2);border-bottom:1px solid var(--bd);">
+  <div class="sec-in">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center;" class="guvenle-sat-grid">
+
+      <!-- Sol: metin -->
+      <div>
+        <div class="ey">Gayrimenkulünüzü Güvenle Satın</div>
+        <h2 class="sec-title rv" style="margin-bottom:18px;">Zamandan kazanın,<br>stresten kurtulun,<br><em style="color:var(--gold);font-style:italic;">kazançlı çıkın.</em></h2>
+        <p style="font-size:15px;color:var(--txm);line-height:1.8;margin-bottom:32px;">
+          Gayrimenkul satmak önemli ve stresli bir süreç. Öğren-Sat ile veriyi yanınıza alarak bu süreci daha kolay ve güvenli tamamlayın.
+        </p>
+
+        <!-- İki sütun karşılaştırma -->
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:32px;">
+          <div style="background:var(--d3);border:1px solid var(--bd);border-radius:var(--r);padding:20px;">
+            <div style="font-size:13px;font-weight:700;color:var(--txm);margin-bottom:14px;letter-spacing:.5px;">Geleneksel Yöntem</div>
+            <ul style="list-style:none;display:flex;flex-direction:column;gap:10px;">
+              <li style="font-size:13px;color:var(--txm);display:flex;align-items:flex-start;gap:8px;"><span style="color:var(--txd);flex-shrink:0;">✕</span>Fiyatı sezgiyle belirleme</li>
+              <li style="font-size:13px;color:var(--txm);display:flex;align-items:flex-start;gap:8px;"><span style="color:var(--txd);flex-shrink:0;">✕</span>Piyasa karşılaştırması yok</li>
+              <li style="font-size:13px;color:var(--txm);display:flex;align-items:flex-start;gap:8px;"><span style="color:var(--txd);flex-shrink:0;">✕</span>Uzun satış süresi</li>
+              <li style="font-size:13px;color:var(--txm);display:flex;align-items:flex-start;gap:8px;"><span style="color:var(--txd);flex-shrink:0;">✕</span>Değerinin altında satma riski</li>
+            </ul>
+          </div>
+          <div style="background:rgba(201,168,76,.06);border:1px solid rgba(201,168,76,.25);border-radius:var(--r);padding:20px;">
+            <div style="font-size:13px;font-weight:700;color:var(--gold);margin-bottom:14px;letter-spacing:.5px;">Öğren-Sat ile</div>
+            <ul style="list-style:none;display:flex;flex-direction:column;gap:10px;">
+              <li style="font-size:13px;color:var(--tx);display:flex;align-items:flex-start;gap:8px;"><span style="color:var(--ok);flex-shrink:0;">✓</span>Gerçek veriye dayalı fiyat</li>
+              <li style="font-size:13px;color:var(--tx);display:flex;align-items:flex-start;gap:8px;"><span style="color:var(--ok);flex-shrink:0;">✓</span>123+ ilan analizi</li>
+              <li style="font-size:13px;color:var(--tx);display:flex;align-items:flex-start;gap:8px;"><span style="color:var(--ok);flex-shrink:0;">✓</span>Uzman danışman desteği</li>
+              <li style="font-size:13px;color:var(--tx);display:flex;align-items:flex-start;gap:8px;"><span style="color:var(--ok);flex-shrink:0;">✓</span>Doğru fiyat, hızlı satış</li>
+            </ul>
+          </div>
+        </div>
+
+        <div style="display:flex;gap:12px;flex-wrap:wrap;">
+          <button class="btn-g" onclick="goPage('valuation')">◎ Ücretsiz Değerleme Yap</button>
+          <button class="btn-o" onclick="goPage('advisor')">👤 Danışman Bul</button>
+        </div>
+      </div>
+
+      <!-- Sağ: süreç adımları -->
+      <div style="display:flex;flex-direction:column;gap:14px;">
+        <div style="font-size:11px;color:var(--gold);letter-spacing:3px;text-transform:uppercase;font-weight:700;margin-bottom:6px;">Satış Süreciniz</div>
+        <div style="display:flex;flex-direction:column;gap:0;position:relative;">
+          <!-- dikey çizgi -->
+          <div style="position:absolute;left:19px;top:40px;bottom:40px;width:1px;background:linear-gradient(to bottom,var(--gold),var(--bd));"></div>
+
+          <div style="display:flex;gap:16px;align-items:flex-start;padding:0 0 24px;">
+            <div style="width:40px;height:40px;border-radius:50%;background:var(--gold);display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-size:17px;font-weight:700;color:var(--dark);flex-shrink:0;z-index:1;">1</div>
+            <div style="padding-top:8px;"><div style="font-size:14px;font-weight:700;color:var(--tx);margin-bottom:4px;">Ücretsiz Değerleme</div><div style="font-size:13px;color:var(--txm);">Mülkünüzün gerçek piyasa değerini öğrenin.</div></div>
+          </div>
+          <div style="display:flex;gap:16px;align-items:flex-start;padding:0 0 24px;">
+            <div style="width:40px;height:40px;border-radius:50%;background:var(--d3);border:1px solid var(--gold);display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-size:17px;font-weight:700;color:var(--gold);flex-shrink:0;z-index:1;">2</div>
+            <div style="padding-top:8px;"><div style="font-size:14px;font-weight:700;color:var(--tx);margin-bottom:4px;">Piyasa Analizi</div><div style="font-size:13px;color:var(--txm);">Benzer ilanları karşılaştırın, rekabetçi fiyat belirleyin.</div></div>
+          </div>
+          <div style="display:flex;gap:16px;align-items:flex-start;padding:0 0 24px;">
+            <div style="width:40px;height:40px;border-radius:50%;background:var(--d3);border:1px solid var(--bd);display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-size:17px;font-weight:700;color:var(--txm);flex-shrink:0;z-index:1;">3</div>
+            <div style="padding-top:8px;"><div style="font-size:14px;font-weight:700;color:var(--tx);margin-bottom:4px;">Danışman Desteği</div><div style="font-size:13px;color:var(--txm);">Bölgenizdeki uzman danışmanla tanışın.</div></div>
+          </div>
+          <div style="display:flex;gap:16px;align-items:flex-start;">
+            <div style="width:40px;height:40px;border-radius:50%;background:var(--d3);border:1px solid var(--bd);display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-size:17px;font-weight:700;color:var(--txm);flex-shrink:0;z-index:1;">4</div>
+            <div style="padding-top:8px;"><div style="font-size:14px;font-weight:700;color:var(--tx);margin-bottom:4px;">Güvenle Sat</div><div style="font-size:13px;color:var(--txm);">Doğru fiyat, doğru alıcı, sorunsuz kapanış.</div></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
 <section class="sec cta-sec">
   <div class="cta-in">
     <h2 class="cta-title rv">Konya'da her <em>emlak kararı</em> veriden geçer</h2>
@@ -1009,16 +1437,23 @@ body{font-family:var(--font);background:var(--dark);color:var(--tx);overflow-x:h
   </div>
 
   <!-- Hero -->
-  <div style="max-width:1300px;margin:0 auto;padding:60px 48px 0;">
-    <div style="max-width:760px;">
-      <div class="ey">Biz Kimiz?</div>
-      <h1 style="font-family:var(--serif);font-size:clamp(38px,5vw,64px);font-weight:700;color:var(--tx);line-height:1.1;margin-bottom:22px;">
-        Konya&apos;nın emlak<br>kararlarına <em style="color:var(--gold);font-style:italic;">veri gücü</em>
-      </h1>
-      <p style="font-size:17px;color:var(--txm);line-height:1.8;max-width:600px;">
-        Öğren-Sat, Konya&apos;da doğru fiyattan mülk almak ve satmak isteyen bireylere yapay zeka destekli piyasa analizi sunan bir emlak teknoloji platformudur.
-        Gerçek ilan verileri, bölge emsal bilgisi ve şeffaf hesaplama mantığıyla her kararı kolaylaştırıyoruz.
-      </p>
+  <div class="about-hero-wrap" style="padding:80px 48px 72px;position:relative;">
+    <div class="about-deco-letter">Ö</div>
+    <div style="max-width:1300px;margin:0 auto;position:relative;z-index:1;">
+      <div style="max-width:700px;">
+        <div class="ey rv">Biz Kimiz?</div>
+        <h1 class="rv" style="font-family:var(--serif);font-size:clamp(42px,5.5vw,72px);font-weight:700;color:var(--tx);line-height:1.06;margin-bottom:24px;margin-top:8px;">
+          Konya&apos;nın emlak<br>kararlarına <em style="color:var(--gold);font-style:italic;">veri gücü</em>
+        </h1>
+        <p class="rv" style="font-size:17px;color:var(--txm);line-height:1.85;max-width:580px;margin-bottom:40px;">
+          Öğren-Sat, Konya&apos;da doğru fiyattan mülk almak ve satmak isteyen bireylere yapay zeka destekli piyasa analizi sunan bir emlak teknoloji platformudur.
+          Gerçek ilan verileri, bölge emsal bilgisi ve şeffaf hesaplama mantığıyla her kararı kolaylaştırıyoruz.
+        </p>
+        <div class="rv" style="display:flex;gap:12px;flex-wrap:wrap;">
+          <button class="btn-g" onclick="goPage('valuation')">◎ Hemen Dene</button>
+          <button class="btn-o" onclick="goPage('advisor')">👤 Danışman Bul</button>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -1043,10 +1478,10 @@ body{font-family:var(--font);background:var(--dark);color:var(--tx);overflow-x:h
   <!-- Rakamlar -->
   <div style="background:var(--d2);border-top:1px solid var(--bd);border-bottom:1px solid var(--bd);">
     <div style="max-width:1300px;margin:0 auto;padding:56px 48px;display:grid;grid-template-columns:repeat(4,1fr);gap:20px;text-align:center;">
-      <div><div style="font-family:var(--serif);font-size:48px;font-weight:700;color:var(--gold);">123+</div><div style="font-size:13px;color:var(--txm);letter-spacing:1.5px;text-transform:uppercase;margin-top:8px;">Analiz Edilen İlan</div></div>
-      <div><div style="font-family:var(--serif);font-size:48px;font-weight:700;color:var(--gold);">31</div><div style="font-size:13px;color:var(--txm);letter-spacing:1.5px;text-transform:uppercase;margin-top:8px;">Konya İlçesi</div></div>
-      <div><div style="font-family:var(--serif);font-size:48px;font-weight:700;color:var(--gold);">%94</div><div style="font-size:13px;color:var(--txm);letter-spacing:1.5px;text-transform:uppercase;margin-top:8px;">Doğruluk Oranı</div></div>
-      <div><div style="font-family:var(--serif);font-size:48px;font-weight:700;color:var(--gold);">3</div><div style="font-size:13px;color:var(--txm);letter-spacing:1.5px;text-transform:uppercase;margin-top:8px;">Ücretsiz Değerleme</div></div>
+      <div class="rv stat-band-item"><div class="stat-band-val about-counter" data-target="123" data-suffix="+" style="font-family:var(--serif);font-size:48px;font-weight:700;color:var(--gold);">0</div><div style="font-size:13px;color:var(--txm);letter-spacing:1.5px;text-transform:uppercase;margin-top:8px;">Analiz Edilen İlan</div></div>
+      <div class="rv stat-band-item"><div class="stat-band-val about-counter" data-target="31" data-suffix="" style="font-family:var(--serif);font-size:48px;font-weight:700;color:var(--gold);">0</div><div style="font-size:13px;color:var(--txm);letter-spacing:1.5px;text-transform:uppercase;margin-top:8px;">Konya İlçesi</div></div>
+      <div class="rv stat-band-item"><div class="stat-band-val about-counter" data-target="94" data-suffix="%" style="font-family:var(--serif);font-size:48px;font-weight:700;color:var(--gold);">0</div><div style="font-size:13px;color:var(--txm);letter-spacing:1.5px;text-transform:uppercase;margin-top:8px;">Doğruluk Oranı</div></div>
+      <div class="rv stat-band-item"><div class="stat-band-val about-counter" data-target="3" data-suffix="" style="font-family:var(--serif);font-size:48px;font-weight:700;color:var(--gold);">0</div><div style="font-size:13px;color:var(--txm);letter-spacing:1.5px;text-transform:uppercase;margin-top:8px;">Ücretsiz Değerleme</div></div>
     </div>
   </div>
 
@@ -1055,17 +1490,17 @@ body{font-family:var(--font);background:var(--dark);color:var(--tx);overflow-x:h
     <div class="ey">Metodoloji</div>
     <h2 style="font-family:var(--serif);font-size:clamp(28px,3.5vw,44px);font-weight:700;color:var(--tx);margin-bottom:40px;">Analizimiz nasıl çalışır?</h2>
     <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:20px;">
-      <div style="background:var(--d2);border:1px solid var(--bd);border-radius:var(--r);padding:28px;">
+      <div class="method-card rv" style="background:var(--d2);border:1px solid var(--bd);border-radius:var(--r);padding:28px;">
         <div style="font-size:28px;margin-bottom:14px;">📡</div>
         <div style="font-size:15px;font-weight:700;color:var(--tx);margin-bottom:10px;">Gerçek Piyasa Verisi</div>
         <p style="font-size:14px;color:var(--txm);line-height:1.7;">Konya genelindeki aktif satış ilanlarından toplanan veriler düzenli olarak güncellenir. Her ilçe ve mahalle için ayrı m² fiyat hesaplanır.</p>
       </div>
-      <div style="background:var(--d2);border:1px solid var(--bd);border-radius:var(--r);padding:28px;">
+      <div class="method-card rv" style="background:var(--d2);border:1px solid var(--bd);border-radius:var(--r);padding:28px;">
         <div style="font-size:28px;margin-bottom:14px;">🤖</div>
         <div style="font-size:15px;font-weight:700;color:var(--tx);margin-bottom:10px;">Yapay Zeka Motoru</div>
         <p style="font-size:14px;color:var(--txm);line-height:1.7;">Bina yaşı, kat, oda sayısı, ısıtma sistemi ve yapı durumuna göre ağırlıklandırılmış çok değişkenli hesaplama modeli.</p>
       </div>
-      <div style="background:var(--d2);border:1px solid var(--bd);border-radius:var(--r);padding:28px;">
+      <div class="method-card rv" style="background:var(--d2);border:1px solid var(--bd);border-radius:var(--r);padding:28px;">
         <div style="font-size:28px;margin-bottom:14px;">📊</div>
         <div style="font-size:15px;font-weight:700;color:var(--tx);margin-bottom:10px;">Şeffaf Sonuç</div>
         <p style="font-size:14px;color:var(--txm);line-height:1.7;">±%12 sapma bandı, güven puanı ve kaç ilanın analiz edildiği açıkça gösterilir. Sihirli bir kutu değil, açıklanabilir analiz.</p>
@@ -1080,25 +1515,29 @@ body{font-family:var(--font);background:var(--dark);color:var(--tx);overflow-x:h
       <h2 style="font-family:var(--serif);font-size:clamp(28px,3.5vw,44px);font-weight:700;color:var(--tx);margin-bottom:40px;">Kurucu ortaklar</h2>
       <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:24px;">
 
-        <div style="background:var(--d3);border:1px solid var(--bd);border-radius:var(--r);padding:32px;text-align:center;transition:all .3s;" onmouseover="this.style.borderColor='var(--bdh)';this.style.transform='translateY(-4px)'" onmouseout="this.style.borderColor='var(--bd)';this.style.transform='none'">
-          <div style="width:72px;height:72px;border-radius:50%;background:linear-gradient(135deg,var(--gold-d),var(--gold));display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-size:28px;font-weight:700;color:var(--dark);margin:0 auto 18px;">Z</div>
-          <div style="font-family:var(--serif);font-size:20px;font-weight:700;color:var(--tx);margin-bottom:4px;">Ziya Gökalpоğlu</div>
-          <div style="font-size:12px;color:var(--gold);font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:14px;">Kurucu Ortak & CEO</div>
-          <p style="font-size:13px;color:var(--txm);line-height:1.7;">Konya emlak piyasası analizi ve veri odaklı değerleme metodolojisinin mimarı. Platformun iş geliştirme stratejisinden sorumlu.</p>
-        </div>
-
-        <div style="background:var(--d3);border:1px solid var(--bd);border-radius:var(--r);padding:32px;text-align:center;transition:all .3s;" onmouseover="this.style.borderColor='var(--bdh)';this.style.transform='translateY(-4px)'" onmouseout="this.style.borderColor='var(--bd)';this.style.transform='none'">
-          <div style="width:72px;height:72px;border-radius:50%;background:linear-gradient(135deg,var(--gold-d),var(--gold));display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-size:28px;font-weight:700;color:var(--dark);margin:0 auto 18px;">A</div>
-          <div style="font-family:var(--serif);font-size:20px;font-weight:700;color:var(--tx);margin-bottom:4px;">Ahmet Güler</div>
-          <div style="font-size:12px;color:var(--gold);font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:14px;">Kurucu Ortak & COO</div>
-          <p style="font-size:13px;color:var(--txm);line-height:1.7;">Platform operasyonları, kullanıcı deneyimi ve danışman ağının yönetiminden sorumlu. Konya gayrimenkul sektöründe derin uzmanlık.</p>
-        </div>
-
-        <div style="background:var(--d3);border:1px solid var(--bd);border-radius:var(--r);padding:32px;text-align:center;transition:all .3s;" onmouseover="this.style.borderColor='var(--bdh)';this.style.transform='translateY(-4px)'" onmouseout="this.style.borderColor='var(--bd)';this.style.transform='none'">
-          <div style="width:72px;height:72px;border-radius:50%;background:linear-gradient(135deg,var(--gold-d),var(--gold));display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-size:28px;font-weight:700;color:var(--dark);margin:0 auto 18px;">B</div>
+        <!-- Batuhan - ilk sıra, kurucu & geliştirici -->
+        <div class="team-card rv" style="background:var(--d3);border:1px solid var(--gold);border-radius:var(--r);padding:32px;text-align:center;position:relative;">
+          <div style="position:absolute;top:-12px;left:50%;transform:translateX(-50%);padding:3px 14px;background:var(--gold);border-radius:100px;font-size:10px;font-weight:700;color:var(--dark);letter-spacing:1px;text-transform:uppercase;white-space:nowrap;">Kurucu</div>
+          <div class="team-avatar" style="width:72px;height:72px;border-radius:50%;background:linear-gradient(135deg,var(--gold-d),var(--gold));display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-size:28px;font-weight:700;color:var(--dark);">B</div>
           <div style="font-family:var(--serif);font-size:20px;font-weight:700;color:var(--tx);margin-bottom:4px;">Batuhan Y.</div>
-          <div style="font-size:12px;color:var(--gold);font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:14px;">Kurucu Ortak & CTO</div>
-          <p style="font-size:13px;color:var(--txm);line-height:1.7;">Platform mimarisi, yapay zeka motoru ve veri altyapısının geliştiricisi. Full-stack geliştirme ve emlak teknolojisi alanında uzman.</p>
+          <div style="font-size:12px;color:var(--gold);font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:14px;">Kurucu & Yazılım Mimarı</div>
+          <p style="font-size:13px;color:var(--txm);line-height:1.7;">Platformun fikir sahibi, mimarı ve baş geliştiricisi. Yapay zeka değerleme motoru, veri altyapısı ve tüm kullanıcı deneyiminin tasarımcısı.</p>
+        </div>
+
+        <!-- Ziya -->
+        <div class="team-card rv" style="background:var(--d3);border:1px solid var(--bd);border-radius:var(--r);padding:32px;text-align:center;">
+          <div class="team-avatar" style="width:72px;height:72px;border-radius:50%;background:linear-gradient(135deg,var(--gold-d),var(--gold));display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-size:28px;font-weight:700;color:var(--dark);">Z</div>
+          <div style="font-family:var(--serif);font-size:20px;font-weight:700;color:var(--tx);margin-bottom:4px;">Ziya Gökalp</div>
+          <div style="font-size:12px;color:var(--gold);font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:14px;">Kurucu Ortak & Fikir Babası</div>
+          <p style="font-size:13px;color:var(--txm);line-height:1.7;">Projenin vizyonunu ortaya koyan isim. Konya emlak piyasası uzmanlığı ve iş geliştirme stratejisiyle platformun büyüme yönünü belirliyor.</p>
+        </div>
+
+        <!-- Ahmet -->
+        <div class="team-card rv" style="background:var(--d3);border:1px solid var(--bd);border-radius:var(--r);padding:32px;text-align:center;">
+          <div class="team-avatar" style="width:72px;height:72px;border-radius:50%;background:linear-gradient(135deg,var(--gold-d),var(--gold));display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-size:28px;font-weight:700;color:var(--dark);">A</div>
+          <div style="font-family:var(--serif);font-size:20px;font-weight:700;color:var(--tx);margin-bottom:4px;">Ahmet Güler</div>
+          <div style="font-size:12px;color:var(--gold);font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:14px;">Kurucu Ortak & Emlak Direktörü</div>
+          <p style="font-size:13px;color:var(--txm);line-height:1.7;">Konya gayrimenkul sektöründe derin uzmanlık. Danışman ağının kurucusu, sahadan gelen veri ve içgörülerin kaynağı.</p>
         </div>
 
       </div>
@@ -1155,7 +1594,8 @@ const PAGE_URLS = {
   auth:       '/giris',
   payment:    '/odeme',
   advisor:    '/danisman',
-  about:      '/hakkimizda'
+  about:      '/hakkimizda',
+  analiz:     '/analiz'
 };
 const URL_PAGES = Object.fromEntries(Object.entries(PAGE_URLS).map(([k,v])=>[v,k]));
 
@@ -1238,7 +1678,7 @@ function showLanding() { goPage('landing'); }
 
 // ── NAV ──
 function _updateNav(page) {
-  const map = { landing:0, valuation:1, comparison:2, pricing:3, advisor:4, about:5 };
+  const map = { landing:0, valuation:1, comparison:2, pricing:3, advisor:4, about:5, analiz:6 };
   document.querySelectorAll('#nav-links .nav-lnk').forEach((l,i) => l.classList.toggle('act', map[page]===i));
 }
 
@@ -1322,12 +1762,14 @@ async function loadLandingData() {
     if(!Array.isArray(data)||!data.length) return;
     document.getElementById('hero-cnt').textContent = data.length + '+';
     const prices = data.map(d=>d.price).filter(p=>p>0);
-    const avgP = prices.reduce((a,b)=>a+b,0)/prices.length;
-    const m2list = data.filter(d=>d.price>0&&d.net_size>0).map(d=>d.price/d.net_size);
+    // Medyan fiyat kullan (aykırı değerlere karşı daha sağlıklı)
+    const sortedP = [...prices].sort((a,b)=>a-b);
+    const medianP = sortedP[Math.floor(sortedP.length/2)];
+    const m2list = data.filter(d=>d.price>0&&d.net_size>0&&d.net_size<400).map(d=>d.price/d.net_size);
     const avgM2 = m2list.length ? m2list.reduce((a,b)=>a+b,0)/m2list.length : 0;
-    const fp = n => new Intl.NumberFormat('tr-TR',{style:'currency',currency:'TRY',maximumFractionDigits:0}).format(n);
-    document.getElementById('sum-avg').textContent = fp(avgP);
-    document.getElementById('sum-m2').textContent = fp(avgM2)+'/m²';
+    const fp = n => new Intl.NumberFormat('tr-TR',{maximumFractionDigits:0}).format(n);
+    document.getElementById('sum-avg').textContent = fp(medianP)+' ₺';
+    document.getElementById('sum-m2').textContent = fp(Math.round(avgM2))+' ₺/m²';
     const dc={};
     data.forEach(d=>{if(d.district)dc[d.district]=(dc[d.district]||0)+1;});
     const sorted = Object.entries(dc).sort((a,b)=>b[1]-a[1]);
@@ -1338,33 +1780,106 @@ async function loadLandingData() {
     const dbDistricts = new Set(sorted.map(([n])=>n));
     sorted.forEach(([name,cnt])=>{
       const el=document.createElement('div');
-      el.className='dc-chip rv';
+      el.className='dc-chip';
       el.innerHTML=`<div class="dc-n">${name}</div><div class="dc-c">${cnt} ilan</div>`;
       el.onclick=()=>goDistrict(name);
       list.appendChild(el);
-      rvObs.observe(el);
     });
     // DB'de olmayan ama Konya'ya ait ilçeleri de ekle (yakında)
     const TUMU=['Ahırlı','Akören','Akşehir','Altınekin','Beyşehir','Bozkır','Cihanbeyli','Çeltik','Çumra','Derbent','Derebucak','Doğanhisar','Emirgazi','Ereğli','Güneysınır','Hadim','Halkapınar','Hüyük','Ilgın','Kadınhanı','Karapınar','Karatay','Kulu','Meram','Sarayönü','Selçuklu','Seydişehir','Taşkent','Tuzlukçu','Yalıhüyük','Yunak'];
     TUMU.forEach(name=>{
       if(dbDistricts.has(name)) return;
       const el=document.createElement('div');
-      el.className='dc-chip rv';
-      el.style.opacity='0.5';
+      el.className='dc-chip';
+      el.style.opacity='0.45';
       el.innerHTML=`<div class="dc-n">${name}</div><div class="dc-c" style="color:var(--txd);">Yakında</div>`;
       list.appendChild(el);
-      rvObs.observe(el);
     });
   } catch(e){ console.warn('Landing data:',e); }
 }
 
 // ── REVEAL ──
+// rvObs = advRevealObs ile birleştirildi (animasyon motorunda tanımlandı)
+// Landing data'dan eklenen chip'ler için yedek observer
 const rvObs = new IntersectionObserver(entries=>{
   entries.forEach(e=>{ if(e.isIntersecting){e.target.classList.add('vis');rvObs.unobserve(e.target);} });
 },{threshold:0.1});
-document.querySelectorAll('.rv').forEach(el=>rvObs.observe(el));
 
 // ── INIT ──
+// ═══════════════════════════════════
+// ANİMASYON MOTORU
+// ═══════════════════════════════════
+
+// 1) Parçacık sistemi
+function initParticles() {
+  const container = document.getElementById('hero-particles');
+  if(!container) return;
+  const count = 18;
+  for(let i = 0; i < count; i++) {
+    const p = document.createElement('div');
+    p.className = 'particle';
+    const left = Math.random() * 100;
+    const dur = 7 + Math.random() * 8;
+    const delay = Math.random() * 8;
+    const dx = (Math.random() - .5) * 120;
+    p.style.cssText = `left:${left}%;--dur:${dur}s;--delay:${delay}s;--dx:${dx}px;`;
+    container.appendChild(p);
+  }
+}
+
+// 2) Sayaç animasyonu
+function animateCounter(el) {
+  const target = parseInt(el.dataset.target);
+  const suffix = el.dataset.suffix || '';
+  const duration = 1800;
+  const start = performance.now();
+  function step(now) {
+    const elapsed = now - start;
+    const progress = Math.min(elapsed / duration, 1);
+    // easeOutExpo
+    const eased = progress === 1 ? 1 : 1 - Math.pow(2, -10 * progress);
+    el.textContent = Math.floor(eased * target) + suffix;
+    if(progress < 1) requestAnimationFrame(step);
+  }
+  requestAnimationFrame(step);
+}
+
+// 3) Hero stat counter
+function animateHeroStats() {
+  document.querySelectorAll('.hstat-val').forEach(el => {
+    const txt = el.textContent.trim();
+    const match = txt.match(/^([%]?)([0-9,]+)([+%]?)$/);
+    if(!match) return;
+    const prefix = match[1];
+    const numStr = match[2].replace(',','');
+    const num = parseInt(numStr);
+    const suffix = match[3];
+    if(isNaN(num)||num>10000) return;
+    const duration = 1200;
+    const start = performance.now();
+    const step = (now) => {
+      const p = Math.min((now-start)/duration,1);
+      const e = 1 - Math.pow(2,-10*p);
+      el.textContent = prefix + new Intl.NumberFormat('tr-TR').format(Math.floor(e*num)) + suffix;
+      if(p<1) requestAnimationFrame(step);
+    };
+    requestAnimationFrame(step);
+  });
+}
+
+// 4) Gelişmiş reveal observer — sayaç desteğiyle
+const advRevealObs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if(e.isIntersecting) {
+      e.target.classList.add('vis');
+      // Sayaç varsa çalıştır
+      e.target.querySelectorAll('.about-counter').forEach(animateCounter);
+      if(e.target.classList.contains('about-counter')) animateCounter(e.target);
+      advRevealObs.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
+
 document.addEventListener('DOMContentLoaded', () => {
   // URL'ye göre başlangıç sayfasını belirle
   const startPage = urlToPage(location.pathname);
@@ -1396,6 +1911,15 @@ document.addEventListener('DOMContentLoaded', () => {
   setTimeout(()=>document.getElementById('page-loader').classList.add('hide'), 700);
   loadLandingData();
   if(typeof checkAuth === 'function') checkAuth();
+
+  // Animasyon sistemi başlat
+  initParticles();
+
+  // Hero istatistikleri sayaçla göster
+  setTimeout(animateHeroStats, 800);
+
+  // Gelişmiş reveal observer'ı tüm .rv elementlere bağla
+  document.querySelectorAll('.rv').forEach(el => advRevealObs.observe(el));
 });
 
 // ── DANIŞMAN ──
