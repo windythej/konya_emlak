@@ -51,13 +51,13 @@
   transition: all .3s;
 }
 .val-step.active .val-step-num {
-  border-color: var(--gold);
-  background: var(--gold);
+  border-color: transparent;
+  background: var(--grad);
   color: var(--dark);
 }
 .val-step.done .val-step-num {
-  border-color: var(--gold);
-  background: var(--gold);
+  border-color: transparent;
+  background: var(--grad);
   color: var(--dark);
 }
 .val-step-label {
@@ -120,7 +120,7 @@
   background: var(--d4);
 }
 .cat-card.on {
-  border-color: var(--gold);
+  border-color: #E8A020;
   background: rgba(201,168,76,.06);
 }
 .cat-icon { font-size: 28px; margin-bottom: 8px; }
@@ -154,7 +154,7 @@
   padding: 12px 14px;
   color: var(--tx);
   font-size: 14px;
-  font-family: 'DM Sans', sans-serif;
+  font-family: var(--font);
   outline: none;
   transition: border-color .2s;
   box-sizing: border-box;
@@ -173,14 +173,14 @@
   background: transparent;
   color: var(--txm);
   font-size: 12px;
-  font-family: 'DM Sans', sans-serif;
+  font-family: var(--font);
   cursor: pointer;
   transition: all .2s;
 }
 .vchip:hover { border-color: var(--bdh); color: var(--tx); }
 .vchip.on {
-  background: var(--gold);
-  border-color: var(--gold);
+  background: var(--grad);
+  border-color: transparent;
   color: var(--dark);
   font-weight: 600;
 }
@@ -223,7 +223,7 @@
   background: transparent;
   border: none;
   outline: none;
-  font-family: 'DM Sans', sans-serif;
+  font-family: var(--font);
 }
 
 /* Navigasyon butonları */
@@ -241,7 +241,7 @@
   border-radius: var(--rs);
   color: var(--txm);
   font-size: 13px;
-  font-family: 'DM Sans', sans-serif;
+  font-family: var(--font);
   cursor: pointer;
   transition: all .2s;
 }
@@ -249,13 +249,13 @@
 .val-next {
   flex: 1;
   padding: 13px;
-  background: var(--gold);
+  background: var(--grad);
   border: none;
   border-radius: var(--rs);
   color: var(--dark);
   font-size: 14px;
   font-weight: 700;
-  font-family: 'DM Sans', sans-serif;
+  font-family: var(--font);
   cursor: pointer;
   transition: all .2s;
   letter-spacing: .5px;
@@ -274,7 +274,7 @@
 }
 .val-info-icon { font-size: 28px; margin-bottom: 12px; }
 .val-info-title {
-  font-family: 'Playfair Display', serif;
+  font-family: var(--serif);
   font-size: 16px;
   font-weight: 700;
   color: var(--gold);
@@ -346,7 +346,7 @@
   margin-bottom: 8px;
 }
 .vrc-val {
-  font-family: 'Playfair Display', serif;
+  font-family: var(--serif);
   font-size: 20px;
   font-weight: 700;
   color: var(--gold);
@@ -419,7 +419,7 @@
 }
 .sub-popup-icon { font-size: 48px; margin-bottom: 16px; }
 .sub-popup-title {
-  font-family: 'Playfair Display', serif;
+  font-family: var(--serif);
   font-size: 24px;
   font-weight: 700;
   color: var(--tx);
@@ -439,7 +439,7 @@
 .sub-plan-card.popular { border-color: var(--gold); background: rgba(201,168,76,.06); }
 .spc-badge { font-size: 9px; color: var(--gold); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 6px; }
 .spc-name { font-size: 15px; font-weight: 700; color: var(--tx); margin-bottom: 4px; }
-.spc-price { font-size: 22px; font-weight: 700; color: var(--gold); font-family: 'Playfair Display', serif; }
+.spc-price { font-size: 22px; font-weight: 700; color: var(--gold); font-family: var(--serif); }
 .spc-period { font-size: 11px; color: var(--txm); }
 .sub-popup-login { font-size: 13px; color: var(--txm); margin-top: 12px; }
 .sub-popup-login a { color: var(--gold); cursor: pointer; text-decoration: underline; }
@@ -558,3 +558,17 @@
   .adv-grid { padding: 0 20px 60px; }
   .adv-title { font-size: 34px; }
 }
+
+/* ── DEĞERLEME — HOVER + SMOOTH ── */
+.cat-card{transition:all .3s cubic-bezier(.4,0,.2,1);}
+.cat-card:hover{border-color:rgba(232,160,32,.4)!important;transform:translateY(-3px);box-shadow:0 12px 32px rgba(0,0,0,.4);}
+.cat-card.on{box-shadow:0 0 0 2px rgba(201,168,76,.3),0 8px 24px rgba(0,0,0,.3);}
+.vchip{transition:all .22s ease;}
+.vchip:hover{border-color:var(--bdh);color:var(--tx);}
+.val-next:hover{filter:brightness(1.1);transform:translateY(-2px);}
+.val-back:hover{border-color:var(--bdh);color:var(--tx);}
+.num-btn:hover{background:rgba(201,168,76,.12);color:var(--gold);}
+.val-step-num{transition:all .35s cubic-bezier(.4,0,.2,1);}
+.val-step.active .val-step-num{transform:scale(1.1);box-shadow:0 4px 16px rgba(201,168,76,.3);}
+.val-step-line{transition:background .4s ease;}
+.score-fill{transition:width 1s cubic-bezier(.4,0,.2,1);}

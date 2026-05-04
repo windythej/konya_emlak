@@ -174,7 +174,7 @@ function renderMap(d){
     const isLow=l.price<avg*.85;
     const icon=L.divIcon({className:'',html:`<div style="background:${isLow?'#4CAF82':'#C9A84C'};width:11px;height:11px;border-radius:50%;border:2px solid #fff;box-shadow:0 0 6px rgba(0,0,0,.5)"></div>`,iconSize:[15,15]});
     L.marker([l.latitude,l.longitude],{icon}).addTo(leafMap)
-      .bindPopup(`<div style="font-family:'DM Sans',sans-serif;min-width:170px"><strong style="font-size:13px">${fp(l.price)} ₺</strong><br><span style="font-size:11px;color:#555">${l.rooms||''} · ${l.net_size||'?'}m² · ${l.quarter||''}</span></div>`)
+      .bindPopup(`<div style="font-family:var(--font);min-width:170px"><strong style="font-size:13px">${fp(l.price)} ₺</strong><br><span style="font-size:11px;color:#555">${l.rooms||''} · ${l.net_size||'?'}m² · ${l.quarter||''}</span></div>`)
       .on('click',()=>openDrawer(l));
   });
   if(pts.length){leafMap.fitBounds(L.latLngBounds(pts.map(l=>[l.latitude,l.longitude])),{padding:[30,30]});setTimeout(()=>leafMap.invalidateSize(),100);}

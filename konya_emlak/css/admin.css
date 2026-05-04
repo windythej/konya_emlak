@@ -164,4 +164,45 @@ tr:hover td{background:var(--d3);}
 .sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:99;}
 .sidebar-overlay.show{display:block;}
 
+/* ── ÖĞREN-SAT ADMİN — GÜNCELLEMELER ── */
+:root { --gold-grad: linear-gradient(135deg,#C9A84C 0%,#E8A020 50%,#F5C842 100%); }
 
+.lbtn { background: linear-gradient(135deg,#C9A84C,#E8A020) !important; }
+.lbtn:hover { filter: brightness(1.1); }
+
+.nav-item.on {
+  background: rgba(201,168,76,.1) !important;
+  border-left: 3px solid #E8A020 !important;
+}
+
+.stat-val {
+  background: linear-gradient(135deg,#C9A84C,#E8A020,#F5C842);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: adminGold 4s linear infinite;
+}
+@keyframes adminGold { 0%{background-position:0%} 100%{background-position:200%} }
+
+.stat-card { transition: all .28s ease; }
+.stat-card:hover {
+  border-color: rgba(201,168,76,.3) !important;
+  transform: translateY(-2px);
+  box-shadow: 0 12px 32px rgba(0,0,0,.3);
+}
+.chart-bar:hover { background: linear-gradient(to top,#C9A84C,#E8A020) !important; }
+tr { transition: background .2s; }
+tr:hover td { background: rgba(201,168,76,.04) !important; }
+
+.login-logo-title {
+  background: linear-gradient(135deg,#C9A84C,#E8A020);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+@media(max-width:600px){
+  .stat-grid { grid-template-columns: 1fr 1fr !important; }
+  .main { margin-left: 0 !important; padding-top: 60px !important; }
+}

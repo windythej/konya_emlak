@@ -195,7 +195,7 @@ body{font-family:var(--font);background:var(--dark);color:var(--tx);overflow-x:h
 .cta-sec::after{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);}
 .cta-in{position:relative;z-index:1;max-width:740px;margin:0 auto;}
 .cta-title{font-family:var(--serif);font-size:clamp(40px,5.5vw,70px);font-weight:700;color:var(--tx);margin-bottom:24px;line-height:1.07;}
-.cta-title em{color:var(--gold);font-style:italic;}
+.cta-title em{font-style:italic;}
 .cta-sub{font-size:17px;color:var(--txm);margin-bottom:46px;line-height:1.75;}
 
 /* Footer */
@@ -741,19 +741,28 @@ body { -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; 
 /* ════════════════════════════════════════
    SCROLL ANİMASYONLARI — YÖNLÜ GELİŞ
 ════════════════════════════════════════ */
-/* Sola kayarak gelen */
-.rv.from-left  { transform: translateX(-50px); }
-/* Sağdan gelen */
-.rv.from-right { transform: translateX(50px); }
-/* Aşağıdan yukarı (default .rv) */
-.rv            { opacity: 0; transform: translateY(36px);
-                 transition: opacity .7s cubic-bezier(.4,0,.2,1),
-                             transform .7s cubic-bezier(.4,0,.2,1); }
-.rv.vis        { opacity: 1; transform: translate(0,0) !important; }
+/* Yönlü başlangıç pozisyonları */
+.rv.from-left  { transform: translateX(-48px); }
+.rv.from-right { transform: translateX(48px); }
+/* Default: aşağıdan yukarı */
+.rv {
+  opacity: 0;
+  transform: translateY(32px);
+  transition: opacity .65s cubic-bezier(.4,0,.2,1),
+              transform .65s cubic-bezier(.4,0,.2,1);
+}
+/* Görünür */
+.rv.vis { opacity: 1 !important; transform: translate(0,0) !important; }
 
-/* Çıkış animasyonu (scroll edilince kaybolsun) */
-.rv-exit { transition: opacity .5s ease, transform .5s ease; }
-.rv-exit.exiting { opacity: 0; transform: translateY(20px); }
+/* Çıkış: yavaşça kaybol */
+.rv.rv-hidden {
+  opacity: 0 !important;
+  transform: translateY(16px) !important;
+  transition: opacity .5s cubic-bezier(.4,0,.2,1),
+              transform .5s cubic-bezier(.4,0,.2,1);
+}
+.rv.from-left.rv-hidden  { transform: translateX(-24px) !important; }
+.rv.from-right.rv-hidden { transform: translateX(24px) !important; }
 
 /* ════════════════════════════════════════
    STAT KPI KARTLARI
@@ -912,6 +921,197 @@ body { -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; 
   .analiz-card[style*="grid-column"] { grid-column: auto !important; }
   #analiz-kpi { grid-template-columns: 1fr 1fr !important; }
 }
+
+/* ── EKİP KARTLARI — PREMIUM ── */
+.team-card-founder, .team-card-member {
+  background: var(--d3);
+  border-radius: calc(var(--r) + 2px);
+  transition: all .4s cubic-bezier(.4,0,.2,1);
+  position: relative;
+  overflow: hidden;
+}
+.team-card-founder {
+  border: 1px solid rgba(201,168,76,.4);
+  background: linear-gradient(160deg, rgba(201,168,76,.06) 0%, var(--d3) 50%);
+}
+.team-card-member {
+  border: 1px solid var(--bd);
+}
+.team-card-founder::before, .team-card-member::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse 80% 60% at 50% 0%,
+    rgba(201,168,76,.08) 0%, transparent 65%);
+  opacity: 0;
+  transition: opacity .4s;
+}
+.team-card-founder:hover, .team-card-member:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 28px 70px rgba(0,0,0,.5), 0 0 0 1px rgba(201,168,76,.25);
+}
+.team-card-founder:hover::before, .team-card-member:hover::before { opacity: 1; }
+.team-card-founder:hover { box-shadow: 0 28px 70px rgba(201,168,76,.1), 0 0 0 1px rgba(201,168,76,.4); }
+
+/* Avatar spin-ring */
+.team-avatar {
+  width: 80px; height: 80px;
+  border-radius: 50%;
+  background: var(--grad);
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--serif); font-size: 30px; font-weight: 700;
+  color: var(--dark);
+  margin: 0 auto 20px;
+  position: relative;
+  flex-shrink: 0;
+}
+.team-avatar::after {
+  content: '';
+  position: absolute; inset: -3px;
+  border-radius: 50%;
+  background: conic-gradient(var(--g1), var(--g2), var(--g3), var(--g1));
+  z-index: -1;
+  opacity: 0;
+  transition: opacity .3s;
+  animation: spinRing 3s linear infinite;
+}
+.team-card-founder:hover .team-avatar::after,
+.team-card-member:hover .team-avatar::after { opacity: 1; }
+@keyframes spinRing { to { transform: rotate(360deg); } }
+
+/* ── HOW STEPS — GELİŞMİŞ ── */
+.how-num {
+  background: var(--grad) !important;
+  border: none !important;
+  color: var(--dark) !important;
+  box-shadow: 0 8px 24px rgba(201,168,76,.25);
+  transition: all .35s ease;
+}
+.how-step:hover .how-num {
+  transform: scale(1.1);
+  box-shadow: 0 12px 32px rgba(201,168,76,.4);
+}
+.how-g::before {
+  background: linear-gradient(90deg, transparent, var(--g1), var(--g2), var(--g3), transparent) !important;
+  height: 2px !important;
+}
+.how-ttl { font-size: 16px !important; font-weight: 700 !important; }
+.how-desc { font-size: 14px !important; }
+
+/* ── ANALİZ SAYFASI CANVAS FIX ── */
+#page-analiz canvas {
+  display: block !important;
+  max-width: 100% !important;
+}
+.analiz-card { overflow: visible; }
+
+/* ── SMOOTH HOVER GENEL ── */
+a, button, .tc, .pc, .dc-chip, .adv-card,
+.team-card-founder, .team-card-member,
+.stat-kpi-card, .gs-step-item, .how-step,
+.analiz-card, .mv-card, .method-card {
+  transition: all .32s cubic-bezier(.4,0,.2,1);
+}
+
+/* ── FOOTER GRADİYAN BORDER ── */
+.ftr { border-top: none !important; position: relative; }
+.ftr::before {
+  content: '';
+  display: block; height: 1px;
+  background: var(--grad);
+  margin-bottom: 0;
+  position: absolute; top: 0; left: 0; right: 0;
+}
+
+/* ── CTA BÖLÜMÜ FIX ── */
+.cta-title { color: var(--tx) !important; }
+.cta-title em { -webkit-text-fill-color: transparent !important; }
+
+/* ── MOBİL EK DÜZELTMELER ── */
+@media(max-width:900px){
+  .team-card-founder, .team-card-member { padding: 32px 24px !important; }
+  .how-g { grid-template-columns: 1fr 1fr !important; gap: 32px !important; }
+  .how-g::before { display: none; }
+  .sec { padding: 64px 20px !important; }
+  .ftr-in { grid-template-columns: 1fr 1fr !important; gap: 32px !important; }
+  .pricing-page, .pay-page { padding: 90px 20px 60px !important; }
+  .advisor-hero { padding: 40px 20px 28px !important; }
+  .adv-grid { padding: 0 20px 60px !important; }
+}
+@media(max-width:600px){
+  .how-g { grid-template-columns: 1fr !important; }
+  .team-card-founder, .team-card-member { padding: 28px 20px !important; }
+  .ftr-in { grid-template-columns: 1fr !important; }
+  .gs-grid { grid-template-columns: 1fr !important; }
+  .hero-stats { gap: 20px !important; }
+  .hst-div { display: none !important; }
+  .pg-top { padding-left: 16px !important; padding-right: 16px !important; }
+  .adv-filter-bar { flex-direction: column !important; }
+  .adv-filter-sel { width: 100% !important; }
+  .val-container { padding: 0 16px 80px !important; }
+  .stat-kpi-card { padding: 20px 16px !important; }
+  .stat-kpi-val { font-size: 36px !important; }
+}
+
+/* ── HAKKIMIZDA — HOVER + AÇILIŞ EFEKTLERİ ── */
+
+/* Rakamlar bölümü */
+.about-stat-wrap {
+  transition: all .3s ease;
+  border-radius: var(--rs);
+  padding: 8px;
+  cursor: default;
+}
+.about-stat-wrap:hover .about-stat-num {
+  text-shadow: 0 0 40px rgba(232,160,32,.5);
+  transform: scale(1.06);
+}
+.about-stat-num {
+  display: inline-block;
+  transition: all .35s ease;
+}
+
+/* Metodoloji kartları */
+.method-card {
+  transition: all .35s cubic-bezier(.4,0,.2,1) !important;
+}
+.method-card:hover {
+  transform: translateY(-8px) !important;
+  border-color: rgba(232,160,32,.35) !important;
+  box-shadow: 0 24px 60px rgba(0,0,0,.5), 0 0 0 1px rgba(201,168,76,.15) !important;
+}
+.method-card:hover::after { transform: scaleX(1) !important; }
+
+/* Misyon/Vizyon kartları */
+.mv-card {
+  transition: all .35s cubic-bezier(.4,0,.2,1) !important;
+}
+.mv-card:hover {
+  transform: translateY(-6px) !important;
+  box-shadow: 0 20px 50px rgba(0,0,0,.4) !important;
+}
+.mv-card:hover::before { transform: scaleX(1) !important; }
+
+/* Hero dekoratif harf - interaktif */
+.about-deco-letter {
+  cursor: default;
+  transition: opacity .5s ease, transform .5s ease;
+}
+.about-hero-wrap:hover .about-deco-letter {
+  opacity: .12 !important;
+  transform: translateY(-52%) rotate(3deg) !important;
+}
+
+/* Alt CTA butonu */
+#page-about .btn-g {
+  position: relative; overflow: hidden;
+}
+#page-about .btn-g::before {
+  content: '';
+  position: absolute; top: 0; left: -100%; width: 100%; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,.15), transparent);
+  transition: left .5s ease;
+}
+#page-about .btn-g:hover::before { left: 100%; }
 
 </style>
 </head>
@@ -1135,6 +1335,7 @@ body { -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; 
 
       <!-- SOL: Dinamik Panel -->
       <div id="gs-panel" style="position:sticky;top:90px;">
+        <div class="gs-panel-wrap">
 
         <!-- PANEL 1: Başlangıç -->
         <div class="gs-pane active" id="gs-pane-1">
@@ -1153,7 +1354,7 @@ body { -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; 
                   <div style="font-size:11px;color:var(--txm);margin-top:3px;">Doğruluk Oranı</div>
                 </div>
               </div>
-              <button class="btn-g" style="width:100%;justify-content:center;" onclick="gsNextStep(2)">Hemen Başla →</button>
+              <button class="btn-g" style="width:100%;justify-content:center;" onclick="gsNextStep(2,true)">Hemen Başla →</button>
             </div>
           </div>
         </div>
@@ -1184,7 +1385,7 @@ body { -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; 
                   <div style="font-size:15px;font-weight:700;color:var(--tx);">6.941.150 ₺</div>
                 </div>
               </div>
-              <button class="btn-g" style="width:100%;justify-content:center;" onclick="gsNextStep(3)">Danışman Bul →</button>
+              <button class="btn-g" style="width:100%;justify-content:center;" onclick="gsNextStep(3,true)">Danışman Bul →</button>
               <button class="btn-o" style="width:100%;justify-content:center;margin-top:10px;" onclick="goPage('valuation')">Kendi Mülkümü Değerle</button>
             </div>
           </div>
@@ -1231,7 +1432,7 @@ body { -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; 
                   </div>
                 </div>
               </div>
-              <button class="btn-g" style="width:100%;justify-content:center;" onclick="gsNextStep(4)">Danışmanla Eşleş →</button>
+              <button class="btn-g" style="width:100%;justify-content:center;" onclick="gsNextStep(4,true)">Danışmanla Eşleş →</button>
             </div>
           </div>
         </div>
@@ -1262,6 +1463,7 @@ body { -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; 
           </div>
         </div>
 
+        </div><!-- /gs-panel-wrap -->
       </div><!-- /gs-panel -->
 
       <!-- SAĞ: Sabit Adım Listesi -->
@@ -1287,7 +1489,7 @@ body { -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; 
 
         <!-- Adım Listesi -->
         <div style="display:flex;flex-direction:column;gap:12px;">
-          <div class="gs-step-item active" id="gs-step-1" onclick="gsNextStep(1)" style="cursor:pointer;">
+          <div class="gs-step-item active" id="gs-step-1" onclick="gsNextStep(1,true)" style="cursor:pointer;">
             <div class="gs-step-icon">✎</div>
             <div class="gs-step-body">
               <div class="gs-step-title">1 — Gayrimenkulünüzün Özelliklerini Girin</div>
@@ -1295,7 +1497,7 @@ body { -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; 
             </div>
             <div class="gs-step-arrow">›</div>
           </div>
-          <div class="gs-step-item" id="gs-step-2" onclick="gsNextStep(2)" style="cursor:pointer;">
+          <div class="gs-step-item" id="gs-step-2" onclick="gsNextStep(2,true)" style="cursor:pointer;">
             <div class="gs-step-icon">⊙</div>
             <div class="gs-step-body">
               <div class="gs-step-title">2 — Değerini Öğrenin</div>
@@ -1303,7 +1505,7 @@ body { -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; 
             </div>
             <div class="gs-step-arrow">›</div>
           </div>
-          <div class="gs-step-item" id="gs-step-3" onclick="gsNextStep(3)" style="cursor:pointer;">
+          <div class="gs-step-item" id="gs-step-3" onclick="gsNextStep(3,true)" style="cursor:pointer;">
             <div class="gs-step-icon">👤</div>
             <div class="gs-step-body">
               <div class="gs-step-title">3 — En İyi Danışmanı Bulun</div>
@@ -1311,7 +1513,7 @@ body { -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; 
             </div>
             <div class="gs-step-arrow">›</div>
           </div>
-          <div class="gs-step-item" id="gs-step-4" onclick="gsNextStep(4)" style="cursor:pointer;">
+          <div class="gs-step-item" id="gs-step-4" onclick="gsNextStep(4,true)" style="cursor:pointer;">
             <div class="gs-step-icon">✓</div>
             <div class="gs-step-body">
               <div class="gs-step-title">4 — Güvenle Satın</div>
@@ -1333,18 +1535,42 @@ body { -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; 
 
 <style>
 /* ── GÜVENLE SAT STİLLERİ ── */
-.gs-card {
+.gs-panel-wrap {
+  /* SABİT YÜKSEKLİK - içerik değişse de boyut korunur */
   background: var(--d3);
   border: 1px solid var(--bd);
   border-radius: var(--r);
   overflow: hidden;
+  min-height: 420px;
+  position: relative;
   transition: border-color .3s;
 }
-.gs-pane { display: none; }
-.gs-pane.active { display: block; animation: gsFadeIn .4s ease; }
-@keyframes gsFadeIn {
-  from { opacity: 0; transform: translateY(12px); }
-  to   { opacity: 1; transform: translateY(0); }
+.gs-card {
+  position: absolute;
+  inset: 0;
+  overflow-y: auto;
+}
+.gs-pane {
+  opacity: 0;
+  transform: translateY(16px);
+  pointer-events: none;
+  position: absolute; inset: 0;
+  transition: opacity .45s cubic-bezier(.4,0,.2,1),
+              transform .45s cubic-bezier(.4,0,.2,1);
+  background: var(--d3);
+}
+.gs-pane.active {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+  position: relative;
+}
+
+/* Progress bar - sabit yükseklik, çizgi kaymasın */
+#gs-progress-bar {
+  height: 48px;
+  margin-bottom: 32px;
+  align-items: center;
 }
 
 /* Progress bar */
@@ -1365,28 +1591,41 @@ body { -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; 
   font-size: 15px; font-weight: 700;
   color: var(--txm);
   flex-shrink: 0;
-  transition: all .3s;
+  transition: all .45s cubic-bezier(.4,0,.2,1);
   z-index: 1;
 }
-.gs-prog-step.active .gs-prog-num,
+.gs-prog-step.active .gs-prog-num {
+  background: linear-gradient(135deg,#C9A84C,#E8A020);
+  border-color: transparent;
+  color: var(--dark);
+  box-shadow: 0 0 0 4px rgba(201,168,76,.2);
+  transform: scale(1.1);
+}
 .gs-prog-step.done .gs-prog-num {
-  background: var(--gold);
-  border-color: var(--gold);
+  background: linear-gradient(135deg,#E8A020,#F5C842);
+  border-color: transparent;
   color: var(--dark);
 }
 .gs-prog-line {
   flex: 1;
   height: 2px;
   background: var(--bd);
-  margin: 0 2px;
-  transition: background .4s;
+  margin: 0 4px;
   position: relative;
   overflow: hidden;
+  border-radius: 2px;
 }
-.gs-prog-step.done .gs-prog-line { background: var(--gold); }
-.gs-prog-step.active .gs-prog-line {
-  background: linear-gradient(90deg, var(--gold) 0%, var(--bd) 100%);
+.gs-prog-line::after {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(90deg, #C9A84C, #E8A020, #F5C842);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform .5s cubic-bezier(.4,0,.2,1);
+  border-radius: 2px;
 }
+.gs-prog-step.done .gs-prog-line::after { transform: scaleX(1); }
+.gs-prog-step.active .gs-prog-line::after { transform: scaleX(.5); }
 
 /* Adım listesi */
 .gs-step-item {
@@ -1402,8 +1641,9 @@ body { -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; 
 }
 .gs-step-item:hover { border-color: var(--bdh); background: var(--d4); }
 .gs-step-item.active {
-  background: rgba(201,168,76,.07);
-  border-color: rgba(201,168,76,.35);
+  background: rgba(10,10,10,.85);
+  border-color: rgba(201,168,76,.45);
+  box-shadow: inset 0 0 0 1px rgba(201,168,76,.15);
 }
 .gs-step-icon {
   width: 40px; height: 40px;
@@ -1428,8 +1668,10 @@ body { -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; 
   color: var(--txm); margin-bottom: 5px;
   transition: color .25s;
 }
-.gs-step-item.active .gs-step-title { color: var(--gold); }
+.gs-step-item.active .gs-step-title { color: #F5C842; text-shadow: 0 0 20px rgba(245,200,66,.3); }
 .gs-step-item.done .gs-step-title { color: var(--ok); }
+.gs-step-desc { font-size: 13px; color: var(--txm); line-height: 1.55; }
+.gs-step-item.active .gs-step-desc { color: rgba(237,234,226,.75); }
 .gs-step-desc { font-size: 13px; color: var(--txm); line-height: 1.55; }
 .gs-step-arrow {
   font-size: 20px; color: var(--txd);
@@ -1960,7 +2202,7 @@ body { -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; 
   </div>
 
   <!-- Misyon & Vizyon -->
-  <div style="max-width:1300px;margin:0 auto;padding:60px 48px;display:grid;grid-template-columns:1fr 1fr;gap:24px;">
+  <div class="rv" style="max-width:1300px;margin:0 auto;padding:60px 48px;display:grid;grid-template-columns:1fr 1fr;gap:24px;">
     <div style="background:var(--d2);border:1px solid var(--bd);border-radius:var(--r);padding:36px;">
       <div style="font-size:36px;margin-bottom:16px;">🎯</div>
       <div style="font-family:var(--serif);font-size:22px;font-weight:700;color:var(--gold);margin-bottom:12px;">Misyonumuz</div>
@@ -1990,7 +2232,7 @@ body { -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; 
   <!-- Nasıl Çalışırız -->
   <div style="max-width:1300px;margin:0 auto;padding:60px 48px;">
     <div class="ey">Metodoloji</div>
-    <h2 style="font-family:var(--serif);font-size:clamp(28px,3.5vw,44px);font-weight:700;color:var(--tx);margin-bottom:40px;">Analizimiz nasıl çalışır?</h2>
+    <h2 class="rv" style="font-family:var(--serif);font-size:clamp(28px,3.5vw,44px);font-weight:700;color:var(--tx);margin-bottom:40px;">Analizimiz nasıl çalışır?</h2>
     <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:20px;">
       <div class="method-card rv" style="background:var(--d2);border:1px solid var(--bd);border-radius:var(--r);padding:28px;">
         <div style="font-size:28px;margin-bottom:14px;">📡</div>
@@ -2014,11 +2256,12 @@ body { -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; 
   <div style="background:var(--d2);border-top:1px solid var(--bd);">
     <div style="max-width:1300px;margin:0 auto;padding:60px 48px;">
       <div class="ey">Ekip</div>
-      <h2 style="font-family:var(--serif);font-size:clamp(28px,3.5vw,44px);font-weight:700;color:var(--tx);margin-bottom:40px;">Kurucu ortaklar</h2>
+      <h2 class="rv" style="font-family:var(--serif);font-size:clamp(28px,3.5vw,44px);font-weight:700;color:var(--tx);margin-bottom:40px;">Kurucu ortaklar</h2>
       <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:24px;">
 
         <!-- Batuhan - ilk sıra, kurucu & geliştirici -->
-        <div class="team-card rv" style="background:var(--d3);border:1px solid var(--gold);border-radius:var(--r);padding:32px;text-align:center;position:relative;">
+        <div class="team-card team-card-founder rv from-left" style="padding:40px 32px;text-align:center;position:relative;">
+          <div style="position:absolute;top:-13px;left:50%;transform:translateX(-50%);padding:4px 18px;background:var(--grad);border-radius:100px;font-size:11px;font-weight:700;color:var(--dark);letter-spacing:1px;text-transform:uppercase;white-space:nowrap;">Kurucu</div>
           <div style="position:absolute;top:-12px;left:50%;transform:translateX(-50%);padding:3px 14px;background:var(--gold);border-radius:100px;font-size:10px;font-weight:700;color:var(--dark);letter-spacing:1px;text-transform:uppercase;white-space:nowrap;">Kurucu</div>
           <div class="team-avatar" style="width:72px;height:72px;border-radius:50%;background:linear-gradient(135deg,var(--gold-d),var(--gold));display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-size:28px;font-weight:700;color:var(--dark);">B</div>
           <div style="font-family:var(--serif);font-size:20px;font-weight:700;color:var(--tx);margin-bottom:4px;">Batuhan Y.</div>
@@ -2027,7 +2270,7 @@ body { -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; 
         </div>
 
         <!-- Ziya -->
-        <div class="team-card rv" style="background:var(--d3);border:1px solid var(--bd);border-radius:var(--r);padding:32px;text-align:center;">
+        <div class="team-card team-card-member rv" style="padding:40px 32px;text-align:center;">
           <div class="team-avatar" style="width:72px;height:72px;border-radius:50%;background:linear-gradient(135deg,var(--gold-d),var(--gold));display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-size:28px;font-weight:700;color:var(--dark);">Z</div>
           <div style="font-family:var(--serif);font-size:20px;font-weight:700;color:var(--tx);margin-bottom:4px;">Ziya Gökalp</div>
           <div style="font-size:12px;color:var(--gold);font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:14px;">Kurucu Ortak & Fikir Babası</div>
@@ -2035,7 +2278,7 @@ body { -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; 
         </div>
 
         <!-- Ahmet -->
-        <div class="team-card rv" style="background:var(--d3);border:1px solid var(--bd);border-radius:var(--r);padding:32px;text-align:center;">
+        <div class="team-card team-card-member rv from-right" style="padding:40px 32px;text-align:center;">
           <div class="team-avatar" style="width:72px;height:72px;border-radius:50%;background:linear-gradient(135deg,var(--gold-d),var(--gold));display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-size:28px;font-weight:700;color:var(--dark);">A</div>
           <div style="font-family:var(--serif);font-size:20px;font-weight:700;color:var(--tx);margin-bottom:4px;">Ahmet Güler</div>
           <div style="font-size:12px;color:var(--gold);font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:14px;">Kurucu Ortak & Emlak Direktörü</div>
@@ -2299,8 +2542,26 @@ function _activatePage(page, tab) {
   if(page === 'advisor') {
     setTimeout(() => renderAdvisors('', ''), 80);
   }
+  if(page === 'about') {
+    // Hakkımızda açılışında rv elementleri sırayla tetikle
+    setTimeout(() => {
+      document.querySelectorAll('#page-about .rv').forEach((el, i) => {
+        setTimeout(() => {
+          el.classList.add('vis');
+          el.classList.remove('rv-hidden');
+        }, i * 80);
+        rvObs.observe(el);
+      });
+    }, 100);
+  }
   if(page === 'analiz') {
-    setTimeout(() => renderAnaliz(), 100);
+    setTimeout(() => {
+      // Canvas'ların görünür olmasını bekle
+      document.querySelectorAll('#page-analiz canvas').forEach(cv => {
+        cv.style.width = '100%';
+      });
+      renderAnaliz();
+    }, 300);
   }
   if(page === 'valuation') {
     setTimeout(() => {
@@ -2463,21 +2724,29 @@ async function loadLandingData() {
 }
 
 // ── REVEAL ──
-// Gelişmiş reveal observer — yönlü animasyon + exit desteği
+// Gelişmiş reveal observer — giriş + çıkış animasyonu
 const rvObs = new IntersectionObserver(entries=>{
   entries.forEach(e=>{
     if(e.isIntersecting) {
-      e.target.classList.add('vis');
-      e.target.classList.remove('exiting');
-      // Sayaç varsa tetikle
+      // Girişte: görünür yap
+      requestAnimationFrame(() => {
+        e.target.classList.add('vis');
+        e.target.classList.remove('rv-hidden');
+      });
+      // Sayaç tetikle
       e.target.querySelectorAll('.counter-anim').forEach(animateCounter);
       if(e.target.classList.contains('counter-anim')) animateCounter(e.target);
-    } else if(e.target.classList.contains('rv-exit')) {
-      e.target.classList.remove('vis');
-      e.target.classList.add('exiting');
+    } else {
+      // Çıkışta: yavaşça kaybol (hero hariç)
+      if(!e.target.closest('.hero') && !e.target.closest('#page-loader')) {
+        requestAnimationFrame(() => {
+          e.target.classList.remove('vis');
+          e.target.classList.add('rv-hidden');
+        });
+      }
     }
   });
-},{threshold:0.1, rootMargin:'0px 0px -30px 0px'});
+},{threshold:0.08, rootMargin:'0px 0px -20px 0px'});
 
 // ── INIT ──
 // ═══════════════════════════════════
@@ -2595,10 +2864,13 @@ document.addEventListener('DOMContentLoaded', () => {
   // Tüm .rv elementlere observer bağla
   document.querySelectorAll('.rv').forEach(el => {
     rvObs.observe(el);
+  });
+  // Sayaç elementleri
+  document.querySelectorAll('.counter-anim').forEach(el => rvObs.observe(el));
+  // AdvRevealObs — hakkımızda sayfası için de
+  document.querySelectorAll('#page-about .rv, #page-landing .rv').forEach(el => {
     advRevealObs.observe(el);
   });
-  // Stat KPI kartlarına observe ekle (dinamik değil, statik)
-  document.querySelectorAll('.counter-anim').forEach(el => rvObs.observe(el));
 });
 
 // ── DANIŞMAN ──
@@ -3011,55 +3283,60 @@ function renderAnaliz() {
 
 // ── GÜVENLE SAT — ADIM KONTROLÜ ──
 let gsCurrentStep = 1;
+let gsUserInteracted = false; // kullanıcı tıkladı mı?
+let gsDemoInterval = null;
+const GS_AUTO_DELAY = 6000;   // otomatik: 6 saniye
+const GS_RESUME_DELAY = 12000; // tıklamadan sonra 12sn bekle
 
-function gsNextStep(step) {
+function gsNextStep(step, fromUser) {
   const total = 4;
+  if(fromUser) {
+    gsUserInteracted = true;
+    // Otomatik döngüyü durdur, 12sn sonra tekrar başlat
+    if(gsDemoInterval) { clearInterval(gsDemoInterval); gsDemoInterval = null; }
+    clearTimeout(window._gsResumeTimer);
+    window._gsResumeTimer = setTimeout(() => {
+      gsUserInteracted = false;
+      gsDemoInterval = startGsDemo(gsCurrentStep);
+    }, GS_RESUME_DELAY);
+  }
   gsCurrentStep = step;
 
-  // Panelleri güncelle
+  // Progress bar smooth geçiş
   for(let i = 1; i <= total; i++) {
-    const pane = document.getElementById('gs-pane-' + i);
+    const pane   = document.getElementById('gs-pane-' + i);
     const stepEl = document.getElementById('gs-step-' + i);
     const progEl = document.getElementById('gs-prog-' + i);
     if(!pane || !stepEl || !progEl) continue;
 
-    // Pane
     pane.classList.toggle('active', i === step);
-
-    // Adım item
     stepEl.classList.remove('active','done');
-    if(i === step) stepEl.classList.add('active');
-    else if(i < step) stepEl.classList.add('done');
-
-    // Progress
     progEl.classList.remove('active','done');
-    if(i === step) progEl.classList.add('active');
-    else if(i < step) progEl.classList.add('done');
+    if(i === step)  { stepEl.classList.add('active'); progEl.classList.add('active'); }
+    else if(i < step){ stepEl.classList.add('done');  progEl.classList.add('done'); }
   }
 }
 
-// Otomatik fragman döngüsü — her 3.5 saniyede bir adım ilerler
-function startGsDemo() {
-  let step = 1;
+function startGsDemo(startFrom) {
+  let step = startFrom || gsCurrentStep;
   return setInterval(() => {
     step = step >= 4 ? 1 : step + 1;
-    gsNextStep(step);
-  }, 3500);
+    gsNextStep(step, false);
+  }, GS_AUTO_DELAY);
 }
 
-// Bölüm görünür olunca başlat, gizlenince durdur
-let gsDemoInterval = null;
+// Intersection observer
 const gsObs = new IntersectionObserver(entries => {
   entries.forEach(e => {
     if(e.isIntersecting && !gsDemoInterval) {
-      gsDemoInterval = startGsDemo();
+      setTimeout(() => { gsDemoInterval = startGsDemo(); }, 1500);
     } else if(!e.isIntersecting && gsDemoInterval) {
-      clearInterval(gsDemoInterval);
-      gsDemoInterval = null;
-      gsNextStep(1); // sıfırla
+      clearInterval(gsDemoInterval); gsDemoInterval = null;
+      clearTimeout(window._gsResumeTimer);
+      gsNextStep(1, false);
     }
   });
-}, { threshold: 0.3 });
+}, { threshold: 0.25 });
 
 document.addEventListener('DOMContentLoaded', () => {
   const sec = document.getElementById('guvenle-sat-sec');
