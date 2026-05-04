@@ -201,7 +201,7 @@ function renderStep3() {
 
   if (VAL.category === 'konut' || VAL.category === 'kiralik') {
     html = `
-      <div class="val-form-card">
+      <div class="val-step-layout"><div class="val-form-card">
         <div class="val-form-title">Konut özelliklerini girin</div>
         <div class="val-form-sub">* ile işaretli alanlar değerleme için zorunludur.</div>
 
@@ -302,7 +302,7 @@ function renderStep3() {
 
   } else if (VAL.category === 'arsa') {
     html = `
-      <div class="val-form-card">
+      <div class="val-step-layout"><div class="val-form-card">
         <div class="val-form-title">Arsa / Arazi bilgilerini girin</div>
         <div class="val-form-sub">* ile işaretli alanlar değerleme için zorunludur.</div>
         <div class="vfg">
@@ -332,7 +332,7 @@ function renderStep3() {
 
   } else if (VAL.category === 'ticari') {
     html = `
-      <div class="val-form-card">
+      <div class="val-step-layout"><div class="val-form-card">
         <div class="val-form-title">Ticari mülk bilgilerini girin</div>
         <div class="val-form-sub">* ile işaretli alanlar değerleme için zorunludur.</div>
         <div class="vfg">
@@ -550,6 +550,9 @@ function renderStep5() {
 }
 
 function calcAndRender() {
+  // Adım 5'te val-container geniş olsun
+  const vc = document.getElementById('val-container-inner');
+  if(vc) vc.classList.add('val-result-wide');
   // Freemium kullanım artır
   if (!currentUser) {
     freeUsed++;
@@ -1105,6 +1108,9 @@ function buildInfoPanelHTML() {
 
 // ===== ADIM GEÇİŞİ =====
 function goStep(step) {
+  // Adım değişince container dar moda dön
+  const vcw = document.getElementById('val-container-inner');
+  if(vcw) vcw.classList.remove('val-result-wide');
   VAL.currentStep = step;
   if (step === 1) renderStep1();
   else if (step === 2) renderStep2();
@@ -1179,8 +1185,8 @@ function initValuation() {
   VAL.views=[]; VAL.amenities=[]; VAL.currentStep=1;
   area.innerHTML = `
     <div id="free-counter"></div>
-    <div class="val-progress" id="val-progress"></div>
-    <div class="val-container">
+    <div class="val-progress" id="val-progress" style="max-width:clamp(400px,75%,860px);margin:0 auto;padding-left:clamp(12px,2vw,24px);padding-right:clamp(12px,2vw,24px);"></div>
+    <div class="val-container" id="val-container-inner">
       <div id="val-form-area"></div>
       <div id="val-info-area"></div>
     </div>`;

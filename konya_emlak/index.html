@@ -1190,19 +1190,29 @@ a, button, .tc, .pc, .dc-chip, .adv-card,
   .analiz-card { padding: 14px 12px !important; }
 }
 
-/* Değerleme adım 1-4: ortalı sabit genişlik */
+/* Değerleme: val-container grid içinde form alanı */
+/* val-step-layout: sadece form-card'ı sarar, grid'i etkilemez */
 .val-step-layout {
-  max-width: clamp(600px, 72%, 900px);
-  margin: 0 auto;
+  /* Wrapper sadece semantik, genişlik val-container grid'den gelir */
+  width: 100%;
 }
-/* Adım 5 sonuç: biraz daha geniş */
+/* val-form-card genişlik kısıtı */
+.val-step-layout > .val-form-card {
+  max-width: 100%;
+}
+/* Adım 5 sonuç: val-container'ı geniş yap */
 .val-result-layout {
-  max-width: clamp(800px, 90%, 1200px);
-  margin: 0 auto;
+  width: 100%;
+}
+/* val-page içindeki progress max-width */
+@media(min-width:901px){
+  #val-content .val-container {
+    padding-left: clamp(16px, 3vw, 40px);
+    padding-right: clamp(16px, 3vw, 40px);
+  }
 }
 @media(max-width:900px){
-  .val-step-layout { max-width: 100%; padding: 0 16px; }
-  .val-result-layout { max-width: 100%; padding: 0 12px; }
+  .val-step-layout,.val-result-layout { max-width: 100%; }
 }
 
 .stat-kpi-card {
@@ -1218,6 +1228,85 @@ a, button, .tc, .pc, .dc-chip, .adv-card,
 @media(max-width:600px){
   .stat-kpi-card { min-height: 140px; padding: 18px 12px !important; }
   .stat-kpi-val { font-size: 30px !important; }
+}
+
+/* Val container: adım 1-4 dar+ortalı, adım 5 geniş */
+.val-container {
+  max-width: clamp(600px, 78%, 960px);
+  margin: 0 auto;
+}
+.val-container.val-result-wide {
+  max-width: 100%;
+  margin: 0;
+}
+
+/* ── BUTON SHINE EFEKTİ ── */
+.btn-g, .btn-o, .val-next, .vre-advisor-btn,
+.gs-step-item button, .stat-kpi-badge,
+.adv-contact-btn, .gs-prog-num {
+  position: relative;
+  overflow: hidden;
+}
+.btn-g::before, .btn-o::before,
+.val-next::before, .vre-advisor-btn::before,
+.adv-contact-btn::before {
+  content: '';
+  position: absolute;
+  top: 0; left: -100%;
+  width: 60%;
+  height: 100%;
+  background: linear-gradient(
+    105deg,
+    transparent 20%,
+    rgba(255,255,255,.28) 50%,
+    transparent 80%
+  );
+  transform: skewX(-20deg);
+  transition: none;
+  pointer-events: none;
+}
+.btn-g:hover::before, .btn-o:hover::before,
+.val-next:hover::before, .vre-advisor-btn:hover::before,
+.adv-contact-btn:hover::before {
+  left: 160%;
+  transition: left .55s ease;
+}
+
+/* ── DEVAMINI OKU ── */
+.read-more-wrap {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height .45s cubic-bezier(.4,0,.2,1);
+}
+.read-more-wrap.open {
+  max-height: 400px;
+}
+.read-more-btn {
+  background: none;
+  border: none;
+  color: var(--gold);
+  font-size: 13px;
+  font-weight: 600;
+  font-family: var(--font);
+  cursor: pointer;
+  padding: 4px 0 16px;
+  transition: color .2s;
+  display: inline-block;
+}
+.read-more-btn:hover { color: var(--gold-l); }
+
+/* ── HAKKIMIZDA PADDING DÜZELTME ── */
+#page-about [style*="padding:60px 48px"] {
+  padding: clamp(32px,5vw,60px) clamp(16px,4vw,48px) !important;
+}
+#page-about [style*="padding:40px"] {
+  padding: clamp(24px,3vw,40px) !important;
+}
+/* mv-card iç padding azalt mobilde */
+@media(max-width:600px) {
+  .mv-card { padding: 24px 18px !important; }
+  .mv-card p { font-size: 14px !important; line-height: 1.7 !important; }
+  #page-about .stat-kpi-card { min-height: 120px !important; }
 }
 
 </style>
@@ -1735,11 +1824,15 @@ a, button, .tc, .pc, .dc-chip, .adv-card,
   transition: transform .4s cubic-bezier(.4,0,.2,1);
   border-radius: 2px;
 }
-/* Tamamlanan adımlar her zaman dolu */
-.gs-prog-step.done .gs-prog-line { --hover-scale: 1; }
-.gs-prog-step.done .gs-prog-line::after { transform: scaleX(1) !important; }
-/* Active: var(--hover-scale) ile JS kontrol eder */
-.gs-prog-step.active .gs-prog-line::after { transform: scaleX(var(--hover-scale, 0)); }
+/* Done adımlar: hover-scale override edilmedikçe tam dolu */
+.gs-prog-step.done .gs-prog-line::after {
+  transform: scaleX(var(--hover-scale, 1));
+}
+/* Active ve diğerleri: JS'den gelen scale */
+.gs-prog-step.active .gs-prog-line::after,
+.gs-prog-step:not(.done) .gs-prog-line::after {
+  transform: scaleX(var(--hover-scale, 0));
+}
 
 /* Adım listesi */
 .gs-step-item {
@@ -2323,9 +2416,12 @@ a, button, .tc, .pc, .dc-chip, .adv-card,
       <p style="font-size:15px;color:var(--txm);line-height:1.85;margin-bottom:16px;">
         Konya&apos;da gayrimenkul piyasasını <strong style="color:var(--tx);">şeffaf, ölçülebilir ve herkes için erişilebilir</strong> kılmak. Alıcıların pişmanlık duymadan, satıcıların gerçek değerinin altında satmadan karar almasını sağlamak.
       </p>
-      <p style="font-size:14px;color:var(--txm);line-height:1.8;margin-bottom:20px;">
-        Binlerce insanın hayatının en büyük finansal kararlarından biri olan gayrimenkul alım-satımını; veri, şeffaflık ve teknoloji ile güvenli bir deneyime dönüştürüyoruz. Konya&apos;daki her mahallenin, her sokağın piyasa gerçekliğini yansıtmayı hedefliyoruz.
-      </p>
+      <div class="read-more-wrap" id="misyon-more">
+        <p style="font-size:14px;color:var(--txm);line-height:1.8;">
+          Binlerce insanın hayatının en büyük finansal kararlarından biri olan gayrimenkul alım-satımını; veri, şeffaflık ve teknoloji ile güvenli bir deneyime dönüştürüyoruz. Konya&apos;daki her mahallenin, her sokağın piyasa gerçekliğini yansıtmayı hedefliyoruz.
+        </p>
+      </div>
+      <button class="read-more-btn" onclick="toggleReadMore('misyon-more',this)">Devamını oku ↓</button>
       <div style="padding-top:20px;border-top:1px solid var(--bd);display:flex;gap:24px;">
         <div style="text-align:center;"><div style="font-family:var(--serif);font-size:26px;font-weight:700;color:var(--gold);">31</div><div style="font-size:10px;color:var(--txm);letter-spacing:1.5px;text-transform:uppercase;margin-top:4px;">İlçe</div></div>
         <div style="text-align:center;"><div style="font-family:var(--serif);font-size:26px;font-weight:700;color:var(--gold);">123+</div><div style="font-size:10px;color:var(--txm);letter-spacing:1.5px;text-transform:uppercase;margin-top:4px;">İlan</div></div>
@@ -2338,9 +2434,12 @@ a, button, .tc, .pc, .dc-chip, .adv-card,
       <p style="font-size:15px;color:var(--txm);line-height:1.85;margin-bottom:16px;">
         Türkiye&apos;nin her şehrinde yapay zeka destekli değerleme altyapısını yaygınlaştırarak emlak kararlarının <strong style="color:var(--tx);">sezgiye değil veriye</strong> dayanmasını sağlamak.
       </p>
-      <p style="font-size:14px;color:var(--txm);line-height:1.8;margin-bottom:20px;">
-        Konya&apos;da başlattığımız bu yolculuğu Türkiye&apos;nin tüm büyükşehirlerine taşımayı hedefliyoruz. 2025 yılında Konya odaklı çalışmalarımızı sürdürürken ulusal büyüme için altyapımızı hazırlıyoruz.
-      </p>
+      <div class="read-more-wrap" id="vizyon-more">
+        <p style="font-size:14px;color:var(--txm);line-height:1.8;">
+          Konya&apos;da başlattığımız bu yolculuğu Türkiye&apos;nin tüm büyükşehirlerine taşımayı hedefliyoruz. 2025 yılında Konya odaklı çalışmalarımızı sürdürürken ulusal büyüme için altyapımızı hazırlıyoruz.
+        </p>
+      </div>
+      <button class="read-more-btn" onclick="toggleReadMore('vizyon-more',this)">Devamını oku ↓</button>
       <div style="display:flex;flex-direction:column;gap:10px;">
         <div style="display:flex;align-items:center;gap:10px;">
           <span style="width:7px;height:7px;border-radius:50%;background:var(--gold);flex-shrink:0;"></span>
@@ -3526,25 +3625,41 @@ document.addEventListener('DOMContentLoaded', () => {
   if(sec) gsObs.observe(sec);
 });
 
-// Güvenle Sat hover → çizgi yarıya kadar
+// Güvenle Sat hover → hover edilen adımın ÖNCESİNDEKİ çizgi yarıya
+// Kural: adım N'e hover → N-1. adımın çizgisi yarıya (N-1 done ise de yarıya geçer)
+// Done olan önceki adımların çizgisi tam kalır (N-1'den öncekilere dokunma)
 function gsHover(step) {
-  for(let i=1;i<=4;i++){
-    const p = document.getElementById('gs-prog-'+i);
+  for(let i = 1; i <= 4; i++) {
+    const p = document.getElementById('gs-prog-' + i);
     if(!p) continue;
     const line = p.querySelector('.gs-prog-line');
     if(!line) continue;
-    if(i < step) { line.dataset.hoverScale = '1'; line.style.setProperty('--hover-scale','1'); }
-    else if(i === step) { line.dataset.hoverScale = '0.5'; line.style.setProperty('--hover-scale','0.5'); }
-    else { line.style.setProperty('--hover-scale','0'); }
+
+    if(i < step - 1) {
+      // Hover edilen adımdan 2+ öncesi: done ise tam, değilse 0
+      line.style.removeProperty('--hover-scale');
+    } else if(i === step - 1) {
+      // Hover edilen adımın hemen öncesi: yarıya
+      line.style.setProperty('--hover-scale', '0.5');
+    } else {
+      // Hover edilen adım ve sonrası: 0
+      line.style.setProperty('--hover-scale', '0');
+    }
   }
-  document.getElementById('gs-progress-bar')?.setAttribute('data-hover', step);
 }
 function gsHoverOut() {
-  document.getElementById('gs-progress-bar')?.removeAttribute('data-hover');
-  for(let i=1;i<=4;i++){
-    const p = document.getElementById('gs-prog-'+i);
+  for(let i = 1; i <= 4; i++) {
+    const p = document.getElementById('gs-prog-' + i);
     if(p) p.querySelector('.gs-prog-line')?.style.removeProperty('--hover-scale');
   }
+}
+
+// ── DEVAMINI OKU ──
+function toggleReadMore(id, btn) {
+  const el = document.getElementById(id);
+  if(!el) return;
+  const isOpen = el.classList.toggle('open');
+  btn.textContent = isOpen ? 'Kapat ↑' : 'Devamını oku ↓';
 }
 
 // ── LEGACY COMPAT ──
