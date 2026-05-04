@@ -75,9 +75,28 @@
   margin: 0;
   padding: 0 clamp(12px,3vw,32px) 80px;
   display: grid;
-  grid-template-columns: minmax(0,1fr) clamp(220px,24%,320px);
-  gap: clamp(14px,2vw,28px);
+  grid-template-columns: minmax(0,1fr) clamp(240px,26%,340px);
+  gap: clamp(16px,2.5vw,32px);
   align-items: start;
+}
+/* Adım 5: sağ kolon gizle, tek kolon */
+.val-container.val-result-wide {
+  grid-template-columns: 1fr !important;
+}
+/* Adım 5: benzer ilanlar alt kısma geçsin */
+.val-container.val-result-wide #val-info-area {
+  grid-column: 1 / -1;
+}
+.val-container.val-result-wide #val-info-area .val-info-panel {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 12px;
+}
+.val-container.val-result-wide #val-info-area .val-info-panel > *:not(.val-info-icon):not(.val-info-title) {
+  background: var(--d3);
+  border: 1px solid var(--bd);
+  border-radius: var(--rs);
+  padding: 10px 12px;
 }
 .val-form-card {
   background: var(--d2);
@@ -622,4 +641,13 @@
   border: 1px solid var(--bd);
   border-radius: var(--rs);
   padding: 12px !important;
+}
+/* val-form-area içindeki içerik doğal genişlikte */
+#val-form-area {
+  min-width: 0;
+  overflow: hidden;
+}
+.val-form-card {
+  width: 100%;
+  box-sizing: border-box;
 }

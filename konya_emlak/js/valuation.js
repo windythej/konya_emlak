@@ -552,7 +552,7 @@ function renderStep5() {
 function calcAndRender() {
   // Adım 5'te: container tek kolon (benzer ilanlar alt kısımda)
   const vc = document.getElementById('val-container-inner');
-  if(vc) { vc.classList.add('val-result-wide'); vc.style.gridTemplateColumns='1fr'; }
+  if(vc) vc.classList.add('val-result-wide');
   // Freemium kullanım artır
   if (!currentUser) {
     freeUsed++;
@@ -736,14 +736,8 @@ function calcAndRender() {
 
   // Sağ panel benzer ilanlar
   const similarList = calcPool.slice(0, 5);
-  // Tek kolon modda benzer ilanları val-form-area'nın altına ekle
-  const existingBenzer = document.getElementById('val-benzer-inline');
-  if(existingBenzer) existingBenzer.remove();
-  const benzerDiv = document.createElement('div');
-  benzerDiv.id = 'val-benzer-inline';
-  document.getElementById('val-form-area').appendChild(benzerDiv);
-  benzerDiv.innerHTML = `
-    <div class="val-info-panel" style="margin-top:20px;">
+  document.getElementById('val-info-area').innerHTML = `
+    <div class="val-info-panel">
       <div class="val-info-icon">🏠</div>
       <div class="val-info-title">Benzer İlanlar</div>
       ${similarList.map(l => {
@@ -764,7 +758,6 @@ function calcAndRender() {
 
   // AI typewriter
   typewriter('ai-analysis-text', aiAnalysis, 15);
-  document.getElementById('val-info-area').innerHTML = '';
 }
 
 function generateAIText(v, estimated, real, avgM2, count, scope, stale) {
@@ -786,7 +779,7 @@ function goBack5() {
     localStorage.setItem('val_used', freeUsed);
   }
   const vcb = document.getElementById('val-container-inner');
-  if(vcb) { vcb.classList.remove('val-result-wide'); vcb.style.gridTemplateColumns=''; }
+  if(vcb) vcb.classList.remove('val-result-wide');
   goStep(4);
 }
 
@@ -839,7 +832,7 @@ const ZONING_MULT = {
 
 function calcAndRenderNonKonut() {
   const vcn = document.getElementById('val-container-inner');
-  if(vcn) { vcn.classList.add('val-result-wide'); vcn.style.gridTemplateColumns='1fr'; }
+  if(vcn) vcn.classList.add('val-result-wide');
   const fp = n => new Intl.NumberFormat('tr-TR').format(Math.round(n));
   const isArsa = VAL.category === 'arsa';
   const m2 = isArsa ? (VAL.landM2 || 0) : (VAL.grossM2 || 0);
@@ -1121,7 +1114,7 @@ function buildInfoPanelHTML() {
 function goStep(step) {
   // Adım değişince container dar moda dön
   const vcw = document.getElementById('val-container-inner');
-  if(vcw) { vcw.classList.remove('val-result-wide'); vcw.style.gridTemplateColumns=''; }
+  if(vcw) vcw.classList.remove('val-result-wide');
   VAL.currentStep = step;
   if (step === 1) renderStep1();
   else if (step === 2) renderStep2();
