@@ -33,7 +33,7 @@ const gi=l=>Array.isArray(l.images)?l.images:(typeof l.images==='string'?JSON.pa
 async function load(){
   const btn=document.getElementById('sbtn');
   btn.textContent='Yükleniyor...';btn.disabled=true;
-  document.getElementById('listv').innerHTML='<div class="loader"><div class="spin"></div><p>İlanlar getiriliyor...</p></div>';
+  const lv=document.getElementById('listv'); if(lv) lv.innerHTML='<div class="loader"><div class="spin"></div><p>İlanlar getiriliyor...</p></div>';
   try{
     const r=await fetch(`${SU}/rest/v1/listings?select=*`,{headers:{'apikey':SK,'Authorization':`Bearer ${SK}`}});
     all=await r.json();
@@ -80,7 +80,7 @@ function apply(){
 }
 
 function sortRender(){
-  const s=document.getElementById('sort').value;
+  const sortEl=document.getElementById('sort'); const s=sortEl?sortEl.value:'price_asc';
   let d=[...filtered];
   if(s==='price_asc')d.sort((a,b)=>a.price-b.price);
   else if(s==='price_desc')d.sort((a,b)=>b.price-a.price);
@@ -500,17 +500,25 @@ document.getElementById('tab-val').addEventListener('click', () => {
   else populateValDistricts();
 });
 
-// DESKTOP EVENTS
-document.getElementById('ov').addEventListener('click',closeDrawer);
-document.getElementById('dclose').addEventListener('click',closeDrawer);
-document.getElementById('sbtn').addEventListener('click',()=>{F.min=parseInt(document.getElementById('mnp').value)||null;F.max=parseInt(document.getElementById('mxp').value)||null;load();});
-document.getElementById('sort').addEventListener('change',()=>{if(all.length)sortRender();});
-document.getElementById('rc').addEventListener('click',e=>{if(!e.target.matches('.chip'))return;document.getElementById('rc').querySelectorAll('.chip').forEach(x=>x.classList.remove('on'));e.target.classList.add('on');F.rooms=e.target.dataset.value;if(all.length)apply();});
-document.getElementById('hc').addEventListener('click',e=>{if(!e.target.matches('.chip'))return;document.getElementById('hc').querySelectorAll('.chip').forEach(x=>x.classList.remove('on'));e.target.classList.add('on');F.heating=e.target.dataset.value;if(all.length)apply();});
-document.querySelectorAll('#dc .chip, #qc .chip').forEach(b=>{}); // handled by buildD/buildQ
-document.querySelectorAll('.panel .tog').forEach(t=>t.addEventListener('click',()=>{t.classList.toggle('on');const f=t.dataset.feat;if(F.features.includes(f))F.features=F.features.filter(x=>x!==f);else F.features.push(f);if(all.length)apply();}));
-document.getElementById('vl').addEventListener('click',()=>{document.getElementById('vl').classList.add('on');document.getElementById('vm').classList.remove('on');document.getElementById('mapv').style.display='none';document.getElementById('listv').style.display='flex';});
-document.getElementById('vm').addEventListener('click',()=>{document.getElementById('vm').classList.add('on');document.getElementById('vl').classList.remove('on');if(filtered.length)renderMap(filtered);});
+// DESKTOP EVENTS (null-safe)
+function bindComparisonEvents() {
+  const ov = document.getElementById('ov');
+  const dclose = document.getElementById('dclose');
+  const sbtn = document.getElementById('sbtn');
+  const sort = document.getElementById('sort');
+  const vl = document.getElementById('vl');
+  const vm = document.getElementById('vm');
+  if(ov) ov.addEventListener('click',closeDrawer);
+  if(dclose) dclose.addEventListener('click',closeDrawer);
+  if(sbtn) sbtn.addEventListener('click',()=>{F.min=parseInt(document.getElementById('mnp').value)||null;F.max=parseInt(document.getElementById('mxp').value)||null;load();});
+  if(sort) sort.addEventListener('change',()=>{if(all.length)sortRender();});
+  const rc=document.getElementById('rc');const hc=document.getElementById('hc');
+  if(rc) rc.addEventListener('click',e=>{if(!e.target.matches('.chip'))return;rc.querySelectorAll('.chip').forEach(x=>x.classList.remove('on'));e.target.classList.add('on');F.rooms=e.target.dataset.value;if(all.length)apply();});
+  if(hc) hc.addEventListener('click',e=>{if(!e.target.matches('.chip'))return;hc.querySelectorAll('.chip').forEach(x=>x.classList.remove('on'));e.target.classList.add('on');F.heating=e.target.dataset.value;if(all.length)apply();});
+  document.querySelectorAll('.panel .tog').forEach(t=>t.addEventListener('click',()=>{t.classList.toggle('on');const f=t.dataset.feat;if(F.features.includes(f))F.features=F.features.filter(x=>x!==f);else F.features.push(f);if(all.length)apply();}));
+  if(vl) vl.addEventListener('click',()=>{vl.classList.add('on');if(vm)vm.classList.remove('on');document.getElementById('mapv').style.display='none';document.getElementById('listv').style.display='flex';});
+  if(vm) vm.addEventListener('click',()=>{vm.classList.add('on');if(vl)vl.classList.remove('on');if(filtered.length)renderMap(filtered);});
+}
 
 // MOBILE FILTER SHEET
 function openFsheet(){document.getElementById('fsheet').classList.add('open');document.body.style.overflow='hidden';}
@@ -826,40 +834,6 @@ async function loadForVal() {
   } catch(e) { showError('Veri yüklenemedi: ' + e.message, 'Bağlantı Hatası'); }
   if (btn) { btn.textContent = 'Devam →'; btn.disabled = false; }
 }
-
-// TAB EVENTLERİ
-function switchTab(tab) {
-  const isVal = tab === 'val';
-  document.getElementById('tab-list').classList.toggle('on', !isVal);
-  document.getElementById('tab-val').classList.toggle('on', isVal);
-  document.getElementById('page-val').style.display = isVal ? 'block' : 'none';
-  document.getElementById('main-wrap').style.display = isVal ? 'none' : 'block';
-  const ms = document.getElementById('mob-search');
-  if(ms) ms.style.display = isVal ? 'none' : 'block';
-  if (isVal) {
-    setTimeout(() => {
-      if (typeof initValuation === 'function') initValuation();
-    }, 50);
-  }
-}
-document.getElementById('tab-list').addEventListener('click', () => switchTab('list'));
-document.getElementById('tab-val').addEventListener('click', () => {
-  switchTab('val');
-  if (all.length === 0) loadForVal();
-  else populateValDistricts();
-});
-
-// DESKTOP EVENTS
-document.getElementById('ov').addEventListener('click',closeDrawer);
-document.getElementById('dclose').addEventListener('click',closeDrawer);
-document.getElementById('sbtn').addEventListener('click',()=>{F.min=parseInt(document.getElementById('mnp').value)||null;F.max=parseInt(document.getElementById('mxp').value)||null;load();});
-document.getElementById('sort').addEventListener('change',()=>{if(all.length)sortRender();});
-document.getElementById('rc').addEventListener('click',e=>{if(!e.target.matches('.chip'))return;document.getElementById('rc').querySelectorAll('.chip').forEach(x=>x.classList.remove('on'));e.target.classList.add('on');F.rooms=e.target.dataset.value;if(all.length)apply();});
-document.getElementById('hc').addEventListener('click',e=>{if(!e.target.matches('.chip'))return;document.getElementById('hc').querySelectorAll('.chip').forEach(x=>x.classList.remove('on'));e.target.classList.add('on');F.heating=e.target.dataset.value;if(all.length)apply();});
-document.querySelectorAll('#dc .chip, #qc .chip').forEach(b=>{}); // handled by buildD/buildQ
-document.querySelectorAll('.panel .tog').forEach(t=>t.addEventListener('click',()=>{t.classList.toggle('on');const f=t.dataset.feat;if(F.features.includes(f))F.features=F.features.filter(x=>x!==f);else F.features.push(f);if(all.length)apply();}));
-document.getElementById('vl').addEventListener('click',()=>{document.getElementById('vl').classList.add('on');document.getElementById('vm').classList.remove('on');document.getElementById('mapv').style.display='none';document.getElementById('listv').style.display='flex';});
-document.getElementById('vm').addEventListener('click',()=>{document.getElementById('vm').classList.add('on');document.getElementById('vl').classList.remove('on');if(filtered.length)renderMap(filtered);});
 
 // MOBILE FILTER SHEET
 function openFsheet(){document.getElementById('fsheet').classList.add('open');document.body.style.overflow='hidden';}

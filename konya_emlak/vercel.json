@@ -1,5 +1,10 @@
 {
   "rewrites": [
-    { "source": "/admin", "destination": "/admin.html" }
+    { "source": "/admin",          "destination": "/admin.html" },
+    { "source": "/degerleme",      "destination": "/index.html" },
+    { "source": "/karsilastirma",  "destination": "/index.html" },
+    { "source": "/fiyatlar",       "destination": "/index.html" },
+    { "source": "/giris",          "destination": "/index.html" },
+    { "source": "/odeme",          "destination": "/index.html" }
   ]
 }

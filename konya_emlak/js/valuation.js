@@ -1,3 +1,6 @@
+// allListings = main.js'deki 'all' dizisine referans
+Object.defineProperty(window, 'allListings', { get: () => (typeof all !== 'undefined' ? all : []) });
+
 // ===== GELİŞMİŞ DEĞERLEME SİSTEMİ =====
 
 // Freemium - 3 ücretsiz hak
@@ -818,7 +821,7 @@ function showSubPopup() {
           <div class="spc-period">/ay · Yıllık faturalama</div>
         </div>
       </div>
-      <button onclick="document.getElementById('sub-popup').remove();openAuth();" 
+      <button onclick="document.getElementById('sub-popup').remove();goPage('auth');" 
         style="width:100%;padding:14px;background:var(--gold);border:none;border-radius:var(--rs);color:var(--dark);font-size:14px;font-weight:700;font-family:'DM Sans',sans-serif;cursor:pointer;">
         Giriş Yap / Kayıt Ol
       </button>
