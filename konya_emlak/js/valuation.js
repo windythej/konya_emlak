@@ -69,7 +69,7 @@ function renderStep1() {
   renderProgress();
   updateFreeCounter();
   document.getElementById('val-form-area').innerHTML = `
-    <div class="val-form-card">
+    <div class="val-step-layout"><div class="val-form-card">
       <div class="val-form-title">Ne değerlendirmek istiyorsunuz?</div>
       <div class="val-form-sub">Mülk tipini seçerek başlayın. Her kategori için farklı analiz kriterleri kullanılmaktadır.</div>
       <div class="cat-grid">
@@ -132,7 +132,7 @@ function renderStep2() {
   const allDistricts = [...new Set([...districts, ...extraDistricts])].sort();
 
   document.getElementById('val-form-area').innerHTML = `
-    <div class="val-form-card">
+    <div class="val-step-layout"><div class="val-form-card">
       <div class="val-form-title">Mülkün konumu nerede?</div>
       <div class="val-form-sub">Konum, değerleme analizinin en kritik faktörüdür.</div>
       <div class="vfg">
@@ -447,7 +447,7 @@ function step3NextTicari() {
 function renderStep4() {
   renderProgress();
   document.getElementById('val-form-area').innerHTML = `
-    <div class="val-form-card">
+    <div class="val-step-layout"><div class="val-form-card">
       <div class="val-form-title">Ek özellikleri girin</div>
       <div class="val-form-sub">Bu bilgiler değerlemeyi daha doğru hale getirir. İsteğe bağlıdır.</div>
 
@@ -531,7 +531,7 @@ function renderStep5() {
   }
 
   document.getElementById('val-form-area').innerHTML = `
-    <div class="val-form-card">
+    <div class="val-step-layout"><div class="val-form-card">
       <div style="text-align:center;padding:20px 0;">
         <div style="font-size:36px;margin-bottom:12px;">🔍</div>
         <div style="font-family:'Playfair Display',serif;font-size:18px;color:var(--tx);margin-bottom:8px;">Analiz Yapılıyor...</div>
@@ -645,7 +645,7 @@ function calcAndRender() {
   const confidenceScore = Math.min(95, Math.round(55 + calcPool.length * 3));
 
   document.getElementById('val-form-area').innerHTML = `
-    <div class="val-result-endeksa">
+    <div class="val-result-layout"><div class="val-result-endeksa">
 
       <!-- ÜST BAŞLIK -->
       <div class="vre-header">
@@ -881,7 +881,7 @@ Satıcı için öneri: ${fp(estimated * 1.05)} TL civarından pazarlığa başla
 Alıcı için öneri: ${fp(real)} TL altındaki teklifler fırsat olarak değerlendirilebilir.`;
 
   document.getElementById('val-form-area').innerHTML = `
-    <div class="val-result-endeksa">
+    <div class="val-result-layout"><div class="val-result-endeksa">
       <div class="vre-header">
         <div>
           <div class="vre-title">Değerleme Sonucu</div>

@@ -91,7 +91,7 @@ body{font-family:var(--font);background:var(--dark);color:var(--tx);overflow-x:h
 /* Mobil menü */
 .mob-ov{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:1990;display:none;}
 .mob-ov.on{display:block;}
-.mob-sheet{position:fixed;top:0;right:-100%;bottom:0;width:300px;background:var(--d2);border-left:1px solid var(--bd);z-index:2000;padding:80px 28px 40px;display:flex;flex-direction:column;gap:4px;transition:right .32s cubic-bezier(.4,0,.2,1);}
+.mob-sheet{position:fixed;top:0;right:-100%;bottom:0;width:300px;background:var(--d2);border-left:1px solid var(--bd);z-index:2000;padding:80px 28px 40px;display:flex;flex-direction:column;gap:4px;transition:right .22s cubic-bezier(.2,0,.1,1);}
 .mob-sheet.on{right:0;}
 .mob-close{position:absolute;top:18px;right:18px;width:36px;height:36px;background:var(--d3);border:1px solid var(--bd);border-radius:var(--rs);cursor:pointer;font-size:18px;color:var(--txm);}
 .mob-sheet .nav-lnk{display:block;padding:14px 16px;font-size:15px;border-bottom:1px solid var(--bd);}
@@ -1113,6 +1113,113 @@ a, button, .tc, .pc, .dc-chip, .adv-card,
 }
 #page-about .btn-g:hover::before { left: 100%; }
 
+/* Güvenle Sat — mobilde adımlar önce, panel sonra */
+@media(max-width:900px){
+  .gs-grid { display:flex !important; flex-direction:column !important; }
+  #gs-panel { order: 2; }
+  .gs-grid > div:last-child { order: 1; }
+}
+
+@media(max-width:600px){
+  /* Genel kart paddingler */
+  .pc { padding: 20px 16px !important; }
+  .tc { padding: 20px 16px !important; }
+  .adv-card { padding: 18px 14px !important; }
+  .analiz-card { padding: 16px 14px !important; }
+  .gs-step-item { padding: 12px 10px !important; }
+  .stat-kpi-card { padding: 18px 12px !important; }
+  .val-form-card { padding: 20px 16px !important; }
+  /* Fiyatlar sayfası kart padding */
+  .pc .pc-feats { padding: 0 !important; }
+  .pricing-page { padding: 80px 12px 40px !important; }
+}
+
+@media(max-width:900px){
+  /* Metodoloji kartları */
+  #page-about [style*="grid-template-columns:1fr 1fr 1fr"] {
+    grid-template-columns: 1fr !important;
+  }
+  /* Ekip kartları */
+  #page-about [style*="grid-template-columns:repeat(3"] {
+    grid-template-columns: 1fr !important;
+    gap: 28px !important;
+  }
+  .team-card-founder, .team-card-member {
+    margin-top: 20px !important;
+  }
+  /* Misyon/vizyon */
+  #page-about [style*="grid-template-columns:1fr 1fr"] {
+    grid-template-columns: 1fr !important;
+  }
+  /* Stat band */
+  #page-about .stat-band-grid {
+    grid-template-columns: 1fr 1fr !important;
+  }
+  /* Hero padding */
+  .about-hero-wrap { padding: 50px 20px 40px !important; }
+  .about-deco-letter { display: none !important; }
+}
+@media(max-width:600px){
+  .team-card-founder, .team-card-member { padding: 36px 20px 24px !important; }
+  #page-about [style*="grid-template-columns:repeat(3"] {
+    grid-template-columns: 1fr !important;
+  }
+  /* Metodoloji metin taşmasın */
+  .method-card p { font-size: 13px !important; }
+}
+
+@media(max-width:900px){
+  #page-analiz [style*="grid-template-columns:1fr 1fr"] {
+    grid-template-columns: 1fr !important;
+  }
+  #page-analiz [style*="grid-template-columns:1fr 1fr;gap:20px"] {
+    grid-template-columns: 1fr !important;
+  }
+  #page-analiz .analiz-card[style*="grid-column:1/-1"] {
+    grid-column: auto !important;
+  }
+  #analiz-kpi { grid-template-columns: 1fr 1fr !important; }
+  #page-analiz { padding: 0 12px !important; }
+  .analiz-card canvas { height: 180px !important; }
+}
+@media(max-width:600px){
+  #analiz-kpi { grid-template-columns: 1fr 1fr !important; }
+  #page-analiz [style*="padding:0 48px"] {
+    padding: 0 12px !important;
+  }
+  .analiz-card { padding: 14px 12px !important; }
+}
+
+/* Değerleme adım 1-4: ortalı sabit genişlik */
+.val-step-layout {
+  max-width: clamp(600px, 72%, 900px);
+  margin: 0 auto;
+}
+/* Adım 5 sonuç: biraz daha geniş */
+.val-result-layout {
+  max-width: clamp(800px, 90%, 1200px);
+  margin: 0 auto;
+}
+@media(max-width:900px){
+  .val-step-layout { max-width: 100%; padding: 0 16px; }
+  .val-result-layout { max-width: 100%; padding: 0 12px; }
+}
+
+.stat-kpi-card {
+  min-height: 160px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.stat-kpi-val { font-size: clamp(32px, 4vw, 46px) !important; }
+.stat-kpi-lbl { font-size: clamp(9px, 1.2vw, 11px) !important; }
+.stat-kpi-icon { font-size: clamp(22px, 3vw, 28px) !important; }
+@media(max-width:600px){
+  .stat-kpi-card { min-height: 140px; padding: 18px 12px !important; }
+  .stat-kpi-val { font-size: 30px !important; }
+}
+
 </style>
 </head>
 <body>
@@ -1190,7 +1297,8 @@ a, button, .tc, .pc, .dc-chip, .adv-card,
       <button class="nav-out" onclick="logout()">Çıkış</button>
     </div>
     <button class="nav-ham" id="nav-ham" onclick="openMob()">
-      <div class="hbar"></div><div class="hbar"></div><div class="hbar"></div>
+      <span id="mob-burger-icon" style="display:none"></span>
+      <div class="hbar" id="hbar1"></div><div class="hbar" id="hbar2"></div><div class="hbar"></div>
     </button>
   </div>
 </nav>
@@ -1312,7 +1420,6 @@ a, button, .tc, .pc, .dc-chip, .adv-card,
       <div class="stat-kpi-icon">🎁</div>
       <div class="stat-kpi-val counter-anim" data-target="3" data-suffix="">3</div>
       <div class="stat-kpi-lbl">Ücretsiz Sorgu Hakkı</div>
-      <div class="stat-kpi-badge">Hemen Dene →</div>
     </div>
   </div>
 </div>
@@ -1489,7 +1596,7 @@ a, button, .tc, .pc, .dc-chip, .adv-card,
 
         <!-- Adım Listesi -->
         <div style="display:flex;flex-direction:column;gap:12px;">
-          <div class="gs-step-item active" id="gs-step-1" onclick="gsNextStep(1,true)" style="cursor:pointer;">
+          <div class="gs-step-item active" id="gs-step-1" onclick="gsNextStep(1,true)" onmouseenter="gsHover(1)" onmouseleave="gsHoverOut()" style="cursor:pointer;">
             <div class="gs-step-icon">✎</div>
             <div class="gs-step-body">
               <div class="gs-step-title">1 — Gayrimenkulünüzün Özelliklerini Girin</div>
@@ -1497,7 +1604,7 @@ a, button, .tc, .pc, .dc-chip, .adv-card,
             </div>
             <div class="gs-step-arrow">›</div>
           </div>
-          <div class="gs-step-item" id="gs-step-2" onclick="gsNextStep(2,true)" style="cursor:pointer;">
+          <div class="gs-step-item" id="gs-step-2" onclick="gsNextStep(2,true)" onmouseenter="gsHover(2)" onmouseleave="gsHoverOut()" style="cursor:pointer;">
             <div class="gs-step-icon">⊙</div>
             <div class="gs-step-body">
               <div class="gs-step-title">2 — Değerini Öğrenin</div>
@@ -1505,7 +1612,7 @@ a, button, .tc, .pc, .dc-chip, .adv-card,
             </div>
             <div class="gs-step-arrow">›</div>
           </div>
-          <div class="gs-step-item" id="gs-step-3" onclick="gsNextStep(3,true)" style="cursor:pointer;">
+          <div class="gs-step-item" id="gs-step-3" onclick="gsNextStep(3,true)" onmouseenter="gsHover(3)" onmouseleave="gsHoverOut()" style="cursor:pointer;">
             <div class="gs-step-icon">👤</div>
             <div class="gs-step-body">
               <div class="gs-step-title">3 — En İyi Danışmanı Bulun</div>
@@ -1513,7 +1620,7 @@ a, button, .tc, .pc, .dc-chip, .adv-card,
             </div>
             <div class="gs-step-arrow">›</div>
           </div>
-          <div class="gs-step-item" id="gs-step-4" onclick="gsNextStep(4,true)" style="cursor:pointer;">
+          <div class="gs-step-item" id="gs-step-4" onclick="gsNextStep(4,true)" onmouseenter="gsHover(4)" onmouseleave="gsHoverOut()" style="cursor:pointer;">
             <div class="gs-step-icon">✓</div>
             <div class="gs-step-body">
               <div class="gs-step-title">4 — Güvenle Satın</div>
@@ -1541,7 +1648,7 @@ a, button, .tc, .pc, .dc-chip, .adv-card,
   border-radius: var(--r);
   overflow: hidden;
   /* Panel 4 "İşlem Tamam" en uzun içerik — ona göre sabit yükseklik */
-  height: 500px;
+  height: 580px;
   position: relative;
   transition: border-color .3s;
 }
@@ -1623,17 +1730,16 @@ a, button, .tc, .pc, .dc-chip, .adv-card,
   content: '';
   position: absolute; inset: 0;
   background: linear-gradient(90deg, #C9A84C, #E8A020, #F5C842);
-  transform: scaleX(0);
+  transform: scaleX(var(--hover-scale, 0));
   transform-origin: left;
-  transition: transform .5s cubic-bezier(.4,0,.2,1);
+  transition: transform .4s cubic-bezier(.4,0,.2,1);
   border-radius: 2px;
 }
-.gs-prog-step.done .gs-prog-line::after { transform: scaleX(1); }
-/* active: çizgi YOK — sadece daire dolu */
-.gs-prog-step.active .gs-prog-line::after { transform: scaleX(0); }
-/* hover: çizginin yarısı görünsün */
-.gs-prog-step.active:hover .gs-prog-line::after,
-.gs-prog-step:not(.done):not(.active):hover .gs-prog-line::after { transform: scaleX(.5); }
+/* Tamamlanan adımlar her zaman dolu */
+.gs-prog-step.done .gs-prog-line { --hover-scale: 1; }
+.gs-prog-step.done .gs-prog-line::after { transform: scaleX(1) !important; }
+/* Active: var(--hover-scale) ile JS kontrol eder */
+.gs-prog-step.active .gs-prog-line::after { transform: scaleX(var(--hover-scale, 0)); }
 
 /* Adım listesi */
 .gs-step-item {
@@ -2274,7 +2380,6 @@ a, button, .tc, .pc, .dc-chip, .adv-card,
         <div class="stat-kpi-icon">🎁</div>
         <div class="stat-kpi-val counter-anim" data-target="3" data-suffix="">0</div>
         <div class="stat-kpi-lbl">Ücretsiz Sorgu</div>
-        <div class="stat-kpi-badge">Hemen Dene →</div>
       </div>
     </div>
   </div>
@@ -2666,8 +2771,27 @@ function _updateNav(page) {
 window.addEventListener('scroll', () => document.getElementById('main-nav').classList.toggle('scrolled', window.scrollY>40));
 
 // ── MOBİL MENÜ ──
-function openMob() { document.getElementById('mob-sheet').classList.add('on'); document.getElementById('mob-ov').classList.add('on'); }
-function closeMob() { document.getElementById('mob-sheet').classList.remove('on'); document.getElementById('mob-ov').classList.remove('on'); }
+function openMob() {
+  document.getElementById('mob-sheet').classList.add('on');
+  document.getElementById('mob-ov').classList.add('on');
+  document.body.style.overflow = 'hidden';
+  // hbar → X animasyonu
+  const h1=document.getElementById('hbar1'), h2=document.getElementById('hbar2');
+  const h3=document.querySelector('#nav-ham .hbar:last-child');
+  if(h1){h1.style.cssText='transform:translateY(7px) rotate(45deg);transition:all .25s';}
+  if(h2){h2.style.cssText='opacity:0;transition:all .25s';}
+  if(h3){h3.style.cssText='transform:translateY(-7px) rotate(-45deg);transition:all .25s';}
+}
+function closeMob() {
+  document.getElementById('mob-sheet').classList.remove('on');
+  document.getElementById('mob-ov').classList.remove('on');
+  document.body.style.overflow = '';
+  const h1=document.getElementById('hbar1'), h2=document.getElementById('hbar2');
+  const h3=document.querySelector('#nav-ham .hbar:last-child');
+  if(h1){h1.style.cssText='transform:none;transition:all .25s';}
+  if(h2){h2.style.cssText='opacity:1;transition:all .25s';}
+  if(h3){h3.style.cssText='transform:none;transition:all .25s';}
+}
 
 // ── ABONE OL ──
 function handleSub(name, price, period) {
@@ -3401,6 +3525,27 @@ document.addEventListener('DOMContentLoaded', () => {
   const sec = document.getElementById('guvenle-sat-sec');
   if(sec) gsObs.observe(sec);
 });
+
+// Güvenle Sat hover → çizgi yarıya kadar
+function gsHover(step) {
+  for(let i=1;i<=4;i++){
+    const p = document.getElementById('gs-prog-'+i);
+    if(!p) continue;
+    const line = p.querySelector('.gs-prog-line');
+    if(!line) continue;
+    if(i < step) { line.dataset.hoverScale = '1'; line.style.setProperty('--hover-scale','1'); }
+    else if(i === step) { line.dataset.hoverScale = '0.5'; line.style.setProperty('--hover-scale','0.5'); }
+    else { line.style.setProperty('--hover-scale','0'); }
+  }
+  document.getElementById('gs-progress-bar')?.setAttribute('data-hover', step);
+}
+function gsHoverOut() {
+  document.getElementById('gs-progress-bar')?.removeAttribute('data-hover');
+  for(let i=1;i<=4;i++){
+    const p = document.getElementById('gs-prog-'+i);
+    if(p) p.querySelector('.gs-prog-line')?.style.removeProperty('--hover-scale');
+  }
+}
 
 // ── LEGACY COMPAT ──
 function switchTab(t) { if(t==='val') goPage('valuation'); else goPage('comparison'); }

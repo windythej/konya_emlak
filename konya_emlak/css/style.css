@@ -597,3 +597,11 @@ body{font-family:var(--font);background:var(--dark);color:var(--tx);min-height:1
   .layout{grid-template-columns:1fr!important;}
   .panel{display:none;}
 }
+/* Responsive padding — clamp ile */
+.pc { padding: clamp(16px,3vw,28px); }
+.tc { padding: clamp(16px,2.5vw,28px) clamp(14px,2vw,24px); }
+.adv-grid { padding: 0 clamp(12px,3vw,48px) 60px; }
+@media(max-width:480px){
+  .pc,.tc { padding: 14px 12px !important; }
+  .pc-feats li { font-size: 12px !important; }
+}

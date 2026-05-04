@@ -5,8 +5,8 @@
 
 /* Progress bar */
 .val-progress {
-  padding: 28px 0 36px;
-  max-width: 800px;
+  padding: clamp(20px,3vw,36px) 0;
+  max-width: clamp(400px,80%,820px);
   margin: 0 auto;
 }
 .val-steps {
@@ -73,10 +73,10 @@
 .val-container {
   max-width: 100%;
   margin: 0;
-  padding: 0 28px 80px;
+  padding: 0 clamp(12px,3vw,32px) 80px;
   display: grid;
-  grid-template-columns: 1fr 380px;
-  gap: 24px;
+  grid-template-columns: 1fr clamp(260px,28%,380px);
+  gap: clamp(14px,2vw,24px);
   align-items: start;
 }
 .val-form-card {
@@ -573,3 +573,10 @@
 .val-step.active .val-step-num{transform:scale(1.1);box-shadow:0 4px 16px rgba(201,168,76,.3);}
 .val-step-line{transition:background .4s ease;}
 .score-fill{transition:width 1s cubic-bezier(.4,0,.2,1);}
+
+@media(max-width:600px){
+  .val-step-layout,.val-result-layout{max-width:100%!important;padding:0 8px!important;}
+  .val-container{grid-template-columns:1fr!important;padding:0 10px 60px!important;}
+  .val-form-card{padding:18px 14px!important;}
+  .vrow2,.vrow3{grid-template-columns:1fr 1fr!important;gap:10px!important;}
+}
