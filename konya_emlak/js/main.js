@@ -19,9 +19,7 @@ function showSMSCode(code, tel) {
   document.getElementById('popup-overlay').classList.add('open');
 }
 function closePopup() { document.getElementById('popup-overlay').classList.remove('open'); }
-document.getElementById('popup-overlay').addEventListener('click', function(e) {
-  if (e.target === this) closePopup();
-});
+(function(){var _po=document.getElementById('popup-overlay');if(_po)_po.addEventListener('click',function(e){if(e.target===this)closePopup();});})();
 
 const SU='https://bknfjyfuzbanhoomooth.supabase.co',SK='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJrbmZqeWZ1emJhbmhvb21vb3RoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc1ODczNDgsImV4cCI6MjA5MzE2MzM0OH0.7Tl3nWspqxDtnhIj2SZju_ObXtjkAsv_n-Joj7vwSx0';
 let all=[],filtered=[],dMap=null,gImgs=[],gIdx=0;
@@ -33,15 +31,14 @@ const gi=l=>Array.isArray(l.images)?l.images:(typeof l.images==='string'?JSON.pa
 async function load(){
   const btn=document.getElementById('sbtn');
   if(btn){btn.textContent='Yükleniyor...';btn.disabled=true;}
-  const lv=document.getElementById('listv');
-  if(lv) lv.innerHTML='<div class="loader"><div class="spin"></div><p>İlanlar getiriliyor...</p></div>';
+  const lv=document.getElementById('listv');if(lv)lv.innerHTML='<div class="loader"><div class="spin"></div><p>İlanlar getiriliyor...</p></div>';
   try{
     const r=await fetch(`${SU}/rest/v1/listings?select=*`,{headers:{'apikey':SK,'Authorization':`Bearer ${SK}`}});
     all=await r.json();
     buildD();buildQ();apply();populateValDistricts();
   }catch(e){
-    const lv2=document.getElementById('listv');
-    if(lv2) lv2.innerHTML=`<div class="empty"><h3>Hata</h3><p>${e.message}</p></div>`;
+    const lve=document.getElementById('listv');
+    if(lve)lve.innerHTML=`<div class="empty"><h3>Hata</h3><p>${e.message}</p></div>`;
   }
   if(btn){btn.textContent='İlanları Getir';btn.disabled=false;}
 }
@@ -91,27 +88,27 @@ function sortRender(){
   else if(s==='m2_asc')d.sort((a,b)=>(a.price/(a.net_size||1))-(b.price/(b.net_size||1)));
   else if(s==='m2_desc')d.sort((a,b)=>(b.price/(b.net_size||1))-(a.price/(a.net_size||1)));
   renderStats(d);
-  const vmEl=document.getElementById('vm');
-  if(vmEl&&vmEl.classList.contains('on'))renderMap(d);
+  const _vm0=document.getElementById('vm');
+  if(_vm0&&_vm0.classList.contains('on'))renderMap(d);
   else renderList(d);
 }
 
 function renderStats(d){
   const s=document.getElementById('stats'),r=document.getElementById('rh');
-  if(!s||!r) return;
+  if(!s||!r)return;
   if(!d.length){s.style.display='none';r.style.display='none';return;}
   s.style.display='grid';r.style.display='flex';
   const avg=Math.round(d.reduce((x,l)=>x+l.price,0)/d.length);
   const wm=d.filter(l=>l.net_size>0);
   const am=wm.length?Math.round(wm.reduce((x,l)=>x+(l.price/l.net_size),0)/wm.length):0;
-  const sc=document.getElementById('sc');if(sc)sc.textContent=d.length;
-  const sa=document.getElementById('sa');if(sa)sa.textContent=fp(avg)+' ₺';
-  const sm=document.getElementById('sm');if(sm)sm.textContent=fp(am)+' ₺';
-  const rcnt=document.getElementById('rcnt');if(rcnt)rcnt.textContent=d.length;
+  const _sc=document.getElementById('sc');if(_sc)_sc.textContent=d.length;
+  const _sa=document.getElementById('sa');if(_sa)_sa.textContent=fp(avg)+' ₺';
+  const _sm=document.getElementById('sm');if(_sm)_sm.textContent=fp(am)+' ₺';
+  const _rcnt=document.getElementById('rcnt');if(_rcnt)_rcnt.textContent=d.length;
 }
 
 function renderList(d){
-  const mapvEl=document.getElementById('mapv');if(mapvEl)mapvEl.style.display='none';
+  const _mp=document.getElementById('mapv');if(_mp)_mp.style.display='none';
   const c=document.getElementById('listv');if(!c)return;c.style.display='flex';
   if(!d.length){c.innerHTML='<div class="empty"><h3>İlan bulunamadı</h3><p>Farklı filtreler deneyin.</p></div>';return;}
   const avg=d.reduce((x,l)=>x+l.price,0)/d.length;
@@ -164,7 +161,7 @@ function renderList(d){
 let leafMap=null;
 function renderMap(d){
   const mv=document.getElementById('mapv');if(!mv)return;
-  mv.style.display='block';const lvEl=document.getElementById('listv');if(lvEl)lvEl.style.display='none';
+  mv.style.display='block';const _lv=document.getElementById('listv');if(_lv)_lv.style.display='none';
   const pts=d.filter(l=>l.latitude&&l.longitude);
   if(!leafMap){
     const ctr=pts.length?[pts[0].latitude,pts[0].longitude]:[37.87,32.49];
@@ -461,6 +458,7 @@ const KONYA_MAHALLELER = {
 function populateValDistricts() {
   const ds = [...new Set(all.map(l => l.district).filter(Boolean))].sort();
   const sel = document.getElementById('v-district');
+  if (!sel) return;
   const cur = sel.value;
   sel.innerHTML = '<option value="">İlçe seçin...</option>';
   // Önce veritabanındaki ilçeler
@@ -499,12 +497,7 @@ function switchTab(tab) {
     }, 50);
   }
 }
-document.getElementById('tab-list').addEventListener('click', () => switchTab('list'));
-document.getElementById('tab-val').addEventListener('click', () => {
-  switchTab('val');
-  if (all.length === 0) loadForVal();
-  else populateValDistricts();
-});
+// tab-list/tab-val SPA ile yönetiliyor - goPage() kullanılıyor
 
 // DESKTOP EVENTS (null-safe)
 function bindComparisonEvents() {
@@ -522,17 +515,17 @@ function bindComparisonEvents() {
   if(rc) rc.addEventListener('click',e=>{if(!e.target.matches('.chip'))return;rc.querySelectorAll('.chip').forEach(x=>x.classList.remove('on'));e.target.classList.add('on');F.rooms=e.target.dataset.value;if(all.length)apply();});
   if(hc) hc.addEventListener('click',e=>{if(!e.target.matches('.chip'))return;hc.querySelectorAll('.chip').forEach(x=>x.classList.remove('on'));e.target.classList.add('on');F.heating=e.target.dataset.value;if(all.length)apply();});
   document.querySelectorAll('.panel .tog').forEach(t=>t.addEventListener('click',()=>{t.classList.toggle('on');const f=t.dataset.feat;if(F.features.includes(f))F.features=F.features.filter(x=>x!==f);else F.features.push(f);if(all.length)apply();}));
-  if(vl) vl.addEventListener('click',()=>{vl.classList.add('on');if(vm)vm.classList.remove('on');const _mp=document.getElementById('mapv');if(_mp)_mp.style.display='none';const _lv=document.getElementById('listv');if(_lv)_lv.style.display='flex';});
+  if(vl) vl.addEventListener('click',()=>{vl.classList.add('on');if(vm)vm.classList.remove('on');document.getElementById('mapv').style.display='none';document.getElementById('listv').style.display='flex';});
   if(vm) vm.addEventListener('click',()=>{vm.classList.add('on');if(vl)vl.classList.remove('on');if(filtered.length)renderMap(filtered);});
 }
 
 // MOBILE FILTER SHEET
 function openFsheet(){document.getElementById('fsheet').classList.add('open');document.body.style.overflow='hidden';}
 function closeFsheet(){document.getElementById('fsheet').classList.remove('open');document.body.style.overflow='';}
-document.getElementById('mob-filter-btn').addEventListener('click',openFsheet);
-document.getElementById('mnb-filter').addEventListener('click',openFsheet);
-document.getElementById('fsheet-close').addEventListener('click',closeFsheet);
-document.getElementById('fsheet-ov').addEventListener('click',closeFsheet);
+(function(){var __elmob_filter_btn=document.getElementById('mob-filter-btn');if(__elmob_filter_btn)__elmob_filter_btn.addEventListener('click',openFsheet)})()
+(function(){var __elmnb_filter=document.getElementById('mnb-filter');if(__elmnb_filter)__elmnb_filter.addEventListener('click',openFsheet)})()
+(function(){var __elfsheet_close=document.getElementById('fsheet-close');if(__elfsheet_close)__elfsheet_close.addEventListener('click',closeFsheet)})()
+(function(){var __elfsheet_ov=document.getElementById('fsheet-ov');if(__elfsheet_ov)__elfsheet_ov.addEventListener('click',closeFsheet)})()
 
 // Sync mobile chip groups with F state
 function syncMobChips(cid, field, val){
@@ -540,14 +533,14 @@ function syncMobChips(cid, field, val){
   const found=document.querySelector('#'+cid+' .chip[data-value="'+val+'"]');
   if(found)found.classList.add('on');
 }
-document.getElementById('rc-m').addEventListener('click',e=>{
-  if(!e.target.matches('.chip'))return;
+(function(){var __elrc_m=document.getElementById('rc-m');if(__elrc_m)__elrc_m.addEventListener('click',e=>{
+  if(!e.target.matches('.chip'))return})()
   document.getElementById('rc-m').querySelectorAll('.chip').forEach(x=>x.classList.remove('on'));
   e.target.classList.add('on');F.rooms=e.target.dataset.value;
   syncMobChips('rc',null,F.rooms);
 });
-document.getElementById('hc-m').addEventListener('click',e=>{
-  if(!e.target.matches('.chip'))return;
+(function(){var __elhc_m=document.getElementById('hc-m');if(__elhc_m)__elhc_m.addEventListener('click',e=>{
+  if(!e.target.matches('.chip'))return})()
   document.getElementById('hc-m').querySelectorAll('.chip').forEach(x=>x.classList.remove('on'));
   e.target.classList.add('on');F.heating=e.target.dataset.value;
   syncMobChips('hc',null,F.heating);
@@ -567,30 +560,29 @@ function updateMobFilterCount(){
   el.textContent=cnt?cnt+' filtre aktif':'';
 }
 
-document.getElementById('fsheet-apply').addEventListener('click',()=>{
-  F.min=parseInt(document.getElementById('mnp-m').value)||null;
+(function(){var __elfsheet_apply=document.getElementById('fsheet-apply');if(__elfsheet_apply)__elfsheet_apply.addEventListener('click',()=>{
+  F.min=parseInt(document.getElementById('mnp-m').value)||null})()
   F.max=parseInt(document.getElementById('mxp-m').value)||null;
   closeFsheet();
   load();
   updateMobFilterCount();
 });
-document.getElementById('mob-go-btn').addEventListener('click',()=>{
-  F.min=parseInt(document.getElementById('mnp-m').value)||null;
+(function(){var __elmob_go_btn=document.getElementById('mob-go-btn');if(__elmob_go_btn)__elmob_go_btn.addEventListener('click',()=>{
+  F.min=parseInt(document.getElementById('mnp-m').value)||null})()
   F.max=parseInt(document.getElementById('mxp-m').value)||null;
   load();
 });
 
 // MOBILE NAV BAR
-const mnbList=document.getElementById('mnb-list');
-  if(mnbList) mnbList.addEventListener('click',()=>{
-    ['mnb-list','mnb-map','mnb-filter'].forEach(id=>{const x=document.getElementById(id);if(x)x.classList.remove('on');});
-    mnbList.classList.add('on');
-    const vlE=document.getElementById('vl');if(vlE)vlE.click();
-  });
-document.getElementById('mnb-map').addEventListener('click',()=>{
-  ['mnb-list','mnb-map','mnb-filter'].forEach(id=>{const x=document.getElementById(id);if(x)x.classList.remove('on');});
-  const mnbm=document.getElementById('mnb-map');if(mnbm)mnbm.classList.add('on');
-  const vmE=document.getElementById('vm');if(vmE)vmE.click();
+(function(){var __elmnb_list=document.getElementById('mnb-list');if(__elmnb_list)__elmnb_list.addEventListener('click',()=>{
+  ['mnb-list','mnb-map','mnb-filter'].forEach(id=>document.getElementById(id).classList.remove('on'))})()
+  document.getElementById('mnb-list').classList.add('on');
+  document.getElementById('vl').click();
+});
+(function(){var __elmnb_map=document.getElementById('mnb-map');if(__elmnb_map)__elmnb_map.addEventListener('click',()=>{
+  ['mnb-list','mnb-map','mnb-filter'].forEach(id=>document.getElementById(id).classList.remove('on'))})()
+  document.getElementById('mnb-map').classList.add('on');
+  document.getElementById('vm').click();
 });
 
 // Mobile district & quarter chips
@@ -613,15 +605,15 @@ function buildQ_m(){
 // SWIPE TO CLOSE DRAWER on mobile
 (function(){
   let sy=0;
-  document.getElementById('drawer').addEventListener('touchstart',e=>{sy=e.touches[0].clientY;},{passive:true});
-  document.getElementById('drawer').addEventListener('touchend',e=>{
-    const dy=e.changedTouches[0].clientY-sy;
+  (function(){var __eldrawer=document.getElementById('drawer');if(__eldrawer)__eldrawer.addEventListener('touchstart',e=>{sy=e.touches[0].clientY})()},{passive:true});
+  (function(){var __eldrawer=document.getElementById('drawer');if(__eldrawer)__eldrawer.addEventListener('touchend',e=>{
+    const dy=e.changedTouches[0].clientY-sy})()
     if(dy>80&&document.getElementById('drawer').scrollTop<=0)closeDrawer();
   },{passive:true});
 })();
 
-document.getElementById('v-district').addEventListener('change', function() {
-  populateValQuarters(this.value);
+(function(){var __elv_district=document.getElementById('v-district');if(__elv_district)__elv_district.addEventListener('change', function() {
+  populateValQuarters(this.value)})()
 });
 
 // Adım geçişi
@@ -650,13 +642,13 @@ function vstepNext(step) {
 }
 
 // Chip seçimi
-document.getElementById('v-rooms-chips').addEventListener('click', e => {
-  if (!e.target.matches('.vchip')) return;
+(function(){var __elv_rooms_chips=document.getElementById('v-rooms-chips');if(__elv_rooms_chips)__elv_rooms_chips.addEventListener('click', e => {
+  if (!e.target.matches('.vchip')) return})()
   document.querySelectorAll('#v-rooms-chips .vchip').forEach(x => x.classList.remove('on'));
   e.target.classList.add('on');
 });
-document.getElementById('v-heat-chips').addEventListener('click', e => {
-  if (!e.target.matches('.vchip')) return;
+(function(){var __elv_heat_chips=document.getElementById('v-heat-chips');if(__elv_heat_chips)__elv_heat_chips.addEventListener('click', e => {
+  if (!e.target.matches('.vchip')) return})()
   document.querySelectorAll('#v-heat-chips .vchip').forEach(x => x.classList.remove('on'));
   e.target.classList.add('on');
 });
@@ -845,10 +837,10 @@ async function loadForVal() {
 // MOBILE FILTER SHEET
 function openFsheet(){document.getElementById('fsheet').classList.add('open');document.body.style.overflow='hidden';}
 function closeFsheet(){document.getElementById('fsheet').classList.remove('open');document.body.style.overflow='';}
-document.getElementById('mob-filter-btn').addEventListener('click',openFsheet);
-document.getElementById('mnb-filter').addEventListener('click',openFsheet);
-document.getElementById('fsheet-close').addEventListener('click',closeFsheet);
-document.getElementById('fsheet-ov').addEventListener('click',closeFsheet);
+(function(){var __elmob_filter_btn=document.getElementById('mob-filter-btn');if(__elmob_filter_btn)__elmob_filter_btn.addEventListener('click',openFsheet)})()
+(function(){var __elmnb_filter=document.getElementById('mnb-filter');if(__elmnb_filter)__elmnb_filter.addEventListener('click',openFsheet)})()
+(function(){var __elfsheet_close=document.getElementById('fsheet-close');if(__elfsheet_close)__elfsheet_close.addEventListener('click',closeFsheet)})()
+(function(){var __elfsheet_ov=document.getElementById('fsheet-ov');if(__elfsheet_ov)__elfsheet_ov.addEventListener('click',closeFsheet)})()
 
 // Sync mobile chip groups with F state
 function syncMobChips(cid, field, val){
@@ -856,14 +848,14 @@ function syncMobChips(cid, field, val){
   const found=document.querySelector('#'+cid+' .chip[data-value="'+val+'"]');
   if(found)found.classList.add('on');
 }
-document.getElementById('rc-m').addEventListener('click',e=>{
-  if(!e.target.matches('.chip'))return;
+(function(){var __elrc_m=document.getElementById('rc-m');if(__elrc_m)__elrc_m.addEventListener('click',e=>{
+  if(!e.target.matches('.chip'))return})()
   document.getElementById('rc-m').querySelectorAll('.chip').forEach(x=>x.classList.remove('on'));
   e.target.classList.add('on');F.rooms=e.target.dataset.value;
   syncMobChips('rc',null,F.rooms);
 });
-document.getElementById('hc-m').addEventListener('click',e=>{
-  if(!e.target.matches('.chip'))return;
+(function(){var __elhc_m=document.getElementById('hc-m');if(__elhc_m)__elhc_m.addEventListener('click',e=>{
+  if(!e.target.matches('.chip'))return})()
   document.getElementById('hc-m').querySelectorAll('.chip').forEach(x=>x.classList.remove('on'));
   e.target.classList.add('on');F.heating=e.target.dataset.value;
   syncMobChips('hc',null,F.heating);
@@ -883,31 +875,29 @@ function updateMobFilterCount(){
   el.textContent=cnt?cnt+' filtre aktif':'';
 }
 
-document.getElementById('fsheet-apply').addEventListener('click',()=>{
-  F.min=parseInt(document.getElementById('mnp-m').value)||null;
+(function(){var __elfsheet_apply=document.getElementById('fsheet-apply');if(__elfsheet_apply)__elfsheet_apply.addEventListener('click',()=>{
+  F.min=parseInt(document.getElementById('mnp-m').value)||null})()
   F.max=parseInt(document.getElementById('mxp-m').value)||null;
   closeFsheet();
   load();
   updateMobFilterCount();
 });
-document.getElementById('mob-go-btn').addEventListener('click',()=>{
-  F.min=parseInt(document.getElementById('mnp-m').value)||null;
+(function(){var __elmob_go_btn=document.getElementById('mob-go-btn');if(__elmob_go_btn)__elmob_go_btn.addEventListener('click',()=>{
+  F.min=parseInt(document.getElementById('mnp-m').value)||null})()
   F.max=parseInt(document.getElementById('mxp-m').value)||null;
   load();
 });
 
 // MOBILE NAV BAR
-const _mnbList=document.getElementById('mnb-list');
-if(_mnbList) _mnbList.addEventListener('click',()=>{
-  ['mnb-list','mnb-map','mnb-filter'].forEach(id=>{const x=document.getElementById(id);if(x)x.classList.remove('on');});
-  _mnbList.classList.add('on');
-  const _vl=document.getElementById('vl');if(_vl)_vl.click();
+(function(){var __elmnb_list=document.getElementById('mnb-list');if(__elmnb_list)__elmnb_list.addEventListener('click',()=>{
+  ['mnb-list','mnb-map','mnb-filter'].forEach(id=>document.getElementById(id).classList.remove('on'))})()
+  document.getElementById('mnb-list').classList.add('on');
+  document.getElementById('vl').click();
 });
-const _mnbMap=document.getElementById('mnb-map');
-if(_mnbMap) _mnbMap.addEventListener('click',()=>{
-  ['mnb-list','mnb-map','mnb-filter'].forEach(id=>{const x=document.getElementById(id);if(x)x.classList.remove('on');});
-  _mnbMap.classList.add('on');
-  const _vm=document.getElementById('vm');if(_vm)_vm.click();
+(function(){var __elmnb_map=document.getElementById('mnb-map');if(__elmnb_map)__elmnb_map.addEventListener('click',()=>{
+  ['mnb-list','mnb-map','mnb-filter'].forEach(id=>document.getElementById(id).classList.remove('on'))})()
+  document.getElementById('mnb-map').classList.add('on');
+  document.getElementById('vm').click();
 });
 
 // Mobile district & quarter chips
@@ -930,9 +920,9 @@ function buildQ_m(){
 // SWIPE TO CLOSE DRAWER on mobile
 (function(){
   let sy=0;
-  document.getElementById('drawer').addEventListener('touchstart',e=>{sy=e.touches[0].clientY;},{passive:true});
-  document.getElementById('drawer').addEventListener('touchend',e=>{
-    const dy=e.changedTouches[0].clientY-sy;
+  (function(){var __eldrawer=document.getElementById('drawer');if(__eldrawer)__eldrawer.addEventListener('touchstart',e=>{sy=e.touches[0].clientY})()},{passive:true});
+  (function(){var __eldrawer=document.getElementById('drawer');if(__eldrawer)__eldrawer.addEventListener('touchend',e=>{
+    const dy=e.changedTouches[0].clientY-sy})()
     if(dy>80&&document.getElementById('drawer').scrollTop<=0)closeDrawer();
   },{passive:true});
 })();
