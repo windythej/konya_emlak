@@ -631,110 +631,126 @@ function calcAndRender() {
   // AI analizi
   const aiAnalysis = generateAIText(VAL, estimated, real, avgM2, calcPool.length, scopeLabel, hasStaleData);
 
+  // ── Endeksa benzeri sonuç ekranı ──
+  const confidenceScore = Math.min(95, Math.round(55 + calcPool.length * 3));
+
   document.getElementById('val-form-area').innerHTML = `
-    <div class="val-form-card">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;">
+    <div class="val-result-endeksa">
+
+      <!-- ÜST BAŞLIK -->
+      <div class="vre-header">
         <div>
-          <div class="val-form-title" style="margin-bottom:4px;">Değerleme Sonucu</div>
-          <div style="font-size:12px;color:var(--txm);">${scopeLabel} · ${roomsStr} · ${m2}m² · ${age} yaş</div>
+          <div class="vre-title">Değerleme Sonucu</div>
+          <div class="vre-sub">${scopeLabel} · ${roomsStr} · ${m2}m² · ${age} yaş bina</div>
         </div>
-        <div style="text-align:right;">
-          <div style="font-family:'Playfair Display',serif;font-size:28px;font-weight:700;color:var(--gold);">${fp(estimated)} ₺</div>
-          <div style="font-size:11px;color:var(--txm);">Tahmini Piyasa Değeri</div>
-        </div>
+        <button class="vre-new-btn" onclick="goStep(1)">+ Yeni Değerleme</button>
       </div>
 
-      ${hasStaleData ? `<div style="padding:10px 14px;background:rgba(201,168,76,.06);border:1px solid var(--bd);border-radius:var(--rs);font-size:12px;color:var(--txm);margin-bottom:16px;">
-        ⚠️ Bazı eski ilanlar (90+ gün) analizden çıkarıldı, güncel fiyatlar esas alındı.
-      </div>` : ''}
-
-      <div class="val-result-grid">
-        <div class="val-result-card">
-          <div class="vrc-label">Fiyat Aralığı</div>
-          <div class="vrc-val" style="font-size:14px;">${fp(low)} — ${fp(high)}</div>
-          <div class="vrc-sub">±%12 sapma bandı</div>
-        </div>
-        <div class="val-result-card">
-          <div class="vrc-label">Gerçek Satış</div>
-          <div class="vrc-val">${fp(real)} ₺</div>
-          <div class="vrc-sub">Pazarlık sonrası tahmini</div>
-        </div>
-        <div class="val-result-card">
-          <div class="vrc-label">Ort. m² Fiyatı</div>
-          <div class="vrc-val">${fp(Math.round(avgM2))} ₺</div>
-          <div class="vrc-sub">${calcPool.length} ilan analiz edildi</div>
-        </div>
-      </div>
-
-      <div style="font-size:12px;font-weight:600;color:var(--txm);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:12px;">Yatırım Analizi</div>
-      <div class="invest-grid">
-        <div class="invest-card">
-          <div class="ic-label">Tahmini Aylık Kira</div>
-          <div class="ic-val pos">${fp(rentEstimate)} ₺</div>
-          <div class="ic-sub">Bölge ortalamasına göre</div>
-        </div>
-        <div class="invest-card">
-          <div class="ic-label">Brüt Kira Getirisi</div>
-          <div class="ic-val pos">%${rentYield}</div>
-          <div class="ic-sub">Yıllık brüt getiri</div>
-        </div>
-        <div class="invest-card">
-          <div class="ic-label">Amortisman Süresi</div>
-          <div class="ic-val">${paybackYears} yıl</div>
-          <div class="ic-sub">Kira ile geri dönüş</div>
-        </div>
-        <div class="invest-card">
-          <div class="ic-label">Fırsat Skoru</div>
-          <div class="ic-val ${priceScore >= 60 ? 'pos' : priceScore >= 40 ? '' : 'neg'}">${priceScore}/100</div>
-          <div class="ic-sub">${priceScore >= 70 ? 'Uygun fiyat' : priceScore >= 40 ? 'Piyasa değeri' : 'Piyasa üstü'}</div>
-        </div>
-      </div>
-
-      <div style="font-size:12px;font-weight:600;color:var(--txm);letter-spacing:1.5px;text-transform:uppercase;margin:20px 0 12px;">Değerleme Skoru</div>
-      ${[
-        { label: 'Konum Puanı', val: Math.min(95, 50 + calcPool.length * 3), max: 100 },
-        { label: 'Veri Güvenilirliği', val: Math.min(95, Math.round(60 + calcPool.length * 2.5)), max: 100 },
-        { label: 'Piyasa Uyumu', val: priceScore, max: 100 },
-      ].map(s => `
-        <div class="score-bar-wrap">
-          <div class="score-label-row">
-            <span class="score-label">${s.label}</span>
-            <span class="score-val">${s.val}%</span>
+      <!-- ANA SONUÇ KARTI -->
+      <div class="vre-main">
+        <!-- Sol: Fiyat kartı -->
+        <div class="vre-price-card">
+          <div class="vre-price-icon">🏠</div>
+          <div class="vre-price-label">TAHMİNİ DEĞER</div>
+          <div class="vre-price-big">${fp(estimated)} ₺</div>
+          <div class="vre-confidence">
+            <div class="vre-conf-bar">
+              <div class="vre-conf-fill" style="width:${confidenceScore}%"></div>
+            </div>
+            <span class="vre-conf-txt">⊙ ${confidenceScore} Güven Puanı</span>
           </div>
-          <div class="score-bar">
-            <div class="score-fill ${s.val >= 70 ? 'green' : s.val >= 40 ? '' : 'red'}" style="width:${s.val}%"></div>
+          <div class="vre-minmax">
+            <div class="vre-min">
+              <span class="vre-mm-icon vre-down">↓</span>
+              <span class="vre-mm-lbl">Min Değer</span>
+              <span class="vre-mm-val">${fp(low)} ₺</span>
+            </div>
+            <div class="vre-max">
+              <span class="vre-mm-icon vre-up">↑</span>
+              <span class="vre-mm-lbl">Maks Değer</span>
+              <span class="vre-mm-val">${fp(high)} ₺</span>
+            </div>
           </div>
-        </div>`).join('')}
+        </div>
 
-      <div style="margin-top:20px;padding:16px;background:rgba(201,168,76,.05);border:1px solid var(--bd);border-radius:var(--rs);">
-        <div style="font-size:10px;color:var(--gold);letter-spacing:2px;text-transform:uppercase;margin-bottom:8px;">▲ AI ANALİZİ</div>
-        <div style="font-size:13px;color:var(--tx);line-height:1.8;white-space:pre-wrap;" id="ai-analysis-text"></div>
+        <!-- Sağ: Adım listesi -->
+        <div class="vre-steps-panel">
+          <div class="vre-step-item done">
+            <div class="vre-step-icon">✎</div>
+            <div class="vre-step-body">
+              <div class="vre-step-title">1 — Gayrimenkulünüzün Özelliklerini Girin</div>
+              <div class="vre-step-desc">Gayrimenkulünüzün türünü, konumunu ve detaylı özelliklerini girin.</div>
+            </div>
+          </div>
+          <div class="vre-step-item active">
+            <div class="vre-step-icon">⊙</div>
+            <div class="vre-step-body">
+              <div class="vre-step-title">2 — Değerini Öğrenin</div>
+              <div class="vre-step-desc">Öğren-Sat'ın yapay zeka destekli değerleme modeli ile gerçek değerini saniyeler içerisinde öğrenin.</div>
+            </div>
+            <div class="vre-step-arrow">›</div>
+          </div>
+          <div class="vre-step-item">
+            <div class="vre-step-icon">👤</div>
+            <div class="vre-step-body">
+              <div class="vre-step-title">3 — En İyi Danışmanı Bulun</div>
+              <div class="vre-step-desc">Bölgenizdeki uzman danışmanları keşfedin ve mülkünüzü en iyi fiyata satın.</div>
+            </div>
+          </div>
+          <div class="vre-step-item">
+            <div class="vre-step-icon">✓</div>
+            <div class="vre-step-body">
+              <div class="vre-step-title">4 — Güvenle Satın</div>
+              <div class="vre-step-desc">Doğru fiyatla, doğru danışmanla mülkünüzü kısa sürede satın.</div>
+            </div>
+          </div>
+          <button class="vre-advisor-btn" onclick="window._goAdvisor && window._goAdvisor('${VAL.district}')">
+            👤 Danışman Bul
+          </button>
+        </div>
       </div>
 
-      <div style="font-size:11px;color:var(--txd);text-align:center;margin-top:16px;font-style:italic;">
-        * ${calcPool.length} benzer ilan analiz edilmiştir. Tahmin ±%12 sapma gösterebilir. Konya ${new Date().getFullYear()} piyasa verilerine dayanmaktadır.
+      <!-- YATIRIM ANALİZİ -->
+      <div class="vre-invest">
+        <div class="vre-section-title">Yatırım Analizi</div>
+        <div class="vre-invest-grid">
+          <div class="vre-invest-card">
+            <div class="vre-ic-lbl">Tahmini Aylık Kira</div>
+            <div class="vre-ic-val ok">${fp(rentEstimate)} ₺</div>
+          </div>
+          <div class="vre-invest-card">
+            <div class="vre-ic-lbl">Brüt Kira Getirisi</div>
+            <div class="vre-ic-val ok">%${rentYield}</div>
+          </div>
+          <div class="vre-invest-card">
+            <div class="vre-ic-lbl">Amortisman Süresi</div>
+            <div class="vre-ic-val">${paybackYears} yıl</div>
+          </div>
+          <div class="vre-invest-card">
+            <div class="vre-ic-lbl">Fırsat Skoru</div>
+            <div class="vre-ic-val ${priceScore >= 60 ? 'ok' : priceScore >= 40 ? '' : 'err'}">${priceScore}/100</div>
+          </div>
+        </div>
       </div>
 
-      <div class="val-nav">
-        <button class="val-back" onclick="goStep(1)">Yeni Değerleme</button>
-        ${!currentUser ? `<div style="font-size:12px;color:var(--txm);display:flex;align-items:center;gap:6px;">
-          <span>${FREE_LIMIT - freeUsed} ücretsiz hakkın kaldı</span>
-        </div>` : ''}
+      <!-- AI ANALİZİ -->
+      <div class="vre-ai">
+        <div class="vre-ai-badge">▲ AI ANALİZİ</div>
+        <div class="vre-ai-text" id="ai-analysis-text"></div>
       </div>
+
+      <div class="vre-disclaimer">* ${calcPool.length} benzer ilan analiz edilmiştir. Tahmin ±%12 sapma gösterebilir.</div>
     </div>`;
 
-  // AI metni typewriter efekti
-  typewriter('ai-analysis-text', aiAnalysis, 15);
-
-  // Sağ panel - benzer ilanlar
-  const similar = calcPool.slice(0, 5);
+  // Sağ panel benzer ilanlar
+  const similarList = calcPool.slice(0, 5);
   document.getElementById('val-info-area').innerHTML = `
     <div class="val-info-panel">
       <div class="val-info-icon">🏠</div>
       <div class="val-info-title">Benzer İlanlar</div>
-      ${similar.map(l => {
-        const days = l.created_at ? Math.floor((now - new Date(l.created_at)) / 86400000) : null;
-        const ageBadge = days === null ? '' : days <= 7 ? '<span class="age-badge age-new">Yeni</span>' : days <= 30 ? '<span class="age-badge age-normal">' + days + ' gün</span>' : days <= 90 ? '<span class="age-badge age-old">' + days + ' gün</span>' : '<span class="age-badge age-very-old">Eski İlan</span>';
+      ${similarList.map(l => {
+        const days = l.created_at ? Math.floor((Date.now() - new Date(l.created_at)) / 86400000) : null;
+        const ageBadge = days === null ? '' : days <= 7 ? '<span class="age-badge age-new">Yeni</span>' : days <= 30 ? `<span class="age-badge age-normal">${days} gün</span>` : days <= 90 ? `<span class="age-badge age-old">${days} gün</span>` : '<span class="age-badge age-very-old">Eski</span>';
         return `<div style="padding:12px 0;border-bottom:1px solid var(--bd);">
           <div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:4px;">
             <div style="font-size:12px;color:var(--tx);flex:1;margin-right:8px;line-height:1.4;">${(l.title||'').substring(0,45)}...</div>
@@ -747,6 +763,9 @@ function calcAndRender() {
         </div>`;
       }).join('')}
     </div>`;
+
+  // AI typewriter
+  typewriter('ai-analysis-text', aiAnalysis, 15);
 }
 
 function generateAIText(v, estimated, real, avgM2, count, scope, stale) {
@@ -855,3 +874,4 @@ function initValuation() {
     </div>`;
   goStep(1);
 }
+

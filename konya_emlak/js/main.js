@@ -522,9 +522,9 @@ function bindComparisonEvents() {
 // MOBILE FILTER SHEET
 function openFsheet(){document.getElementById('fsheet').classList.add('open');document.body.style.overflow='hidden';}
 function closeFsheet(){document.getElementById('fsheet').classList.remove('open');document.body.style.overflow='';}
-(function(){var __elmob_filter_btn=document.getElementById('mob-filter-btn');if(__elmob_filter_btn)__elmob_filter_btn.addEventListener('click',openFsheet)})()
-(function(){var __elmnb_filter=document.getElementById('mnb-filter');if(__elmnb_filter)__elmnb_filter.addEventListener('click',openFsheet)})()
-(function(){var __elfsheet_close=document.getElementById('fsheet-close');if(__elfsheet_close)__elfsheet_close.addEventListener('click',closeFsheet)})()
+(function(){var __elmob_filter_btn=document.getElementById('mob-filter-btn');if(__elmob_filter_btn)__elmob_filter_btn.addEventListener('click',openFsheet)})();
+(function(){var __elmnb_filter=document.getElementById('mnb-filter');if(__elmnb_filter)__elmnb_filter.addEventListener('click',openFsheet)})();
+(function(){var __elfsheet_close=document.getElementById('fsheet-close');if(__elfsheet_close)__elfsheet_close.addEventListener('click',closeFsheet)})();
 (function(){var __elfsheet_ov=document.getElementById('fsheet-ov');if(__elfsheet_ov)__elfsheet_ov.addEventListener('click',closeFsheet)})()
 
 // Sync mobile chip groups with F state
@@ -837,9 +837,9 @@ async function loadForVal() {
 // MOBILE FILTER SHEET
 function openFsheet(){document.getElementById('fsheet').classList.add('open');document.body.style.overflow='hidden';}
 function closeFsheet(){document.getElementById('fsheet').classList.remove('open');document.body.style.overflow='';}
-(function(){var __elmob_filter_btn=document.getElementById('mob-filter-btn');if(__elmob_filter_btn)__elmob_filter_btn.addEventListener('click',openFsheet)})()
-(function(){var __elmnb_filter=document.getElementById('mnb-filter');if(__elmnb_filter)__elmnb_filter.addEventListener('click',openFsheet)})()
-(function(){var __elfsheet_close=document.getElementById('fsheet-close');if(__elfsheet_close)__elfsheet_close.addEventListener('click',closeFsheet)})()
+(function(){var __elmob_filter_btn=document.getElementById('mob-filter-btn');if(__elmob_filter_btn)__elmob_filter_btn.addEventListener('click',openFsheet)})();
+(function(){var __elmnb_filter=document.getElementById('mnb-filter');if(__elmnb_filter)__elmnb_filter.addEventListener('click',openFsheet)})();
+(function(){var __elfsheet_close=document.getElementById('fsheet-close');if(__elfsheet_close)__elfsheet_close.addEventListener('click',closeFsheet)})();
 (function(){var __elfsheet_ov=document.getElementById('fsheet-ov');if(__elfsheet_ov)__elfsheet_ov.addEventListener('click',closeFsheet)})()
 
 // Sync mobile chip groups with F state

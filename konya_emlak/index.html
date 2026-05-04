@@ -363,6 +363,7 @@ body{font-family:var(--font);background:var(--dark);color:var(--tx);overflow-x:h
   <button class="nav-lnk" onclick="goPage('valuation');closeMob()">Değerleme</button>
   <button class="nav-lnk" onclick="goPage('comparison');closeMob()">Karşılaştırma</button>
   <button class="nav-lnk" onclick="goPage('pricing');closeMob()">Fiyatlar</button>
+  <button class="nav-lnk" onclick="goPage('advisor');closeMob()">Danışman Bul</button>
   <div style="margin-top:18px;padding-top:18px;border-top:1px solid var(--bd);">
     <button class="btn-g" style="width:100%;justify-content:center;" id="mob-login-btn" onclick="goPage('auth');closeMob()">Giriş Yap</button>
     <div id="mob-user-sec" style="display:none;text-align:center;padding:14px 0;">
@@ -382,6 +383,7 @@ body{font-family:var(--font);background:var(--dark);color:var(--tx);overflow-x:h
     <button class="nav-lnk" id="nl1" onclick="goPage('valuation')">Değerleme</button>
     <button class="nav-lnk" id="nl2" onclick="goPage('comparison')">Karşılaştırma</button>
     <button class="nav-lnk" id="nl3" onclick="goPage('pricing')">Fiyatlar</button>
+    <button class="nav-lnk" id="nl4" onclick="goPage('advisor')">Danışman Bul</button>
   </div>
   <div style="display:flex;align-items:center;">
     <button class="nav-cta" id="nav-login-btn" onclick="goPage('auth')">Giriş Yap</button>
@@ -930,6 +932,42 @@ body{font-family:var(--font);background:var(--dark);color:var(--tx);overflow-x:h
 </div>
 </div><!-- /comparison -->
 
+
+<!-- ═══════════════════════════════════════
+     7. DANIŞMAN BUL
+═══════════════════════════════════════ -->
+<div class="page" id="page-advisor">
+<div style="padding-top:68px;">
+  <div class="pg-top" style="padding-left:48px;padding-right:48px;">
+    <button class="pg-back" onclick="goPage('landing')">← Ana Sayfa</button>
+    <div class="breadcrumb">Ana Sayfa › <span>Danışman Bul</span></div>
+  </div>
+  <div class="advisor-hero">
+    <div class="adv-title">Konya'da <em>uzman</em><br>danışmanlar</div>
+    <p class="adv-sub">Bölgenizdeki deneyimli gayrimenkul danışmanları ile tanışın. Mülkünüzü en iyi fiyata, en kısa sürede satın.</p>
+    <div class="adv-filter-bar">
+      <select class="adv-filter-sel" id="adv-district-filter" onchange="filterAdvisors()">
+        <option value="">Tüm İlçeler</option>
+        <option>Selçuklu</option><option>Meram</option><option>Karatay</option>
+        <option>Beyşehir</option><option>Ereğli</option><option>Akşehir</option>
+        <option>Seydişehir</option><option>Cihanbeyli</option><option>Çumra</option>
+        <option>Kulu</option><option>Ilgın</option><option>Kadınhanı</option>
+      </select>
+      <select class="adv-filter-sel" id="adv-spec-filter" onchange="filterAdvisors()">
+        <option value="">Tüm Uzmanlıklar</option>
+        <option value="konut">Konut</option>
+        <option value="ticari">Ticari</option>
+        <option value="arsa">Arsa / Arazi</option>
+        <option value="kiralık">Kiralık</option>
+      </select>
+    </div>
+  </div>
+  <div class="adv-grid" id="adv-grid">
+    <!-- JS ile doldurulur -->
+  </div>
+</div>
+</div><!-- /advisor -->
+
 <!-- GİZLİ ADMİN -->
 <a href="/admin" style="position:fixed;bottom:20px;right:20px;width:36px;height:36px;background:var(--d2);border:1px solid var(--bd);border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--txd);font-size:14px;text-decoration:none;z-index:997;opacity:0.2;transition:all .3s;" onmouseover="this.style.opacity='.8';this.style.borderColor='var(--gold)';this.style.color='var(--gold)'" onmouseout="this.style.opacity='.2';this.style.borderColor='var(--bd)';this.style.color='var(--txd)'">⚙</a>
 
@@ -965,7 +1003,8 @@ const PAGE_URLS = {
   comparison: '/karsilastirma',
   pricing:    '/fiyatlar',
   auth:       '/giris',
-  payment:    '/odeme'
+  payment:    '/odeme',
+  advisor:    '/danisman'
 };
 const URL_PAGES = Object.fromEntries(Object.entries(PAGE_URLS).map(([k,v])=>[v,k]));
 
@@ -1003,6 +1042,9 @@ function _activatePage(page, tab) {
     bindComparisonEvents();
     setTimeout(() => { if(typeof load === 'function') load(); }, 100);
   }
+  if(page === 'advisor') {
+    setTimeout(() => renderAdvisors('', ''), 80);
+  }
   if(page === 'valuation') {
     setTimeout(() => {
       if(typeof initValuation === 'function') {
@@ -1034,7 +1076,7 @@ function showLanding() { goPage('landing'); }
 
 // ── NAV ──
 function _updateNav(page) {
-  const map = { landing:0, valuation:1, comparison:2, pricing:3 };
+  const map = { landing:0, valuation:1, comparison:2, pricing:3, advisor:4 };
   document.querySelectorAll('#nav-links .nav-lnk').forEach((l,i) => l.classList.toggle('act', map[page]===i));
 }
 
@@ -1113,13 +1155,13 @@ async function loadLandingData() {
   try {
     const SU='https://bknfjyfuzbanhoomooth.supabase.co';
     const SK='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJrbmZqeWZ1emJhbmhvb21vb3RoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc1ODczNDgsImV4cCI6MjA5MzE2MzM0OH0.7Tl3nWspqxDtnhIj2SZju_ObXtjkAsv_n-Joj7vwSx0';
-    const r = await fetch(`${SU}/rest/v1/listings?select=district,price,area_m2`,{headers:{'apikey':SK,'Authorization':'Bearer '+SK}});
+    const r = await fetch(`${SU}/rest/v1/listings?select=district,price,net_size&limit=500`,{headers:{'apikey':SK,'Authorization':'Bearer '+SK}});
     const data = await r.json();
     if(!Array.isArray(data)||!data.length) return;
     document.getElementById('hero-cnt').textContent = data.length + '+';
     const prices = data.map(d=>d.price).filter(p=>p>0);
     const avgP = prices.reduce((a,b)=>a+b,0)/prices.length;
-    const m2list = data.filter(d=>d.price>0&&d.area_m2>0).map(d=>d.price/d.area_m2);
+    const m2list = data.filter(d=>d.price>0&&(d.net_size||d.area_m2)>0).map(d=>d.price/(d.net_size||d.area_m2));
     const avgM2 = m2list.length ? m2list.reduce((a,b)=>a+b,0)/m2list.length : 0;
     const fp = n => new Intl.NumberFormat('tr-TR',{style:'currency',currency:'TRY',maximumFractionDigits:0}).format(n);
     document.getElementById('sum-avg').textContent = fp(avgP);
@@ -1180,6 +1222,68 @@ document.addEventListener('DOMContentLoaded', () => {
   loadLandingData();
   if(typeof checkAuth === 'function') checkAuth();
 });
+
+// ── DANIŞMAN ──
+window._goAdvisor = function(district) {
+  if(district) {
+    setTimeout(()=>{
+      const sel = document.getElementById('adv-district-filter');
+      if(sel) { sel.value = district; filterAdvisors(); }
+    }, 200);
+  }
+  goPage('advisor');
+};
+
+function filterAdvisors() {
+  const dist = (document.getElementById('adv-district-filter')||{}).value || '';
+  const spec = (document.getElementById('adv-spec-filter')||{}).value || '';
+  renderAdvisors(dist, spec);
+}
+
+// Demo danışman verileri
+const ADVISORS = [
+  { name:"Ahmet Yılmaz", initials:"AY", district:"Selçuklu", specialties:["konut","ticari"], sales:47, years:8, rating:4.9, desc:"Selçuklu ve çevresinde 8 yıllık deneyim. Konut ve ticari gayrimenkul alanında uzman." },
+  { name:"Fatma Demir", initials:"FD", district:"Meram", specialties:["konut","kiralık"], sales:38, years:6, rating:4.8, desc:"Meram bölgesinde konut ve kiralık mülk konusunda güvenilir hizmet." },
+  { name:"Mehmet Kaya", initials:"MK", district:"Karatay", specialties:["ticari","arsa"], sales:29, years:11, rating:4.7, desc:"Karatay'da ticari mülkler ve arsa yatırımlarında 11 yıllık deneyim." },
+  { name:"Zeynep Arslan", initials:"ZA", district:"Selçuklu", specialties:["konut","arsa"], sales:52, years:9, rating:4.9, desc:"Lüks konut ve arsa segmentinde Konya'nın en çok tercih edilen danışmanlarından." },
+  { name:"Ali Öztürk", initials:"AÖ", district:"Beyşehir", specialties:["konut","kiralık"], sales:21, years:4, rating:4.6, desc:"Beyşehir bölgesinde konut alım-satım ve kiralama konusunda uzman." },
+  { name:"Ayşe Çelik", initials:"AÇ", district:"Ereğli", specialties:["arsa","ticari"], sales:34, years:7, rating:4.8, desc:"Ereğli ve Konya ovasında arsa ve tarım arazisi değerleme uzmanı." },
+  { name:"Hasan Yıldız", initials:"HY", district:"Meram", specialties:["konut","ticari"], sales:41, years:10, rating:4.7, desc:"Meram'da lüks konut projeleri ve ticari mülk alım-satımında uzman." },
+  { name:"Elif Şahin", initials:"EŞ", district:"Karatay", specialties:["konut","kiralık"], sales:18, years:3, rating:4.5, desc:"Karatay'da konut ve kiralık daire konusunda genç ve dinamik danışman." },
+  { name:"Mustafa Güler", initials:"MG", district:"Seydişehir", specialties:["arsa","konut"], sales:26, years:6, rating:4.6, desc:"Seydişehir ve çevresinde tarım arazisi ve konut alanında uzman." },
+];
+
+function renderAdvisors(distFilter, specFilter) {
+  const grid = document.getElementById('adv-grid');
+  if(!grid) return;
+  let list = ADVISORS;
+  if(distFilter) list = list.filter(a => a.district === distFilter);
+  if(specFilter) list = list.filter(a => a.specialties.includes(specFilter));
+  if(!list.length) {
+    grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:60px;color:var(--txm);font-size:15px;">Bu kriterlere uygun danışman bulunamadı.</div>';
+    return;
+  }
+  grid.innerHTML = list.map(a => `
+    <div class="adv-card">
+      <div class="adv-card-top">
+        <div class="adv-avatar">${a.initials}</div>
+        <div>
+          <div class="adv-name">${a.name}</div>
+          <div class="adv-title-badge">Gayrimenkul Danışmanı</div>
+          <div class="adv-district">📍 ${a.district}</div>
+        </div>
+      </div>
+      <div class="adv-stats">
+        <div class="adv-stat"><div class="adv-stat-val">${a.sales}</div><div class="adv-stat-lbl">Satış</div></div>
+        <div class="adv-stat"><div class="adv-stat-val">${a.years}</div><div class="adv-stat-lbl">Yıl</div></div>
+        <div class="adv-stat"><div class="adv-stat-val">${a.rating}</div><div class="adv-stat-lbl">Puan</div></div>
+      </div>
+      <p class="adv-desc">${a.desc}</p>
+      <div class="adv-tags">${a.specialties.map(s => `<span class="adv-tag">${s}</span>`).join('')}</div>
+      <button class="adv-contact-btn" onclick="showPopup('${a.name} ile iletişim yakında aktif olacak. Demo amaçlıdır.','Danışman İletişim','👤','info')">İletişime Geç</button>
+    </div>
+  `).join('');
+}
 
 // ── LEGACY COMPAT ──
 function switchTab(t) { if(t==='val') goPage('valuation'); else goPage('comparison'); }
