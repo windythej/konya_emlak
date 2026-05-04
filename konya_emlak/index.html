@@ -1536,12 +1536,12 @@ a, button, .tc, .pc, .dc-chip, .adv-card,
 <style>
 /* ── GÜVENLE SAT STİLLERİ ── */
 .gs-panel-wrap {
-  /* SABİT YÜKSEKLİK - içerik değişse de boyut korunur */
   background: var(--d3);
   border: 1px solid var(--bd);
   border-radius: var(--r);
   overflow: hidden;
-  min-height: 420px;
+  /* Panel 4 "İşlem Tamam" en uzun içerik — ona göre sabit yükseklik */
+  height: 520px;
   position: relative;
   transition: border-color .3s;
 }
@@ -1549,21 +1549,25 @@ a, button, .tc, .pc, .dc-chip, .adv-card,
   position: absolute;
   inset: 0;
   overflow-y: auto;
+  scrollbar-width: none;
 }
+.gs-card::-webkit-scrollbar { display: none; }
 .gs-pane {
   opacity: 0;
-  transform: translateY(16px);
+  transform: translateY(14px);
   pointer-events: none;
   position: absolute; inset: 0;
-  transition: opacity .45s cubic-bezier(.4,0,.2,1),
-              transform .45s cubic-bezier(.4,0,.2,1);
+  transition: opacity .5s cubic-bezier(.4,0,.2,1),
+              transform .5s cubic-bezier(.4,0,.2,1);
   background: var(--d3);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 .gs-pane.active {
   opacity: 1;
   transform: translateY(0);
   pointer-events: auto;
-  position: relative;
 }
 
 /* Progress bar - sabit yükseklik, çizgi kaymasın */
@@ -2202,30 +2206,72 @@ a, button, .tc, .pc, .dc-chip, .adv-card,
   </div>
 
   <!-- Misyon & Vizyon -->
-  <div class="rv" style="max-width:1300px;margin:0 auto;padding:60px 48px;display:grid;grid-template-columns:1fr 1fr;gap:24px;">
-    <div style="background:var(--d2);border:1px solid var(--bd);border-radius:var(--r);padding:36px;">
-      <div style="font-size:36px;margin-bottom:16px;">🎯</div>
-      <div style="font-family:var(--serif);font-size:22px;font-weight:700;color:var(--gold);margin-bottom:12px;">Misyonumuz</div>
-      <p style="font-size:15px;color:var(--txm);line-height:1.75;">
-        Konya&apos;da gayrimenkul piyasasını şeffaf, ölçülebilir ve erişilebilir kılmak. Alıcıların pişman olmadan, satıcıların değerinin altında satmadan karar almasını sağlamak.
+  <div style="max-width:1300px;margin:0 auto;padding:60px 48px;display:grid;grid-template-columns:1fr 1fr;gap:24px;">
+    <div class="mv-card rv from-left" style="background:var(--d2);border:1px solid var(--bd);border-radius:var(--r);padding:40px;">
+      <div style="font-size:40px;margin-bottom:18px;">🎯</div>
+      <div style="font-family:var(--serif);font-size:24px;font-weight:700;color:var(--gold);margin-bottom:14px;">Misyonumuz</div>
+      <p style="font-size:15px;color:var(--txm);line-height:1.85;margin-bottom:16px;">
+        Konya&apos;da gayrimenkul piyasasını <strong style="color:var(--tx);">şeffaf, ölçülebilir ve herkes için erişilebilir</strong> kılmak. Alıcıların pişmanlık duymadan, satıcıların gerçek değerinin altında satmadan karar almasını sağlamak.
       </p>
+      <p style="font-size:14px;color:var(--txm);line-height:1.8;margin-bottom:20px;">
+        Binlerce insanın hayatının en büyük finansal kararlarından biri olan gayrimenkul alım-satımını; veri, şeffaflık ve teknoloji ile güvenli bir deneyime dönüştürüyoruz. Konya&apos;daki her mahallenin, her sokağın piyasa gerçekliğini yansıtmayı hedefliyoruz.
+      </p>
+      <div style="padding-top:20px;border-top:1px solid var(--bd);display:flex;gap:24px;">
+        <div style="text-align:center;"><div style="font-family:var(--serif);font-size:26px;font-weight:700;color:var(--gold);">31</div><div style="font-size:10px;color:var(--txm);letter-spacing:1.5px;text-transform:uppercase;margin-top:4px;">İlçe</div></div>
+        <div style="text-align:center;"><div style="font-family:var(--serif);font-size:26px;font-weight:700;color:var(--gold);">123+</div><div style="font-size:10px;color:var(--txm);letter-spacing:1.5px;text-transform:uppercase;margin-top:4px;">İlan</div></div>
+        <div style="text-align:center;"><div style="font-family:var(--serif);font-size:26px;font-weight:700;color:var(--gold);">%94</div><div style="font-size:10px;color:var(--txm);letter-spacing:1.5px;text-transform:uppercase;margin-top:4px;">Doğruluk</div></div>
+      </div>
     </div>
-    <div style="background:var(--d2);border:1px solid var(--bd);border-radius:var(--r);padding:36px;">
-      <div style="font-size:36px;margin-bottom:16px;">🔭</div>
-      <div style="font-family:var(--serif);font-size:22px;font-weight:700;color:var(--gold);margin-bottom:12px;">Vizyonumuz</div>
-      <p style="font-size:15px;color:var(--txm);line-height:1.75;">
-        Türkiye&apos;nin her şehrinde yapay zeka destekli değerleme altyapısını yaygınlaştırarak emlak kararlarının sezgiye değil veriye dayanmasını sağlamak.
+    <div class="mv-card rv from-right" style="background:var(--d2);border:1px solid var(--bd);border-radius:var(--r);padding:40px;">
+      <div style="font-size:40px;margin-bottom:18px;">🔭</div>
+      <div style="font-family:var(--serif);font-size:24px;font-weight:700;color:var(--gold);margin-bottom:14px;">Vizyonumuz</div>
+      <p style="font-size:15px;color:var(--txm);line-height:1.85;margin-bottom:16px;">
+        Türkiye&apos;nin her şehrinde yapay zeka destekli değerleme altyapısını yaygınlaştırarak emlak kararlarının <strong style="color:var(--tx);">sezgiye değil veriye</strong> dayanmasını sağlamak.
       </p>
+      <p style="font-size:14px;color:var(--txm);line-height:1.8;margin-bottom:20px;">
+        Konya&apos;da başlattığımız bu yolculuğu Türkiye&apos;nin tüm büyükşehirlerine taşımayı hedefliyoruz. 2025 yılında Konya odaklı çalışmalarımızı sürdürürken ulusal büyüme için altyapımızı hazırlıyoruz.
+      </p>
+      <div style="display:flex;flex-direction:column;gap:10px;">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <span style="width:7px;height:7px;border-radius:50%;background:var(--gold);flex-shrink:0;"></span>
+          <span style="font-size:13px;color:var(--txm);">2024 — Konya lansmanı ve ilk 100+ ilan analizi</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;">
+          <span style="width:7px;height:7px;border-radius:50%;background:var(--gold);flex-shrink:0;"></span>
+          <span style="font-size:13px;color:var(--txm);">2025 — Danışman ağı ve YZ değerleme motoru</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;">
+          <span style="width:7px;height:7px;border-radius:50%;background:rgba(201,168,76,.3);flex-shrink:0;"></span>
+          <span style="font-size:13px;color:var(--txd);">2026 — Türkiye geneli yayılım (planlanan)</span>
+        </div>
+      </div>
     </div>
   </div>
 
   <!-- Rakamlar -->
   <div style="background:var(--d2);border-top:1px solid var(--bd);border-bottom:1px solid var(--bd);">
-    <div style="max-width:1300px;margin:0 auto;padding:56px 48px;display:grid;grid-template-columns:repeat(4,1fr);gap:20px;text-align:center;">
-      <div class="rv stat-band-item"><div class="stat-band-val about-counter" data-target="123" data-suffix="+" style="font-family:var(--serif);font-size:48px;font-weight:700;color:var(--gold);">0</div><div style="font-size:13px;color:var(--txm);letter-spacing:1.5px;text-transform:uppercase;margin-top:8px;">Analiz Edilen İlan</div></div>
-      <div class="rv stat-band-item"><div class="stat-band-val about-counter" data-target="31" data-suffix="" style="font-family:var(--serif);font-size:48px;font-weight:700;color:var(--gold);">0</div><div style="font-size:13px;color:var(--txm);letter-spacing:1.5px;text-transform:uppercase;margin-top:8px;">Konya İlçesi</div></div>
-      <div class="rv stat-band-item"><div class="stat-band-val about-counter" data-target="94" data-suffix="%" style="font-family:var(--serif);font-size:48px;font-weight:700;color:var(--gold);">0</div><div style="font-size:13px;color:var(--txm);letter-spacing:1.5px;text-transform:uppercase;margin-top:8px;">Doğruluk Oranı</div></div>
-      <div class="rv stat-band-item"><div class="stat-band-val about-counter" data-target="3" data-suffix="" style="font-family:var(--serif);font-size:48px;font-weight:700;color:var(--gold);">0</div><div style="font-size:13px;color:var(--txm);letter-spacing:1.5px;text-transform:uppercase;margin-top:8px;">Ücretsiz Değerleme</div></div>
+    <div style="max-width:1300px;margin:0 auto;padding:44px 48px;display:grid;grid-template-columns:repeat(4,1fr);gap:20px;" class="stat-band-grid">
+      <div class="stat-kpi-card rv">
+        <div class="stat-kpi-icon">📊</div>
+        <div class="stat-kpi-val counter-anim" data-target="123" data-suffix="+">0</div>
+        <div class="stat-kpi-lbl">Analiz Edilen İlan</div>
+      </div>
+      <div class="stat-kpi-card rv d1">
+        <div class="stat-kpi-icon">📍</div>
+        <div class="stat-kpi-val counter-anim" data-target="31" data-suffix="">0</div>
+        <div class="stat-kpi-lbl">Konya İlçesi</div>
+      </div>
+      <div class="stat-kpi-card rv d2">
+        <div class="stat-kpi-icon">🎯</div>
+        <div class="stat-kpi-val">%94</div>
+        <div class="stat-kpi-lbl">Doğruluk Oranı</div>
+      </div>
+      <div class="stat-kpi-card rv d3 stat-free" onclick="goPage('valuation')" style="cursor:pointer;">
+        <div class="stat-kpi-icon">🎁</div>
+        <div class="stat-kpi-val counter-anim" data-target="3" data-suffix="">0</div>
+        <div class="stat-kpi-lbl">Ücretsiz Sorgu</div>
+        <div class="stat-kpi-badge">Hemen Dene →</div>
+      </div>
     </div>
   </div>
 
@@ -2321,6 +2367,12 @@ a, button, .tc, .pc, .dc-chip, .adv-card,
       <h1 style="font-family:var(--serif);font-size:clamp(30px,4vw,52px);font-weight:700;color:var(--tx);line-height:1.1;">Konya Piyasa Analizi</h1>
     </div>
     <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
+      <select id="analiz-yil" onchange="renderAnaliz()" style="padding:10px 18px;background:var(--d2);border:1px solid var(--bd);border-radius:var(--rs);color:var(--tx);font-size:14px;font-family:var(--font);outline:none;cursor:pointer;min-width:100px;">
+        <option value="2026">2026</option>
+        <option value="2025" selected>2025</option>
+        <option value="2024">2024</option>
+        <option value="2023">2023</option>
+      </select>
       <select id="analiz-ilce" onchange="renderAnaliz()" style="padding:10px 18px;background:var(--d2);border:1px solid var(--bd);border-radius:var(--rs);color:var(--tx);font-size:14px;font-family:var(--font);outline:none;cursor:pointer;min-width:160px;">
         <option value="Konya">Konya Geneli</option>
         <option>Selçuklu</option><option>Meram</option><option>Karatay</option>
@@ -2329,7 +2381,7 @@ a, button, .tc, .pc, .dc-chip, .adv-card,
         <option>Kadınhanı</option><option>Cihanbeyli</option><option>Çumra</option>
         <option>Karapınar</option><option>Sarayönü</option>
       </select>
-      <div style="font-size:12px;color:var(--txm);padding:10px 14px;background:var(--d2);border:1px solid var(--bd);border-radius:var(--rs);">📅 TÜİK 2023</div>
+      <div id="analiz-tuik-badge" style="font-size:12px;color:var(--txm);padding:10px 14px;background:var(--d2);border:1px solid var(--bd);border-radius:var(--rs);">📅 TÜİK 2025</div>
     </div>
   </div>
 
@@ -3127,6 +3179,9 @@ function mkLegend(containerId, labels, colors) {
 }
 
 function renderAnaliz() {
+  const yil = document.getElementById('analiz-yil')?.value || '2025';
+  const badge = document.getElementById('analiz-tuik-badge');
+  if(badge) badge.textContent = '📅 TÜİK ' + yil;
   loadChartJs(() => {
     const ilce = document.getElementById('analiz-ilce')?.value || 'Konya';
     renderKPI();
