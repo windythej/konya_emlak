@@ -1382,6 +1382,13 @@ a, button, .tc, .pc, .dc-chip, .adv-card,
   box-shadow: 0 0 12px rgba(232,160,32,.6);
 }
 
+/* val-next hover — göz yormayan */
+.val-next:hover {
+  filter: none !important;
+  opacity: .88;
+  transform: translateY(-1px);
+}
+
 </style>
 </head>
 <body>
@@ -1429,7 +1436,7 @@ a, button, .tc, .pc, .dc-chip, .adv-card,
   <button class="nav-lnk" onclick="goPage('about');closeMob()">Hakkımızda</button>
   <button class="nav-lnk" onclick="goPage('analiz');closeMob()">📊 Analiz</button>
   <div style="margin-top:18px;padding-top:18px;border-top:1px solid var(--bd);">
-    <button class="btn-g" style="width:100%;justify-content:center;" id="mob-login-btn" onclick="goPage('auth');closeMob()">Giriş Yap</button>
+    <button class="btn-g" style="width:100%;justify-content:center;" id="mob-login-btn" onclick="goPage('auth');closeMob()">Giriş Yap / Kayıt Ol</button>
     <div id="mob-user-sec" style="display:none;text-align:center;padding:14px 0;">
       <div style="font-size:15px;color:var(--tx);margin-bottom:10px;">Hoş geldin, <strong id="mob-uname">—</strong></div>
       <button onclick="logout();closeMob()" style="font-size:13px;color:var(--txm);background:none;border:none;cursor:pointer;font-family:var(--font);text-decoration:underline;">Çıkış Yap</button>
@@ -1452,8 +1459,21 @@ a, button, .tc, .pc, .dc-chip, .adv-card,
     <button class="nav-lnk" id="nl6" onclick="goPage('analiz')">📊 Analiz</button>
   </div>
   <div style="display:flex;align-items:center;">
-    <button class="nav-cta" id="nav-login-btn" onclick="goPage('auth')">Giriş Yap</button>
-    <div class="nav-user" id="nav-user">
+    <button class="nav-cta" id="nav-login-btn" onclick="goPage('auth')">Giriş Yap / Kayıt Ol</button>
+    <div style="display:flex;align-items:center;gap:8px;margin-right:8px;">
+    <!-- Dil Değiştirici -->
+    <button id="lang-btn" onclick="toggleLang()" style="display:flex;align-items:center;gap:5px;padding:6px 12px;background:var(--d2);border:1px solid var(--bd);border-radius:var(--rs);color:var(--txm);font-size:12px;font-weight:600;font-family:var(--font);cursor:pointer;transition:all .25s;" onmouseover="this.style.borderColor='var(--gold)';this.style.color='var(--gold)'" onmouseout="this.style.borderColor='var(--bd)';this.style.color='var(--txm)'">
+      <span id="lang-flag">🇹🇷</span>
+      <span id="lang-txt">TR</span>
+    </button>
+    <!-- Canlı Destek -->
+    <button onclick="openSupport()" style="display:flex;align-items:center;gap:5px;padding:6px 12px;background:var(--d2);border:1px solid var(--bd);border-radius:var(--rs);color:var(--txm);font-size:12px;font-weight:600;font-family:var(--font);cursor:pointer;transition:all .25s;position:relative;" onmouseover="this.style.borderColor='var(--gold)';this.style.color='var(--gold)'" onmouseout="this.style.borderColor='var(--bd)';this.style.color='var(--txm)'">
+      <span>💬</span>
+      <span id="support-txt">Destek</span>
+      <span style="position:absolute;top:-3px;right:-3px;width:8px;height:8px;background:#4CAF82;border-radius:50%;border:2px solid var(--dark);"></span>
+    </button>
+  </div>
+  <div class="nav-user" id="nav-user">
       <div class="nav-avatar" id="nav-av">K</div>
       <span class="nav-uname" id="nav-uname">—</span>
       <button class="nav-out" onclick="logout()">Çıkış</button>
@@ -2013,7 +2033,7 @@ a, button, .tc, .pc, .dc-chip, .adv-card,
     <div>
       <div class="ftr-col-ttl">Hesap</div>
       <ul class="ftr-links">
-        <li><button onclick="goPage('auth')">Giriş Yap</button></li>
+        <li><button onclick="goPage('auth')">Giriş Yap / Kayıt Ol</button></li>
         <li><button onclick="goPage('auth','register')">Kayıt Ol</button></li>
       </ul>
     </div>
@@ -2043,7 +2063,7 @@ a, button, .tc, .pc, .dc-chip, .adv-card,
       <div class="auth-logo-sub">Konya Emlak Analiz Platformu</div>
     </div>
     <div class="auth-tabs">
-      <button class="auth-tab on" id="atab-login" onclick="switchAuthTab('login')">Giriş Yap</button>
+      <button class="auth-tab on" id="atab-login" onclick="switchAuthTab('login')">Giriş Yap / Kayıt Ol</button>
       <button class="auth-tab" id="atab-register" onclick="switchAuthTab('register')">Hesap Oluştur</button>
     </div>
 
@@ -3736,6 +3756,151 @@ function toggleReadMore(id, btn) {
   btn.textContent = isOpen ? 'Kapat ↑' : 'Devamını oku ↓';
 }
 
+
+// ══════════════════════════════════════
+// DİL SİSTEMİ (TR/EN)
+// ══════════════════════════════════════
+let currentLang = localStorage.getItem('lang') || 'tr';
+
+const TRANSLATIONS = {
+  tr: {
+    "Ana Sayfa":"Ana Sayfa","Değerleme":"Değerleme","Karşılaştırma":"Karşılaştırma",
+    "Fiyatlar":"Fiyatlar","Danışman Bul":"Danışman Bul","Hakkımızda":"Hakkımızda",
+    "Analiz":"Analiz","Destek":"Destek","Giriş Yap / Kayıt Ol":"Giriş Yap / Kayıt Ol",
+    "hero_title":"Konya'da her <em>emlak kararı</em><br>veriden geçer",
+    "hero_sub":"Gerçek piyasa verileri ve yapay zeka analizi ile doğru fiyatı öğrenin.",
+    "btn_val":"◎ Ücretsiz Değerleme","btn_comp":"☰ Piyasayı İncele",
+    "currency":"₺","currency_sym":"TL"
+  },
+  en: {
+    'Ana Sayfa':'Home','Değerleme':'Valuation','Karşılaştırma':'Compare',
+    'Fiyatlar':'Pricing','Danışman Bul':'Find Advisor','Hakkımızda':'About',
+    'Analiz':'Analytics','Destek':'Support','Giriş Yap / Kayıt Ol':'Sign In / Register',
+    'hero_title':'Every <em>real estate decision</em><br>in Konya starts with data',
+    'hero_sub':'Learn the right price with real market data and AI analysis.',
+    'btn_val':'◎ Free Valuation','btn_comp':'☰ Explore Market',
+    'currency':'$', 'currency_sym':'USD'
+  }
+};
+
+function toggleLang() {
+  currentLang = currentLang === 'tr' ? 'en' : 'tr';
+  localStorage.setItem('lang', currentLang);
+  applyLang();
+}
+
+function applyLang() {
+  const t = TRANSLATIONS[currentLang];
+  const isEN = currentLang === 'en';
+
+  // Flag ve metin
+  document.getElementById('lang-flag').textContent = isEN ? '🇬🇧' : '🇹🇷';
+  document.getElementById('lang-txt').textContent   = isEN ? 'EN' : 'TR';
+  document.getElementById('support-txt') && (document.getElementById('support-txt').textContent = t['Destek']);
+  document.getElementById('bot-title')   && (document.getElementById('bot-title').textContent = isEN ? 'Öğren-Sat Assistant' : 'Öğren-Sat Asistanı');
+  document.getElementById('bot-welcome') && (document.getElementById('bot-welcome').textContent = isEN
+    ? 'Hello! 👋 I am ready to answer your questions about the Konya real estate market. How can I help you?'
+    : 'Merhaba! 👋 Konya gayrimenkul piyasası hakkında sorularınızı yanıtlamaya hazırım. Size nasıl yardımcı olabilirim?');
+
+  // Nav linkleri
+  const navMap = {
+    'nl0':'Ana Sayfa','nl1':'Değerleme','nl2':'Karşılaştırma',
+    'nl3':'Fiyatlar','nl4':'Danışman Bul','nl5':'Hakkımızda','nl6':'Analiz'
+  };
+  Object.entries(navMap).forEach(([id, trKey]) => {
+    const el = document.getElementById(id);
+    if(el) el.textContent = t[trKey] || trKey;
+  });
+
+  // Fiyat para birimi — tüm .pc-price elementleri
+  const rate = 36; // 1 USD = 36 TL (sabit gösterim)
+  document.querySelectorAll('.pc-price').forEach(el => {
+    const raw = el.dataset.try || el.textContent.replace(/[^\d]/g,'');
+    if(!el.dataset.try) el.dataset.try = raw;
+    const num = parseInt(el.dataset.try);
+    if(isEN) {
+      el.textContent = '$' + new Intl.NumberFormat('en-US').format(Math.round(num/rate));
+    } else {
+      el.textContent = '₺' + new Intl.NumberFormat('tr-TR').format(num);
+    }
+  });
+
+  // Hero başlık
+  const heroH = document.querySelector('.hero-h1');
+  if(heroH) heroH.innerHTML = t['hero_title'];
+}
+
+// Sayfa açılışında dili uygula
+document.addEventListener('DOMContentLoaded', () => {
+  setTimeout(applyLang, 200);
+});
+
+// ══════════════════════════════════════
+// DESTEK BOTU
+// ══════════════════════════════════════
+function openSupport() {
+  const modal = document.getElementById('support-modal');
+  if(!modal) return;
+  modal.style.display = 'flex';
+  document.getElementById('support-fab').style.display = 'none';
+  document.getElementById('support-input')?.focus();
+}
+
+function closeSupport() {
+  const modal = document.getElementById('support-modal');
+  if(modal) modal.style.display = 'none';
+  document.getElementById('support-fab').style.display = 'flex';
+}
+
+async function sendSupport() {
+  const input = document.getElementById('support-input');
+  const msgs  = document.getElementById('support-messages');
+  if(!input || !msgs || !input.value.trim()) return;
+
+  const userText = input.value.trim();
+  input.value = '';
+
+  // Kullanıcı mesajı
+  const userBubble = document.createElement('div');
+  userBubble.style.cssText = 'background:rgba(201,168,76,.15);border:1px solid rgba(201,168,76,.2);border-radius:12px 12px 2px 12px;padding:10px 14px;font-size:13px;color:var(--tx);max-width:85%;align-self:flex-end;line-height:1.6;';
+  userBubble.textContent = userText;
+  msgs.appendChild(userBubble);
+
+  // Yazıyor göstergesi
+  const typing = document.createElement('div');
+  typing.style.cssText = 'background:var(--d3);border-radius:12px 12px 12px 2px;padding:10px 14px;font-size:13px;color:var(--txm);';
+  typing.textContent = '...';
+  msgs.appendChild(typing);
+  msgs.scrollTop = msgs.scrollHeight;
+
+  try {
+    const isEN = currentLang === 'en';
+    const systemPrompt = isEN
+      ? 'You are a helpful real estate assistant for Öğren-Sat, a Konya real estate analytics platform. Answer questions about real estate in Konya, property valuation, neighborhoods, and investment. Be concise and helpful. Max 3 sentences.'
+      : "Sen Öğren-Sat’ın Konya gayrimenkul analiz platformunun yardımcı asistanısın. Konya’daki gayrimenkul, değerleme, mahalleler ve yatırım hakkındaki soruları yanıtla. Kısa ve yardımcı ol. Maksimum 3 cümle.";
+
+    const resp = await fetch('https://api.anthropic.com/v1/messages', {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        model:'claude-sonnet-4-20250514',
+        max_tokens:300,
+        system: systemPrompt,
+        messages:[{role:'user', content: userText}]
+      })
+    });
+    const data = await resp.json();
+    const botText = data.content?.[0]?.text || (isEN ? 'Sorry, I could not respond.' : 'Üzgünüm, yanıt veremedim.');
+
+    typing.textContent = botText;
+    typing.style.color = 'var(--tx)';
+  } catch(e) {
+    const isEN = currentLang === 'en';
+    typing.textContent = isEN ? 'Connection error. Please try again.' : 'Bağlantı hatası. Lütfen tekrar deneyin.';
+  }
+  msgs.scrollTop = msgs.scrollHeight;
+}
+
 // ── LEGACY COMPAT ──
 function switchTab(t) { if(t==='val') goPage('valuation'); else goPage('comparison'); }
 function openAuth(t) { goPage('auth', t||'login'); }
@@ -3755,5 +3920,33 @@ document.getElementById = function(id) {
   return _origGet(id);
 };
 </script>
+
+<!-- ── DESTEK BOTU ── -->
+<div id="support-modal" style="display:none;position:fixed;bottom:80px;right:24px;width:min(380px,92vw);background:var(--d2);border:1px solid var(--bd);border-radius:var(--r);z-index:9000;box-shadow:0 24px 80px rgba(0,0,0,.6);overflow:hidden;flex-direction:column;">
+  <!-- Başlık -->
+  <div style="padding:16px 20px;background:var(--grad);display:flex;align-items:center;justify-content:space-between;">
+    <div style="display:flex;align-items:center;gap:10px;">
+      <div style="width:36px;height:36px;background:rgba(0,0,0,.2);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;">🤖</div>
+      <div>
+        <div style="font-size:14px;font-weight:700;color:var(--dark);" id="bot-title">Öğren-Sat Asistanı</div>
+        <div style="font-size:11px;color:rgba(0,0,0,.6);">● Çevrimiçi</div>
+      </div>
+    </div>
+    <button onclick="closeSupport()" style="background:rgba(0,0,0,.15);border:none;border-radius:50%;width:28px;height:28px;color:var(--dark);font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;">✕</button>
+  </div>
+  <!-- Sohbet alanı -->
+  <div id="support-messages" style="height:280px;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:10px;scrollbar-width:thin;scrollbar-color:rgba(201,168,76,.2) transparent;">
+    <div class="bot-msg" style="background:var(--d3);border-radius:12px 12px 12px 2px;padding:10px 14px;font-size:13px;color:var(--tx);max-width:85%;line-height:1.6;" id="bot-welcome">
+      Merhaba! 👋 Konya gayrimenkul piyasası hakkında sorularınızı yanıtlamaya hazırım. Size nasıl yardımcı olabilirim?
+    </div>
+  </div>
+  <!-- Input -->
+  <div style="padding:12px 16px;border-top:1px solid var(--bd);display:flex;gap:8px;">
+    <input id="support-input" type="text" placeholder="Mesajınızı yazın..." style="flex:1;background:var(--d3);border:1px solid var(--bd);border-radius:var(--rs);padding:9px 14px;color:var(--tx);font-size:13px;font-family:var(--font);outline:none;transition:border-color .2s;" onkeydown="if(event.key==='Enter')sendSupport()" onfocus="this.style.borderColor='var(--gold)'" onblur="this.style.borderColor='var(--bd)'">
+    <button onclick="sendSupport()" style="padding:9px 16px;background:var(--grad);border:none;border-radius:var(--rs);color:var(--dark);font-size:13px;font-weight:700;font-family:var(--font);cursor:pointer;">→</button>
+  </div>
+</div>
+<!-- Sabit destek butonu (sağ alt) -->
+<button onclick="openSupport()" id="support-fab" style="position:fixed;bottom:20px;right:20px;width:52px;height:52px;background:var(--grad);border:none;border-radius:50%;font-size:22px;cursor:pointer;z-index:8999;box-shadow:0 8px 24px rgba(201,168,76,.35);transition:all .3s;display:flex;align-items:center;justify-content:center;" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'">💬</button>
 </body>
 </html>
