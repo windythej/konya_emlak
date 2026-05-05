@@ -213,7 +213,7 @@ function openDrawer(l){
       dMap.invalidateSize();
     },350);
   }
-  document.getElementById('dcta').innerHTML=`${l.url?`<a class="ctap" href="${l.url}" target="_blank">Sahibinden'de Gör →</a>`:''}<button class="ctas" onclick="closeDrawer()">Kapat</button>`;
+  document.getElementById('dcta').innerHTML=`${l.url?`<a class="ctap" href="${l.url}" target="_blank">İlanı Gör →</a>`:''}<button class="ctas" onclick="closeDrawer()">Kapat</button>`;
   document.getElementById('ov').classList.add('open');
   document.getElementById('drawer').classList.add('open');
   document.getElementById('drawer').scrollTop=0;

@@ -104,7 +104,7 @@ function renderStep1() {
       <div class="val-info-icon">🎯</div>
       <div class="val-info-title">Nasıl Çalışır?</div>
       <div class="val-info-text">
-        Sahibinden.com'daki <strong>gerçek ilan verileri</strong> kullanılarak yapay zeka destekli piyasa analizi yapılır.
+        Konya piyasa veritabanındaki <strong>gerçek ilan verileri</strong> kullanılarak yapay zeka destekli analiz yapılır.
       </div>
       <ul class="val-info-list">
         <li>Bölgenizdeki benzer ilanlar karşılaştırılır</li>
