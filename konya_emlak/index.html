@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" defer></script>
 <link rel="stylesheet" href="css/style.css">
 <link rel="stylesheet" href="css/valuation.css">
 <style>
@@ -2179,7 +2179,7 @@ html, body {
 <!-- ═══════════════════════════════════════
      1. LANDING
 ═══════════════════════════════════════ -->
-<div class="page on" id="page-landing">
+<div class="page" id="page-landing">
 
 <section class="hero">
   <div class="hero-particles" id="hero-particles"></div>
@@ -3548,7 +3548,7 @@ function _activatePage(page, tab) {
   // Sayfa-özel init
   if(page === 'comparison' && !_cmpLoaded) {
     _cmpLoaded = true;
-    bindComparisonEvents();
+    if(typeof bindComparisonEvents === 'function') bindComparisonEvents();
     setTimeout(() => { if(typeof load === 'function') load(); }, 100);
   }
   if(page === 'advisor') {
@@ -3874,7 +3874,7 @@ const advRevealObs = new IntersectionObserver(entries => {
 // Sayfa yüklenmeden önce doğru sayfayı göster (flash önleme)
 (function() {
   const path = location.pathname;
-  const urlMap = {'/':' landing','/degerleme':'valuation','/karsilastirma':'comparison',
+  const urlMap = {'/':'landing','/degerleme':'valuation','/karsilastirma':'comparison',
     '/fiyatlar':'pricing','/giris':'auth','/odeme':'payment','/danisman':'advisor',
     '/hakkimizda':'about','/analiz':'analiz'};
   const page = urlMap[path] || urlMap[path.replace(/\/$/,'')] || 'landing';
@@ -3906,7 +3906,7 @@ document.addEventListener('DOMContentLoaded', () => {
   if(startPage === 'comparison') {
     _cmpLoaded = true;
     setTimeout(() => {
-      bindComparisonEvents();
+      if(typeof bindComparisonEvents === 'function') bindComparisonEvents();
       if(typeof load === 'function') load();
     }, 200);
   }
