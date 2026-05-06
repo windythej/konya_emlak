@@ -3733,7 +3733,7 @@ async function loadLandingData() {
     const r = await fetch(`${SU}/rest/v1/listings?select=district,price,net_size&limit=500`,{headers:{'apikey':SK,'Authorization':'Bearer '+SK}});
     const data = await r.json();
     if(!Array.isArray(data)||!data.length) return;
-    document.getElementById('hero-cnt').textContent = data.length + '+';
+    const heroCnt = document.getElementById('hero-cnt'); if(heroCnt) heroCnt.textContent = data.length + '+';
     const prices = data.map(d=>d.price).filter(p=>p>0);
     // Medyan fiyat kullan (aykırı değerlere karşı daha sağlıklı)
     const sortedP = [...prices].sort((a,b)=>a-b);
@@ -3741,13 +3741,14 @@ async function loadLandingData() {
     const m2list = data.filter(d=>d.price>0&&d.net_size>0&&d.net_size<400).map(d=>d.price/d.net_size);
     const avgM2 = m2list.length ? m2list.reduce((a,b)=>a+b,0)/m2list.length : 0;
     const fp = n => new Intl.NumberFormat('tr-TR',{maximumFractionDigits:0}).format(n);
-    document.getElementById('sum-avg').textContent = fp(medianP)+' ₺';
-    document.getElementById('sum-m2').textContent = fp(Math.round(avgM2))+' ₺/m²';
+    const sa=document.getElementById('sum-avg'); if(sa) sa.textContent=fp(medianP)+' ₺';
+    const sm=document.getElementById('sum-m2'); if(sm) sm.textContent=fp(Math.round(avgM2))+' ₺/m²';
     const dc={};
     data.forEach(d=>{if(d.district)dc[d.district]=(dc[d.district]||0)+1;});
     const sorted = Object.entries(dc).sort((a,b)=>b[1]-a[1]);
-    document.getElementById('sum-top').textContent = sorted[0]?sorted[0][0]:'—';
+    const st=document.getElementById('sum-top'); if(st) st.textContent=sorted[0]?sorted[0][0]:'—';
     const list = document.getElementById('dc-list');
+    if(!list) return;
     list.innerHTML = '';
     // DB'deki ilçeler
     const dbDistricts = new Set(sorted.map(([n])=>n));
@@ -3917,7 +3918,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   setTimeout(()=>document.getElementById('page-loader').classList.add('hide'), 700);
-  loadLandingData();
+  if(document.getElementById('hero-cnt')) loadLandingData();
   if(typeof checkAuth === 'function') checkAuth();
 
   // Animasyon sistemi başlat
