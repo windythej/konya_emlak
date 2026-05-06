@@ -1,0 +1,46 @@
+{
+  "rewrites": [
+    {
+      "source": "/admin",
+      "destination": "/admin.html"
+    },
+    {
+      "source": "/degerleme",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/karsilastirma",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/fiyatlar",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/giris",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/odeme",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/danisman",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/hakkimizda",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/analiz",
+      "destination": "/index.html"
+    }
+  ],
+  "functions": {
+    "api/*.js": {
+      "memory": 128,
+      "maxDuration": 10
+    }
+  }
+}
