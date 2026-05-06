@@ -1389,6 +1389,17 @@ a, button, .tc, .pc, .dc-chip, .adv-card,
   transform: translateY(-1px);
 }
 
+/* val-next hover — TÜM çakışan kuralları ezip tek temiz hover */
+.val-next:hover,
+.val-next:hover:focus,
+.val-next:focus:hover {
+  background: var(--grad) !important;
+  filter: none !important;
+  opacity: .85 !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 6px 20px rgba(201,168,76,.25) !important;
+}
+
 </style>
 </head>
 <body>
@@ -1460,12 +1471,17 @@ a, button, .tc, .pc, .dc-chip, .adv-card,
   </div>
   <div style="display:flex;align-items:center;">
     <button class="nav-cta" id="nav-login-btn" onclick="goPage('auth')">Giriş Yap / Kayıt Ol</button>
-    <div style="display:flex;align-items:center;gap:8px;margin-right:8px;">
+    <div style="display:flex;align-items:center;gap:14px;margin-right:14px;">
     <!-- Dil Değiştirici -->
-    <button id="lang-btn" onclick="toggleLang()" style="display:flex;align-items:center;gap:5px;padding:6px 12px;background:var(--d2);border:1px solid var(--bd);border-radius:var(--rs);color:var(--txm);font-size:12px;font-weight:600;font-family:var(--font);cursor:pointer;transition:all .25s;" onmouseover="this.style.borderColor='var(--gold)';this.style.color='var(--gold)'" onmouseout="this.style.borderColor='var(--bd)';this.style.color='var(--txm)'">
-      <span id="lang-flag">🇹🇷</span>
-      <span id="lang-txt">TR</span>
-    </button>
+    <div style="position:relative;">
+      <button id="lang-btn" onclick="toggleLangMenu()" style="display:flex;align-items:center;gap:6px;padding:7px 14px;background:var(--d2);border:1px solid var(--bd);border-radius:var(--rs);color:var(--txm);font-size:12px;font-weight:600;font-family:var(--font);cursor:pointer;transition:all .25s;" onmouseover="this.style.borderColor='var(--gold)';this.style.color='var(--gold)'" onmouseout="this.style.borderColor='var(--bd)';this.style.color='var(--txm)'">
+        🌐 <span id="lang-txt">Dil</span>
+      </button>
+      <div id="lang-menu" style="display:none;position:absolute;top:calc(100% + 8px);right:0;background:var(--d2);border:1px solid var(--bd);border-radius:var(--rs);overflow:hidden;min-width:150px;z-index:5000;box-shadow:0 8px 32px rgba(0,0,0,.5);">
+        <button onclick="setLang('tr')" id="lang-opt-tr" style="width:100%;padding:10px 16px;background:none;border:none;color:var(--tx);font-size:13px;font-family:var(--font);cursor:pointer;display:flex;align-items:center;gap:10px;transition:background .2s;" onmouseover="this.style.background='rgba(201,168,76,.08)'" onmouseout="this.style.background='none'">🇹🇷 Türkçe</button>
+        <button onclick="setLang('en')" id="lang-opt-en" style="width:100%;padding:10px 16px;background:none;border:none;color:var(--tx);font-size:13px;font-family:var(--font);cursor:pointer;display:flex;align-items:center;gap:10px;transition:background .2s;" onmouseover="this.style.background='rgba(201,168,76,.08)'" onmouseout="this.style.background='none'">🇬🇧 English</button>
+      </div>
+    </div>
     <!-- Canlı Destek -->
     <button onclick="openSupport()" style="display:flex;align-items:center;gap:5px;padding:6px 12px;background:var(--d2);border:1px solid var(--bd);border-radius:var(--rs);color:var(--txm);font-size:12px;font-weight:600;font-family:var(--font);cursor:pointer;transition:all .25s;position:relative;" onmouseover="this.style.borderColor='var(--gold)';this.style.color='var(--gold)'" onmouseout="this.style.borderColor='var(--bd)';this.style.color='var(--txm)'">
       <span>💬</span>
@@ -3758,81 +3774,166 @@ function toggleReadMore(id, btn) {
 
 
 // ══════════════════════════════════════
-// DİL SİSTEMİ (TR/EN)
+// DİL SİSTEMİ (TR/EN) — TAM ÇEVİRİ
 // ══════════════════════════════════════
 let currentLang = localStorage.getItem('lang') || 'tr';
+const USD_RATE = 45.24;
 
-const TRANSLATIONS = {
-  tr: {
-    "Ana Sayfa":"Ana Sayfa","Değerleme":"Değerleme","Karşılaştırma":"Karşılaştırma",
-    "Fiyatlar":"Fiyatlar","Danışman Bul":"Danışman Bul","Hakkımızda":"Hakkımızda",
-    "Analiz":"Analiz","Destek":"Destek","Giriş Yap / Kayıt Ol":"Giriş Yap / Kayıt Ol",
-    "hero_title":"Konya'da her <em>emlak kararı</em><br>veriden geçer",
-    "hero_sub":"Gerçek piyasa verileri ve yapay zeka analizi ile doğru fiyatı öğrenin.",
-    "btn_val":"◎ Ücretsiz Değerleme","btn_comp":"☰ Piyasayı İncele",
-    "currency":"₺","currency_sym":"TL"
-  },
-  en: {
-    'Ana Sayfa':'Home','Değerleme':'Valuation','Karşılaştırma':'Compare',
-    'Fiyatlar':'Pricing','Danışman Bul':'Find Advisor','Hakkımızda':'About',
-    'Analiz':'Analytics','Destek':'Support','Giriş Yap / Kayıt Ol':'Sign In / Register',
-    'hero_title':'Every <em>real estate decision</em><br>in Konya starts with data',
-    'hero_sub':'Learn the right price with real market data and AI analysis.',
-    'btn_val':'◎ Free Valuation','btn_comp':'☰ Explore Market',
-    'currency':'$', 'currency_sym':'USD'
-  }
+// data-tr ile işaretlenmiş elementleri çevir
+const TR_TEXT = {
+  // NAV
+  "nl0":"Ana Sayfa","nl1":"Değerleme","nl2":"Karşılaştırma",
+  "nl3":"Fiyatlar","nl4":"Danışman Bul","nl5":"Hakkımızda","nl6":"Analiz",
+};
+const EN_TEXT = {
+  "nl0":"Home","nl1":"Valuation","nl2":"Compare",
+  "nl3":"Pricing","nl4":"Find Advisor","nl5":"About","nl6":"Analytics",
 };
 
-function toggleLang() {
-  currentLang = currentLang === 'tr' ? 'en' : 'tr';
-  localStorage.setItem('lang', currentLang);
+// Tam çeviri sözlüğü — sayfadaki tüm metinler
+const FULL_TR = {
+  hero_title: "Konya'da her <em>emlak kararı</em><br>veriden geçer",
+  hero_sub: "Gerçek piyasa verileri ve yapay zeka analizi ile doğru fiyatı öğrenin.",
+  btn_val: "◎ Ücretsiz Değerleme", btn_comp: "☰ Piyasayı İncele",
+  login_btn: "Giriş Yap / Kayıt Ol",
+  support_txt: "Destek", lang_label: "Dil",
+  // Değerleme adımları
+  step1_title: "Kategori", step2_title: "Konum", step3_title: "Özellikler",
+  step4_title: "Detaylar", step5_title: "Analiz",
+  cat_konut: "Konut", cat_arsa: "Arsa / Arazi", cat_ticari: "Ticari", cat_kiralik: "Kiralık",
+  cat_konut_sub: "Daire, müstakil ev, villa", cat_arsa_sub: "İmarlı arsa, tarla, bağ bahçe",
+  cat_ticari_sub: "Dükkan, ofis, depo, fabrika", cat_kiralik_sub: "Aylık kira değeri analizi",
+  // Fiyatlar
+  plan_free: "Ücretsiz", plan_monthly: "Aylık Plan", plan_yearly: "Yıllık Plan",
+  // Hakkımızda
+  about_title: "Konya'nın emlak kararlarına veri gücü",
+  mission_title: "Misyonumuz", vision_title: "Vizyonumuz",
+  // Analiz
+  analiz_title: "Konya Piyasa Analizi",
+};
+const FULL_EN = {
+  hero_title: "Every <em>real estate decision</em><br>in Konya starts with data",
+  hero_sub: "Learn the right price with real market data and AI analysis.",
+  btn_val: "◎ Free Valuation", btn_comp: "☰ Explore Market",
+  login_btn: "Sign In / Register",
+  support_txt: "Support", lang_label: "Language",
+  // Valuation steps
+  step1_title: "Category", step2_title: "Location", step3_title: "Features",
+  step4_title: "Details", step5_title: "Analysis",
+  cat_konut: "Residential", cat_arsa: "Land / Plot", cat_ticari: "Commercial", cat_kiralik: "Rental",
+  cat_konut_sub: "Apartment, house, villa", cat_arsa_sub: "Zoned land, field, garden",
+  cat_ticari_sub: "Shop, office, warehouse, factory", cat_kiralik_sub: "Monthly rental value analysis",
+  // Pricing
+  plan_free: "Free", plan_monthly: "Monthly Plan", plan_yearly: "Annual Plan",
+  // About
+  about_title: "Data-powered real estate decisions in Konya",
+  mission_title: "Our Mission", vision_title: "Our Vision",
+  // Analytics
+  analiz_title: "Konya Market Analytics",
+};
+
+function toggleLangMenu() {
+  const menu = document.getElementById('lang-menu');
+  if(!menu) return;
+  const isOpen = menu.style.display === 'block';
+  menu.style.display = isOpen ? 'none' : 'block';
+  // Dışarı tıklayınca kapat
+  if(!isOpen) {
+    setTimeout(() => {
+      document.addEventListener('click', function closeLangMenu(e) {
+        if(!e.target.closest('#lang-btn') && !e.target.closest('#lang-menu')) {
+          document.getElementById('lang-menu').style.display = 'none';
+          document.removeEventListener('click', closeLangMenu);
+        }
+      });
+    }, 50);
+  }
+}
+
+function setLang(lang) {
+  currentLang = lang;
+  localStorage.setItem('lang', lang);
+  document.getElementById('lang-menu').style.display = 'none';
+  document.getElementById('lang-txt').textContent = lang === 'en' ? '🇬🇧 EN' : '🇹🇷 TR';
   applyLang();
+  // Değerleme sayfasındaysa yeniden render et
+  if(typeof VAL !== 'undefined' && VAL.currentStep) {
+    if(typeof goStep === 'function') goStep(VAL.currentStep);
+  }
 }
 
 function applyLang() {
-  const t = TRANSLATIONS[currentLang];
   const isEN = currentLang === 'en';
-
-  // Flag ve metin
-  document.getElementById('lang-flag').textContent = isEN ? '🇬🇧' : '🇹🇷';
-  document.getElementById('lang-txt').textContent   = isEN ? 'EN' : 'TR';
-  document.getElementById('support-txt') && (document.getElementById('support-txt').textContent = t['Destek']);
-  document.getElementById('bot-title')   && (document.getElementById('bot-title').textContent = isEN ? 'Öğren-Sat Assistant' : 'Öğren-Sat Asistanı');
-  document.getElementById('bot-welcome') && (document.getElementById('bot-welcome').textContent = isEN
-    ? 'Hello! 👋 I am ready to answer your questions about the Konya real estate market. How can I help you?'
-    : 'Merhaba! 👋 Konya gayrimenkul piyasası hakkında sorularınızı yanıtlamaya hazırım. Size nasıl yardımcı olabilirim?');
+  const t = isEN ? FULL_EN : FULL_TR;
 
   // Nav linkleri
-  const navMap = {
-    'nl0':'Ana Sayfa','nl1':'Değerleme','nl2':'Karşılaştırma',
-    'nl3':'Fiyatlar','nl4':'Danışman Bul','nl5':'Hakkımızda','nl6':'Analiz'
-  };
-  Object.entries(navMap).forEach(([id, trKey]) => {
+  const navIds = {nl0:0,nl1:1,nl2:2,nl3:3,nl4:4,nl5:5,nl6:6};
+  const navEN = ['Home','Valuation','Compare','Pricing','Find Advisor','About','Analytics'];
+  const navTR = ['Ana Sayfa','Değerleme','Karşılaştırma','Fiyatlar','Danışman Bul','Hakkımızda','Analiz'];
+  Object.keys(navIds).forEach((id,i) => {
     const el = document.getElementById(id);
-    if(el) el.textContent = t[trKey] || trKey;
+    if(el) el.textContent = isEN ? navEN[i] : navTR[i];
   });
 
-  // Fiyat para birimi — tüm .pc-price elementleri
-  const rate = 36; // 1 USD = 36 TL (sabit gösterim)
-  document.querySelectorAll('.pc-price').forEach(el => {
-    const raw = el.dataset.try || el.textContent.replace(/[^\d]/g,'');
-    if(!el.dataset.try) el.dataset.try = raw;
-    const num = parseInt(el.dataset.try);
-    if(isEN) {
-      el.textContent = '$' + new Intl.NumberFormat('en-US').format(Math.round(num/rate));
-    } else {
-      el.textContent = '₺' + new Intl.NumberFormat('tr-TR').format(num);
+  // Giriş Yap butonu
+  document.querySelectorAll('.nav-auth-btn, [onclick*="openAuth"]').forEach(el => {
+    if(el.textContent.includes('Giriş') || el.textContent.includes('Sign')) {
+      el.textContent = t.login_btn;
     }
   });
 
-  // Hero başlık
+  // Destek
+  const supEl = document.getElementById('support-txt');
+  if(supEl) supEl.textContent = t.support_txt;
+
+  // Bot dil
+  const botTitle = document.getElementById('bot-title');
+  if(botTitle) botTitle.textContent = isEN ? 'Öğren-Sat Assistant' : 'Öğren-Sat Asistanı';
+  const botWelcome = document.getElementById('bot-welcome');
+  if(botWelcome) botWelcome.textContent = isEN
+    ? 'Hello! 👋 I am ready to answer your questions about the Konya real estate market. How can I help you?'
+    : 'Merhaba! 👋 Konya gayrimenkul piyasası hakkında sorularınızı yanıtlamaya hazırım. Size nasıl yardımcı olabilirim?';
+
+  // Hero
   const heroH = document.querySelector('.hero-h1');
-  if(heroH) heroH.innerHTML = t['hero_title'];
+  if(heroH) heroH.innerHTML = t.hero_title;
+  const heroSub = document.querySelector('.hero-sub, .hero p');
+  if(heroSub) heroSub.textContent = t.hero_sub;
+
+  // Fiyat kartları — pc-price
+  document.querySelectorAll('.pc-price').forEach(el => {
+    if(!el.dataset.tryVal) {
+      const num = parseInt(el.textContent.replace(/[^\d]/g,''));
+      if(num) el.dataset.tryVal = num;
+    }
+    const num = parseInt(el.dataset.tryVal || 0);
+    if(num) {
+      if(isEN) {
+        el.textContent = '$' + new Intl.NumberFormat('en-US').format(Math.round(num/USD_RATE));
+      } else {
+        el.textContent = '₺' + new Intl.NumberFormat('tr-TR').format(num);
+      }
+    }
+  });
+
+  // Sayfa başlığı
+  document.title = isEN ? 'Öğren-Sat — Konya Real Estate Analytics' : 'Öğren-Sat — Konya Emlak Analiz Platformu';
+
+  // data-tr / data-en attribute ile işaretli tüm elementler
+  document.querySelectorAll('[data-tr]').forEach(el => {
+    el.innerHTML = isEN ? (el.dataset.en || el.dataset.tr) : el.dataset.tr;
+  });
 }
 
 // Sayfa açılışında dili uygula
 document.addEventListener('DOMContentLoaded', () => {
-  setTimeout(applyLang, 200);
+  const saved = localStorage.getItem('lang') || 'tr';
+  if(saved === 'en') {
+    document.getElementById('lang-txt').textContent = '🇬🇧 EN';
+  } else {
+    document.getElementById('lang-txt').textContent = '🇹🇷 TR';
+  }
+  setTimeout(applyLang, 300);
 });
 
 // ══════════════════════════════════════
@@ -3881,7 +3982,10 @@ async function sendSupport() {
 
     const resp = await fetch('https://api.anthropic.com/v1/messages', {
       method:'POST',
-      headers:{'Content-Type':'application/json'},
+      headers:{
+        'Content-Type':'application/json',
+        'anthropic-dangerous-direct-browser-access':'true'
+      },
       body:JSON.stringify({
         model:'claude-sonnet-4-20250514',
         max_tokens:300,
