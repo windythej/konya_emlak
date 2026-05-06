@@ -1470,7 +1470,6 @@ a, button, .tc, .pc, .dc-chip, .adv-card,
     <button class="nav-lnk" id="nl6" onclick="goPage('analiz')">📊 Analiz</button>
   </div>
   <div style="display:flex;align-items:center;">
-    <button class="nav-cta" id="nav-login-btn" onclick="goPage('auth')">Giriş Yap / Kayıt Ol</button>
     <div style="display:flex;align-items:center;gap:14px;margin-right:14px;">
     <!-- Dil Değiştirici -->
     <div style="position:relative;">
@@ -1489,6 +1488,7 @@ a, button, .tc, .pc, .dc-chip, .adv-card,
       <span style="position:absolute;top:-3px;right:-3px;width:8px;height:8px;background:#4CAF82;border-radius:50%;border:2px solid var(--dark);"></span>
     </button>
   </div>
+      <button class="nav-cta" id="nav-login-btn" onclick="goPage('auth')">Giriş Yap / Kayıt Ol</button>
   <div class="nav-user" id="nav-user">
       <div class="nav-avatar" id="nav-av">K</div>
       <span class="nav-uname" id="nav-uname">—</span>
@@ -2501,8 +2501,8 @@ a, button, .tc, .pc, .dc-chip, .adv-card,
     <div class="about-deco-letter">Ö</div>
     <div style="max-width:1300px;margin:0 auto;position:relative;z-index:1;">
       <div style="max-width:700px;">
-        <div class="ey rv">Biz Kimiz?</div>
-        <h1 class="rv from-left" style="font-family:var(--serif);font-size:clamp(42px,5.5vw,72px);font-weight:700;color:var(--tx);line-height:1.06;margin-bottom:24px;margin-top:8px;">
+        <div class="ey rv" data-tr="Biz Kimiz?" data-en="Who Are We?">Biz Kimiz?</div>
+        <h1 class="rv from-left" data-tr="Konya&apos;nın emlak<br>kararlarına <em style='color:var(--gold);font-style:italic;'>veri gücü</em>" data-en="Data-powered<br>real estate decisions <em style='color:var(--gold);font-style:italic;'>in Konya</em>" style="font-family:var(--serif);font-size:clamp(42px,5.5vw,72px);font-weight:700;color:var(--tx);line-height:1.06;margin-bottom:24px;margin-top:8px;">
           Konya&apos;nın emlak<br>kararlarına <em style="color:var(--gold);font-style:italic;">veri gücü</em>
         </h1>
         <p class="rv" style="font-size:17px;color:var(--txm);line-height:1.85;max-width:580px;margin-bottom:40px;">
@@ -2510,8 +2510,8 @@ a, button, .tc, .pc, .dc-chip, .adv-card,
           Gerçek ilan verileri, bölge emsal bilgisi ve şeffaf hesaplama mantığıyla her kararı kolaylaştırıyoruz.
         </p>
         <div class="rv" style="display:flex;gap:12px;flex-wrap:wrap;">
-          <button class="btn-g" onclick="goPage('valuation')">◎ Hemen Dene</button>
-          <button class="btn-o" onclick="goPage('advisor')">👤 Danışman Bul</button>
+          <button class="btn-g" data-tr="◎ Hemen Dene" data-en="◎ Try Now" onclick="goPage('valuation')">◎ Hemen Dene</button>
+          <button class="btn-o" data-tr="👤 Danışman Bul" data-en="👤 Find Advisor" onclick="goPage('advisor')">👤 Danışman Bul</button>
         </div>
       </div>
     </div>
@@ -2521,7 +2521,7 @@ a, button, .tc, .pc, .dc-chip, .adv-card,
   <div style="max-width:1300px;margin:0 auto;padding:60px 48px;display:grid;grid-template-columns:1fr 1fr;gap:24px;">
     <div class="mv-card rv from-left" style="background:var(--d2);border:1px solid var(--bd);border-radius:var(--r);padding:40px;">
       <div style="font-size:40px;margin-bottom:18px;">🎯</div>
-      <div style="font-family:var(--serif);font-size:24px;font-weight:700;color:var(--gold);margin-bottom:14px;">Misyonumuz</div>
+      <div data-tr="Misyonumuz" data-en="Our Mission" style="font-family:var(--serif);font-size:24px;font-weight:700;color:var(--gold);margin-bottom:14px;">Misyonumuz</div>
       <p style="font-size:15px;color:var(--txm);line-height:1.85;margin-bottom:16px;">
         Konya&apos;da gayrimenkul piyasasını <strong style="color:var(--tx);">şeffaf, ölçülebilir ve herkes için erişilebilir</strong> kılmak. Alıcıların pişmanlık duymadan, satıcıların gerçek değerinin altında satmadan karar almasını sağlamak.
       </p>
@@ -2539,7 +2539,7 @@ a, button, .tc, .pc, .dc-chip, .adv-card,
     </div>
     <div class="mv-card rv from-right" style="background:var(--d2);border:1px solid var(--bd);border-radius:var(--r);padding:40px;">
       <div style="font-size:40px;margin-bottom:18px;">🔭</div>
-      <div style="font-family:var(--serif);font-size:24px;font-weight:700;color:var(--gold);margin-bottom:14px;">Vizyonumuz</div>
+      <div data-tr="Vizyonumuz" data-en="Our Vision" style="font-family:var(--serif);font-size:24px;font-weight:700;color:var(--gold);margin-bottom:14px;">Vizyonumuz</div>
       <p style="font-size:15px;color:var(--txm);line-height:1.85;margin-bottom:16px;">
         Türkiye&apos;nin her şehrinde yapay zeka destekli değerleme altyapısını yaygınlaştırarak emlak kararlarının <strong style="color:var(--tx);">sezgiye değil veriye</strong> dayanmasını sağlamak.
       </p>
@@ -2594,8 +2594,8 @@ a, button, .tc, .pc, .dc-chip, .adv-card,
 
   <!-- Nasıl Çalışırız -->
   <div style="max-width:1300px;margin:0 auto;padding:60px 48px;">
-    <div class="ey">Metodoloji</div>
-    <h2 class="rv" style="font-family:var(--serif);font-size:clamp(28px,3.5vw,44px);font-weight:700;color:var(--tx);margin-bottom:40px;">Analizimiz nasıl çalışır?</h2>
+    <div class="ey" data-tr="Metodoloji" data-en="Methodology">Metodoloji</div>
+    <h2 class="rv" data-tr="Analizimiz nasıl çalışır?" data-en="How does our analysis work?" style="font-family:var(--serif);font-size:clamp(28px,3.5vw,44px);font-weight:700;color:var(--tx);margin-bottom:40px;">Analizimiz nasıl çalışır?</h2>
     <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:20px;">
       <div class="method-card rv" style="background:var(--d2);border:1px solid var(--bd);border-radius:var(--r);padding:28px;">
         <div style="font-size:28px;margin-bottom:14px;">📡</div>
@@ -2618,8 +2618,8 @@ a, button, .tc, .pc, .dc-chip, .adv-card,
   <!-- Kurucu Ekip -->
   <div style="background:var(--d2);border-top:1px solid var(--bd);">
     <div style="max-width:1300px;margin:0 auto;padding:60px 48px;">
-      <div class="ey">Ekip</div>
-      <h2 class="rv" style="font-family:var(--serif);font-size:clamp(28px,3.5vw,44px);font-weight:700;color:var(--tx);margin-bottom:40px;">Kurucu ortaklar</h2>
+      <div class="ey" data-tr="Ekip" data-en="Team">Ekip</div>
+      <h2 class="rv" data-tr="Kurucu ortaklar" data-en="Co-Founders" style="font-family:var(--serif);font-size:clamp(28px,3.5vw,44px);font-weight:700;color:var(--tx);margin-bottom:40px;">Kurucu ortaklar</h2>
       <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:24px;">
 
         <!-- Batuhan - ilk sıra, kurucu & geliştirici -->
@@ -3923,6 +3923,55 @@ function applyLang() {
   document.querySelectorAll('[data-tr]').forEach(el => {
     el.innerHTML = isEN ? (el.dataset.en || el.dataset.tr) : el.dataset.tr;
   });
+
+  // Giriş Yap butonu
+  const loginBtn = document.getElementById('nav-login-btn');
+  if(loginBtn) loginBtn.textContent = isEN ? 'Sign In / Register' : 'Giriş Yap / Kayıt Ol';
+
+  // "NASIL ÇALIŞIR?" bölümü
+  document.querySelectorAll('.ey').forEach(el => {
+    const map = {
+      'NASIL ÇALIŞIR?':'HOW IT WORKS?','Araçlar':'Tools',
+      'İlçeler':'Districts','GAYRİMENKULÜNÜZÜ GÜVENLE SATIN':'SELL WITH CONFIDENCE',
+      'Biz Kimiz?':'Who Are We?'
+    };
+    if(isEN && map[el.textContent.trim()]) el.textContent = map[el.textContent.trim()];
+    else if(!isEN) {
+      const revMap = {'HOW IT WORKS?':'NASIL ÇALIŞIR?','Tools':'Araçlar',
+        'Districts':'İlçeler','SELL WITH CONFIDENCE':'GAYRİMENKULÜNÜZÜ GÜVENLE SATIN',
+        'Who Are We?':'Biz Kimiz?'};
+      if(revMap[el.textContent.trim()]) el.textContent = revMap[el.textContent.trim()];
+    }
+  });
+
+  // Analiz sayfası başlığı
+  const analIlce = document.getElementById('analiz-ilce');
+  if(analIlce) analIlce.options[0].text = isEN ? 'All Districts' : 'Konya Geneli';
+  const analYil = document.getElementById('analiz-yil');
+  // Analiz yıl select label değişmez
+
+  // Değerleme adım progress etiketleri
+  const stepLabels = isEN
+    ? ['Category','Location','Features','Details','Analysis']
+    : ['Kategori','Konum','Özellikler','Detaylar','Analiz'];
+  document.querySelectorAll('.val-step-label').forEach((el,i) => {
+    if(stepLabels[i]) el.textContent = stepLabels[i];
+  });
+
+  // Güvenle Sat adım listesi
+  const gsSteps = {
+    'gs-step-1': {tr:'1 — Gayrimenkulünüzün Özelliklerini Girin', en:'1 — Enter Property Details'},
+    'gs-step-2': {tr:'2 — Değerini Öğrenin', en:'2 — Get Valuation'},
+    'gs-step-3': {tr:'3 — En İyi Danışmanı Bulun', en:'3 — Find the Best Advisor'},
+    'gs-step-4': {tr:'4 — Güvenle Satın', en:'4 — Sell with Confidence'},
+  };
+  Object.entries(gsSteps).forEach(([id, texts]) => {
+    const el = document.getElementById(id);
+    if(el) {
+      const titleEl = el.querySelector('.gs-step-title');
+      if(titleEl) titleEl.textContent = isEN ? texts.en : texts.tr;
+    }
+  });
 }
 
 // Sayfa açılışında dili uygula
@@ -3984,6 +4033,8 @@ async function sendSupport() {
       method:'POST',
       headers:{
         'Content-Type':'application/json',
+        'x-api-key':'',
+        'anthropic-version':'2023-06-01',
         'anthropic-dangerous-direct-browser-access':'true'
       },
       body:JSON.stringify({
