@@ -699,6 +699,8 @@ function calcAndRender() {
         </div>
       </div>
 
+      <!-- YATIRIM + AI YAN YANA -->
+      <div class="vre-bottom-row">
       <!-- YATIRIM ANALİZİ -->
       <div class="vre-invest">
         <div class="vre-section-title" data-i18n="val_invest">Yatırım Analizi</div>
@@ -727,6 +729,7 @@ function calcAndRender() {
         <div class="vre-ai-badge" data-i18n="val_ai">▲ AI ANALİZİ</div>
         <div class="vre-ai-text" id="ai-analysis-text"></div>
       </div>
+      </div><!-- /vre-bottom-row -->
 
       <div class="vre-disclaimer">* ${calcPool.length} benzer ilan analiz edilmiştir. Tahmin ±%12 sapma gösterebilir.</div>
     </div>`;
@@ -734,27 +737,39 @@ function calcAndRender() {
   // Sağ panel benzer ilanlar
   const similarList = calcPool.slice(0, 5);
   document.getElementById('val-info-area').innerHTML = `
-    <div class="val-info-panel">
-      <div class="val-info-icon">🏠</div>
-      <div class="val-info-title" data-i18n="val_similar">Benzer İlanlar</div>
-      ${similarList.map(l => {
-        const days = l.created_at ? Math.floor((Date.now() - new Date(l.created_at)) / 86400000) : null;
-        const ageBadge = days === null ? '' : days <= 7 ? '<span class="age-badge age-new">Yeni</span>' : days <= 30 ? `<span class="age-badge age-normal">${days} gün</span>` : days <= 90 ? `<span class="age-badge age-old">${days} gün</span>` : '<span class="age-badge age-very-old">Eski</span>';
-        return `<div style="padding:12px 0;border-bottom:1px solid var(--bd);">
-          <div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:4px;">
-            <div style="font-size:12px;color:var(--tx);flex:1;margin-right:8px;line-height:1.4;">${(l.title||'').substring(0,45)}...</div>
-            ${ageBadge}
-          </div>
-          <div style="display:flex;justify-content:space-between;align-items:center;">
-            <div style="font-size:11px;color:var(--txm);">${l.rooms||'?'} · ${l.net_size||'?'}m²</div>
-            <div style="font-size:13px;font-weight:700;color:var(--gold);">${fp(l.price)} ₺</div>
-          </div>
-        </div>`;
-      }).join('')}
+    <div class="val-info-panel" style="height:100%;display:flex;flex-direction:column;">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;">
+        <div class="val-info-icon" style="margin-bottom:0;">🏠</div>
+        <div class="val-info-title" data-i18n="val_similar" style="margin-bottom:0;">Benzer İlanlar</div>
+      </div>
+      <div style="flex:1;overflow-y:auto;scrollbar-width:thin;scrollbar-color:rgba(201,168,76,.2) transparent;">
+        ${similarList.map(l => {
+          const days = l.created_at ? Math.floor((Date.now() - new Date(l.created_at)) / 86400000) : null;
+          const ageBadge = days === null ? '' : days <= 7 ? '<span class="age-badge age-new">Yeni</span>' : days <= 30 ? `<span class="age-badge age-normal">${days} gün</span>` : '<span class="age-badge age-very-old">Eski</span>';
+          const titleShort = (l.title||'').substring(0,38);
+          return `<div style="padding:10px 0;border-bottom:1px solid var(--bd);">
+            <div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:5px;gap:6px;">
+              <div style="font-size:11px;color:var(--tx);flex:1;line-height:1.45;">${titleShort}${l.title&&l.title.length>38?'...':''}</div>
+              ${ageBadge}
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+              <div style="font-size:11px;color:var(--txm);">${l.rooms||'?'} · ${l.net_size||'?'}m²</div>
+              <div style="font-size:13px;font-weight:700;color:var(--gold);">${fp(l.price)} ₺</div>
+            </div>
+            ${l.url ? `<button onclick="confirmGoListing('${l.url}')" style="width:100%;padding:5px 10px;background:rgba(201,168,76,.08);border:1px solid rgba(201,168,76,.2);border-radius:6px;color:var(--gold);font-size:11px;font-weight:600;font-family:var(--font);cursor:pointer;transition:all .2s;" onmouseover="this.style.background='rgba(201,168,76,.15)'" onmouseout="this.style.background='rgba(201,168,76,.08)'">İlana Git →</button>` : ''}
+          </div>`;
+        }).join('')}
+      </div>
     </div>`;
 
-  // AI typewriter
-  typewriter('ai-analysis-text', aiAnalysis, 15);
+  // AI bölümü — kısa göster, devamını oku
+  const aiShort = aiAnalysis.split('\n').slice(0,1).join('\n');
+  document.getElementById('ai-analysis-text').innerHTML = `
+    <span id="ai-short-text"></span>
+    <span id="ai-full-text" style="display:none;">${aiAnalysis.replace(/\n/g,'<br>')}</span>
+    <br><button onclick="toggleAiText(this)" style="background:none;border:none;color:var(--gold);font-size:12px;font-weight:600;font-family:var(--font);cursor:pointer;margin-top:6px;padding:0;">Devamını oku ↓</button>
+  `;
+  typewriter('ai-short-text', aiShort, 15);
 }
 
 function generateAIText(v, estimated, real, avgM2, count, scope, stale) {
@@ -770,6 +785,25 @@ Alıcı için öneri: ${fp(real)} TL altındaki teklifler fırsat olarak değerl
 }
 
 // Sonuç ekranından geri dön - freemium kullanımı geri al
+function toggleAiText(btn) {
+  const shortEl = document.getElementById('ai-short-text');
+  const fullEl  = document.getElementById('ai-full-text');
+  if(!shortEl || !fullEl) return;
+  const isOpen = fullEl.style.display !== 'none';
+  fullEl.style.display = isOpen ? 'none' : 'block';
+  shortEl.style.display = isOpen ? 'inline' : 'none';
+  btn.textContent = isOpen ? 'Devamını oku ↓' : 'Kapat ↑';
+}
+
+function confirmGoListing(url) {
+  if(!url) return;
+  const isEN = typeof currentLang !== 'undefined' && currentLang === 'en';
+  const msg = isEN
+    ? 'You will leave this page and go to the listing. Continue?'
+    : 'Bu sayfadan ayrılıp ilana gideceksiniz. Devam etmek istiyor musunuz?';
+  if(confirm(msg)) window.open(url, '_blank');
+}
+
 function goBack5() {
   if(!currentUser && freeUsed > 0) {
     freeUsed--;
