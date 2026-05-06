@@ -2167,7 +2167,7 @@ html, body {
       <span class="nav-uname" id="nav-uname">—</span>
       <button class="nav-out" onclick="logout()">Çıkış</button>
     </div>
-    <button class="nav-ham" id="nav-ham" onclick="openMob()">
+    <button class="nav-ham" id="nav-ham" onclick="toggleMob()">
       <div class="hbar" id="hbar1"></div>
       <div class="hbar" id="hbar2"></div>
       <div class="hbar" id="hbar3"></div>
@@ -3622,6 +3622,15 @@ function _updateNav(page) {
 window.addEventListener('scroll', () => document.getElementById('main-nav').classList.toggle('scrolled', window.scrollY>40));
 
 // ── MOBİL MENÜ ──
+function toggleMob() {
+  const sheet = document.getElementById('mob-sheet');
+  if(sheet && sheet.classList.contains('on')) {
+    closeMob();
+  } else {
+    openMob();
+  }
+}
+
 function openMob() {
   const sheet = document.getElementById('mob-sheet');
   const ov    = document.getElementById('mob-ov');
@@ -3630,12 +3639,10 @@ function openMob() {
   sheet.classList.add('on');
   if(ov) ov.classList.add('on');
   if(btn) btn.classList.add('is-open');
-  // Sayfayı kilitle - hem scroll hem touch
-  document.body.style.overflow = 'hidden';
-  document.body.style.position = 'fixed';
-  document.body.style.width = '100%';
-  document.body.dataset.scrollY = window.scrollY;
-  document.body.style.top = '-' + window.scrollY + 'px';
+  // Body scroll kilitle
+  const sy = window.scrollY;
+  document.body.dataset.scrollY = sy;
+  document.body.style.cssText += ';overflow:hidden!important;position:fixed!important;width:100%!important;top:-' + sy + 'px!important;';
 }
 function closeMob() {
   const sheet = document.getElementById('mob-sheet');
@@ -3645,13 +3652,13 @@ function closeMob() {
   sheet.classList.remove('on');
   if(ov) ov.classList.remove('on');
   if(btn) btn.classList.remove('is-open');
-  // Scroll kilidi kaldır, pozisyona geri dön
-  const scrollY = parseInt(document.body.dataset.scrollY || 0);
-  document.body.style.position = '';
+  // Scroll kilidi kaldır
+  const sy = parseInt(document.body.dataset.scrollY || 0);
   document.body.style.overflow = '';
+  document.body.style.position = '';
   document.body.style.width = '';
   document.body.style.top = '';
-  window.scrollTo(0, scrollY);
+  window.scrollTo(0, sy);
 }
 
 // ── ABONE OL ──
@@ -3863,6 +3870,23 @@ const advRevealObs = new IntersectionObserver(entries => {
     }
   });
 }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
+
+// Sayfa yüklenmeden önce doğru sayfayı göster (flash önleme)
+(function() {
+  const path = location.pathname;
+  const urlMap = {'/':' landing','/degerleme':'valuation','/karsilastirma':'comparison',
+    '/fiyatlar':'pricing','/giris':'auth','/odeme':'payment','/danisman':'advisor',
+    '/hakkimizda':'about','/analiz':'analiz'};
+  const page = urlMap[path] || urlMap[path.replace(/\/$/,'')] || 'landing';
+  if(page !== 'landing') {
+    document.addEventListener('DOMContentLoaded', function earlyHide() {
+      document.querySelectorAll('.page').forEach(p => p.classList.remove('on'));
+      const t = document.getElementById('page-' + page);
+      if(t) t.classList.add('on');
+      document.removeEventListener('DOMContentLoaded', earlyHide);
+    });
+  }
+})();
 
 document.addEventListener('DOMContentLoaded', () => {
   // URL'ye göre başlangıç sayfasını belirle
