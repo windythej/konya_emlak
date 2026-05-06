@@ -330,7 +330,6 @@ body{font-family:var(--font);background:var(--dark);color:var(--tx);overflow-x:h
   .ftr-in{grid-template-columns:1fr;gap:26px;}
   .p2{grid-template-columns:1fr;}
 }
-<style>
 /* ── RESPONSIVE ── */
 @media(max-width:900px){
   .guvenle-sat-grid{grid-template-columns:1fr!important;}
@@ -1837,7 +1836,6 @@ a, button, .tc, .pc, .dc-chip, .adv-card,
 .hero > * { position: relative; z-index: 1; }
 .hero-grid { display: none !important; }
 
-/* ── HERO STAT BAND GİZLE ── */
 
 
 
@@ -2042,6 +2040,28 @@ html, body {
   padding: 0 clamp(16px,4vw,48px);
 }
 
+.hero-stats,.hst-item,.hst-div{display:none!important;height:0!important;overflow:hidden!important;}
+/* CTA (footer üstü) — şehir arka plan */
+#sec-cta, .cta-section, [id*="cta"] {
+  position: relative;
+  overflow: hidden;
+}
+.cta-wrap {
+  background:
+    linear-gradient(180deg, rgba(4,4,2,1) 0%, rgba(6,5,1,.5) 25%, rgba(10,7,1,.5) 75%, rgba(4,4,2,1) 100%),
+    radial-gradient(ellipse 60% 60% at 50% 50%, rgba(201,168,76,.06) 0%, transparent 70%),
+    url('https://images.unsplash.com/photo-1519501025264-65ba15a82390?w=1920&q=80&auto=format&fit=crop') center/cover no-repeat !important;
+}
+
+/* Hamburger butonu her zaman üstte */
+#nav-ham {
+  z-index: 2500 !important;
+  position: relative;
+}
+.nav-bar, .nav {
+  z-index: 2100 !important;
+}
+
 </style>
 </head>
 <body>
@@ -2172,12 +2192,6 @@ html, body {
       <button class="btn-o" onclick="goPage('comparison')">☰ Piyasayı İncele</button>
     </div>
     </div>
-      <div class="hst-div"></div>
-      <div><div class="hst-val">3</div><div class="hst-lbl">Ücretsiz Sorgu</div></div>
-      <div class="hst-div"></div>
-      <div><div class="hst-val" id="hero-ilce-cnt">31</div><div class="hst-lbl">İlçe</div></div>
-      <div class="hst-div"></div>
-      <div><div class="hst-val">%94</div><div class="hst-lbl">Doğruluk Oranı</div></div>
     </div>
   </div>
 </section>
@@ -2249,31 +2263,7 @@ html, body {
 
 <!-- CTA -->
 
-<!-- ── RAKAMLAR BANDI ── -->
-<div style="background:var(--d2);border-top:1px solid var(--bd);border-bottom:1px solid var(--bd);">
-  <div style="max-width:1300px;margin:0 auto;padding:44px 48px;display:grid;grid-template-columns:repeat(4,1fr);gap:20px;" class="stat-band-grid">
-    <div class="stat-kpi-card rv">
-      <div class="stat-kpi-icon">📊</div>
-      <div class="stat-kpi-val counter-anim" data-target="123" data-suffix="+">123+</div>
-      <div class="stat-kpi-lbl" data-i18n="stat1_lbl">Analiz Edilen İlan</div>
-    </div>
-    <div class="stat-kpi-card rv d1">
-      <div class="stat-kpi-icon">📍</div>
-      <div class="stat-kpi-val counter-anim" data-target="31" data-suffix="">31</div>
-      <div class="stat-kpi-lbl" data-i18n="stat2_lbl">Konya İlçesi</div>
-    </div>
-    <div class="stat-kpi-card rv d2">
-      <div class="stat-kpi-icon">🎯</div>
-      <div class="stat-kpi-val">%94</div>
-      <div class="stat-kpi-lbl" data-i18n="stat3_lbl">Doğruluk Oranı</div>
-    </div>
-    <div class="stat-kpi-card rv d3 stat-free" onclick="goPage('valuation')" style="cursor:pointer;">
-      <div class="stat-kpi-icon">🎁</div>
-      <div class="stat-kpi-val counter-anim" data-target="3" data-suffix="">3</div>
-      <div class="stat-kpi-lbl" data-i18n="stat4_lbl">Ücretsiz Sorgu Hakkı</div>
-    </div>
-  </div>
-</div>
+
 
 <!-- ── GÜVENLE SAT — İNTERAKTİF AKIŞ ── -->
 <section class="sec" id="guvenle-sat-sec" style="background:var(--d2);border-bottom:1px solid var(--bd);padding-top:80px;padding-bottom:80px;">
@@ -2674,7 +2664,7 @@ html, body {
 }
 </style></section>
 
-<section class="sec cta-sec">
+<section class="cta-wrap sec cta-sec">
   <div class="cta-in">
     <h2 class="cta-title rv">Konya'da her <em>emlak kararı</em> veriden geçer</h2>
     <p class="cta-sub rv d1">Gerçek piyasa verileri ve yapay zeka analizi ile doğru fiyatı öğrenin.</p>
