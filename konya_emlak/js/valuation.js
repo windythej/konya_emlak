@@ -70,7 +70,7 @@ function renderStep1() {
   updateFreeCounter();
   document.getElementById('val-form-area').innerHTML = `
     <div class="val-form-card">
-      <div class="val-form-title">Ne değerlendirmek istiyorsunuz?</div>
+      <div class="val-form-title" data-i18n="val_cat_q">Ne değerlendirmek istiyorsunuz?</div>
       <div class="val-form-sub">Mülk tipini seçerek başlayın. Her kategori için farklı analiz kriterleri kullanılmaktadır.</div>
       <div class="cat-grid">
         <div class="cat-card ${VAL.category === 'konut' ? 'on' : ''}" onclick="selectCat('konut',this)">
@@ -133,7 +133,7 @@ function renderStep2() {
 
   document.getElementById('val-form-area').innerHTML = `
     <div class="val-form-card">
-      <div class="val-form-title">Mülkün konumu nerede?</div>
+      <div class="val-form-title" data-i18n="val_loc_title">Mülkün konumu nerede?</div>
       <div class="val-form-sub">Konum, değerleme analizinin en kritik faktörüdür.</div>
       <div class="vfg">
         <label class="vfl">İlçe <span class="req">*</span></label>
@@ -650,12 +650,12 @@ function calcAndRender() {
       <!-- ÜST BAŞLIK -->
       <div class="vre-header">
         <div>
-          <div class="vre-title">Değerleme Sonucu</div>
+          <div class="vre-title" data-i18n="val_result_title">Değerleme Sonucu</div>
           <div class="vre-sub">${scopeLabel} · ${roomsStr} · ${m2}m² · ${age} yaş bina</div>
         </div>
         <div style="display:flex;gap:10px;">
-          <button class="vre-new-btn" onclick="goBack5()">← Geri Dön</button>
-          <button class="vre-new-btn" onclick="goStep(1)">+ Yeni Değerleme</button>
+          <button class="vre-new-btn" onclick="goBack5()" data-i18n="val_back">← Geri Dön</button>
+          <button class="vre-new-btn" onclick="goStep(1)" data-i18n="val_new">+ Yeni Değerleme</button>
         </div>
       </div>
 
@@ -664,7 +664,7 @@ function calcAndRender() {
         <!-- Sol: Fiyat kartı -->
         <div class="vre-price-card">
           <div class="vre-price-icon">🏠</div>
-          <div class="vre-price-label">TAHMİNİ DEĞER</div>
+          <div class="vre-price-label" data-i18n="val_est_lbl">TAHMİNİ DEĞER</div>
           <div class="vre-price-big">${fp(estimated)} ₺</div>
           <div class="vre-confidence">
             <div class="vre-conf-bar">
@@ -675,12 +675,12 @@ function calcAndRender() {
           <div class="vre-minmax">
             <div class="vre-min">
               <span class="vre-mm-icon vre-down">↓</span>
-              <span class="vre-mm-lbl">Min Değer</span>
+              <span class="vre-mm-lbl" data-i18n="val_min">Min Değer</span>
               <span class="vre-mm-val">${fp(low)} ₺</span>
             </div>
             <div class="vre-max">
               <span class="vre-mm-icon vre-up">↑</span>
-              <span class="vre-mm-lbl">Maks Değer</span>
+              <span class="vre-mm-lbl" data-i18n="val_max">Maks Değer</span>
               <span class="vre-mm-val">${fp(high)} ₺</span>
             </div>
           </div>
@@ -688,7 +688,7 @@ function calcAndRender() {
 
         <!-- Sağ: Adım listesi -->
         <div class="vre-steps-panel" style="display:flex;flex-direction:column;gap:8px;justify-content:center;">
-          <div style="font-size:10px;color:var(--txm);letter-spacing:2px;text-transform:uppercase;margin-bottom:4px;">Sonraki Adımlar</div>
+          <div style="font-size:10px;color:var(--txm);letter-spacing:2px;text-transform:uppercase;margin-bottom:4px;" data-i18n="val_next_steps">Sonraki Adımlar</div>
           <div class="vre-step-item done" style="padding:11px 14px;"><div class="vre-step-icon" style="width:30px;height:30px;font-size:12px;flex-shrink:0;">✎</div><div class="vre-step-body"><div class="vre-step-title" style="font-size:12px;margin-bottom:0;">1 — Özellikler Girildi</div></div></div>
           <div class="vre-step-item active" style="padding:11px 14px;"><div class="vre-step-icon" style="width:30px;height:30px;font-size:12px;flex-shrink:0;">⊙</div><div class="vre-step-body"><div class="vre-step-title" style="font-size:12px;margin-bottom:0;">2 — Değer Hesaplandı</div></div><div class="vre-step-arrow">›</div></div>
           <div class="vre-step-item" style="padding:11px 14px;"><div class="vre-step-icon" style="width:30px;height:30px;font-size:12px;flex-shrink:0;">👤</div><div class="vre-step-body"><div class="vre-step-title" style="font-size:12px;margin-bottom:0;">3 — Danışman Bul</div></div></div>
@@ -701,22 +701,22 @@ function calcAndRender() {
 
       <!-- YATIRIM ANALİZİ -->
       <div class="vre-invest">
-        <div class="vre-section-title">Yatırım Analizi</div>
+        <div class="vre-section-title" data-i18n="val_invest">Yatırım Analizi</div>
         <div class="vre-invest-grid">
           <div class="vre-invest-card">
-            <div class="vre-ic-lbl">Tahmini Aylık Kira</div>
+            <div class="vre-ic-lbl" data-i18n="val_rent">Tahmini Aylık Kira</div>
             <div class="vre-ic-val ok">${fp(rentEstimate)} ₺</div>
           </div>
           <div class="vre-invest-card">
-            <div class="vre-ic-lbl">Brüt Kira Getirisi</div>
+            <div class="vre-ic-lbl" data-i18n="val_yield">Brüt Kira Getirisi</div>
             <div class="vre-ic-val ok">%${rentYield}</div>
           </div>
           <div class="vre-invest-card">
-            <div class="vre-ic-lbl">Amortisman Süresi</div>
+            <div class="vre-ic-lbl" data-i18n="val_amort">Amortisman Süresi</div>
             <div class="vre-ic-val">${paybackYears} yıl</div>
           </div>
           <div class="vre-invest-card">
-            <div class="vre-ic-lbl">Fırsat Skoru</div>
+            <div class="vre-ic-lbl" data-i18n="val_score">Fırsat Skoru</div>
             <div class="vre-ic-val ${priceScore >= 60 ? 'ok' : priceScore >= 40 ? '' : 'err'}">${priceScore}/100</div>
           </div>
         </div>
@@ -724,7 +724,7 @@ function calcAndRender() {
 
       <!-- AI ANALİZİ -->
       <div class="vre-ai">
-        <div class="vre-ai-badge">▲ AI ANALİZİ</div>
+        <div class="vre-ai-badge" data-i18n="val_ai">▲ AI ANALİZİ</div>
         <div class="vre-ai-text" id="ai-analysis-text"></div>
       </div>
 
@@ -736,7 +736,7 @@ function calcAndRender() {
   document.getElementById('val-info-area').innerHTML = `
     <div class="val-info-panel">
       <div class="val-info-icon">🏠</div>
-      <div class="val-info-title">Benzer İlanlar</div>
+      <div class="val-info-title" data-i18n="val_similar">Benzer İlanlar</div>
       ${similarList.map(l => {
         const days = l.created_at ? Math.floor((Date.now() - new Date(l.created_at)) / 86400000) : null;
         const ageBadge = days === null ? '' : days <= 7 ? '<span class="age-badge age-new">Yeni</span>' : days <= 30 ? `<span class="age-badge age-normal">${days} gün</span>` : days <= 90 ? `<span class="age-badge age-old">${days} gün</span>` : '<span class="age-badge age-very-old">Eski</span>';
@@ -884,12 +884,12 @@ Alıcı için öneri: ${fp(real)} TL altındaki teklifler fırsat olarak değerl
     <div class="val-result-layout"><div class="val-result-endeksa">
       <div class="vre-header">
         <div>
-          <div class="vre-title">Değerleme Sonucu</div>
+          <div class="vre-title" data-i18n="val_result_title">Değerleme Sonucu</div>
           <div class="vre-sub">${VAL.district} · ${catLabel} · ${typeLabel} · ${m2}m²</div>
         </div>
         <div style="display:flex;gap:10px;">
-          <button class="vre-new-btn" onclick="goBack5()">← Geri Dön</button>
-          <button class="vre-new-btn" onclick="goStep(1)">+ Yeni Değerleme</button>
+          <button class="vre-new-btn" onclick="goBack5()" data-i18n="val_back">← Geri Dön</button>
+          <button class="vre-new-btn" onclick="goStep(1)" data-i18n="val_new">+ Yeni Değerleme</button>
         </div>
       </div>
       ${uyari}
@@ -912,14 +912,14 @@ Alıcı için öneri: ${fp(real)} TL altındaki teklifler fırsat olarak değerl
           <div class="vre-step-item active"><div class="vre-step-icon">⊙</div><div class="vre-step-body"><div class="vre-step-title">2 — Değerini Öğrenin</div><div class="vre-step-desc">Bölge emsal değerleri üzerinden hesaplandı.</div></div><div class="vre-step-arrow">›</div></div>
           <div class="vre-step-item"><div class="vre-step-icon">👤</div><div class="vre-step-body"><div class="vre-step-title">3 — En İyi Danışmanı Bulun</div><div class="vre-step-desc">Bölgenizdeki uzman danışmanları keşfedin.</div></div></div>
           <div class="vre-step-item"><div class="vre-step-icon">✓</div><div class="vre-step-body"><div class="vre-step-title">4 — Güvenle Satın</div></div></div>
-          <button class="vre-advisor-btn" onclick="window._goAdvisor && window._goAdvisor('${VAL.district}')">👤 Danışman Bul</button>
+          <button class="vre-advisor-btn" onclick="window._goAdvisor && window._goAdvisor('${VAL.district}')" data-i18n="val_adv_btn">👤 Danışman Bul</button>
         </div>
       </div>
       ${!isArsa ? `<div class="vre-invest">
-        <div class="vre-section-title">Yatırım Analizi</div>
+        <div class="vre-section-title" data-i18n="val_invest">Yatırım Analizi</div>
         <div class="vre-invest-grid">
-          <div class="vre-invest-card"><div class="vre-ic-lbl">Tahmini Aylık Kira</div><div class="vre-ic-val ok">${fp(rentEstimate)} ₺</div></div>
-          <div class="vre-invest-card"><div class="vre-ic-lbl">Brüt Kira Getirisi</div><div class="vre-ic-val ok">${rentYield}</div></div>
+          <div class="vre-invest-card"><div class="vre-ic-lbl" data-i18n="val_rent">Tahmini Aylık Kira</div><div class="vre-ic-val ok">${fp(rentEstimate)} ₺</div></div>
+          <div class="vre-invest-card"><div class="vre-ic-lbl" data-i18n="val_yield">Brüt Kira Getirisi</div><div class="vre-ic-val ok">${rentYield}</div></div>
           <div class="vre-invest-card"><div class="vre-ic-lbl">Amortisman</div><div class="vre-ic-val">${payback}</div></div>
           <div class="vre-invest-card"><div class="vre-ic-lbl">m² Birim Fiyat</div><div class="vre-ic-val">${fp(baseM2)} ₺</div></div>
         </div>
@@ -932,7 +932,7 @@ Alıcı için öneri: ${fp(real)} TL altındaki teklifler fırsat olarak değerl
           <div class="vre-invest-card"><div class="vre-ic-lbl">Bölge</div><div class="vre-ic-val" style="font-size:16px;">${VAL.district}</div></div>
         </div>
       </div>`}
-      <div class="vre-ai"><div class="vre-ai-badge">▲ AI ANALİZİ</div><div class="vre-ai-text" id="ai-analysis-text"></div></div>
+      <div class="vre-ai"><div class="vre-ai-badge" data-i18n="val_ai">▲ AI ANALİZİ</div><div class="vre-ai-text" id="ai-analysis-text"></div></div>
       <div class="vre-disclaimer">* Emsal bazlı tahmin. Kesin değer için lisanslı değerleme uzmanına danışın.</div>
     </div>`;
 
@@ -1114,6 +1114,7 @@ function goStep(step) {
   else if (step === 5) renderStep5();
   const vc = document.getElementById('val-content');
   if(vc) vc.scrollIntoView({behavior:'smooth', block:'start'});
+  if(typeof applyLang === 'function') setTimeout(applyLang, 60);
 }
 
 // ===== FREEMIUM =====

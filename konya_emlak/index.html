@@ -1539,13 +1539,13 @@ a, button, .tc, .pc, .dc-chip, .adv-card,
       <div class="tc rv from-left" onclick="goPage('valuation')">
         <div class="tc-badge">3 Ücretsiz</div>
         <div class="tc-icon">◎</div>
-        <div class="tc-title">Değerleme Aracı</div>
+        <div class="tc-title" data-i18n="ftr_val">Değerleme Aracı</div>
         <div class="tc-desc">Adres ve özelliklerinizi girin, yapay zeka Konya piyasasındaki gerçek verilerden evinizin tahmini değerini hesaplasın. Kira getirisi ve yatırım skoru dahil.</div>
         <div class="tc-cta">Değerleme Yap →</div>
       </div>
       <div class="tc rv d1 from-right" onclick="goPage('comparison')">
         <div class="tc-icon">⊞</div>
-        <div class="tc-title">Piyasa Karşılaştırma</div>
+        <div class="tc-title" data-i18n="ftr_comp">Piyasa Karşılaştırma</div>
         <div class="tc-desc">İlçe, mahalle, oda sayısı ve onlarca filtreyle Konya'daki mevcut ilanları karşılaştırın. Harita görünümü ve detaylı ilan incelemesi.</div>
         <div class="tc-cta">Piyasayı İncele →</div>
       </div>
@@ -1602,22 +1602,22 @@ a, button, .tc, .pc, .dc-chip, .adv-card,
     <div class="stat-kpi-card rv">
       <div class="stat-kpi-icon">📊</div>
       <div class="stat-kpi-val counter-anim" data-target="123" data-suffix="+">123+</div>
-      <div class="stat-kpi-lbl">Analiz Edilen İlan</div>
+      <div class="stat-kpi-lbl" data-i18n="stat1_lbl">Analiz Edilen İlan</div>
     </div>
     <div class="stat-kpi-card rv d1">
       <div class="stat-kpi-icon">📍</div>
       <div class="stat-kpi-val counter-anim" data-target="31" data-suffix="">31</div>
-      <div class="stat-kpi-lbl">Konya İlçesi</div>
+      <div class="stat-kpi-lbl" data-i18n="stat2_lbl">Konya İlçesi</div>
     </div>
     <div class="stat-kpi-card rv d2">
       <div class="stat-kpi-icon">🎯</div>
       <div class="stat-kpi-val">%94</div>
-      <div class="stat-kpi-lbl">Doğruluk Oranı</div>
+      <div class="stat-kpi-lbl" data-i18n="stat3_lbl">Doğruluk Oranı</div>
     </div>
     <div class="stat-kpi-card rv d3 stat-free" onclick="goPage('valuation')" style="cursor:pointer;">
       <div class="stat-kpi-icon">🎁</div>
       <div class="stat-kpi-val counter-anim" data-target="3" data-suffix="">3</div>
-      <div class="stat-kpi-lbl">Ücretsiz Sorgu Hakkı</div>
+      <div class="stat-kpi-lbl" data-i18n="stat4_lbl">Ücretsiz Sorgu Hakkı</div>
     </div>
   </div>
 </div>
@@ -1794,7 +1794,7 @@ a, button, .tc, .pc, .dc-chip, .adv-card,
 
         <!-- Adım Listesi -->
         <div style="display:flex;flex-direction:column;gap:12px;">
-          <div class="gs-step-item active" id="gs-step-1" onclick="gsNextStep(1,true)" onmouseenter="gsHover(1)" onmouseleave="gsHoverOut()" style="cursor:pointer;">
+          <div class="gs-step-item active" id="gs-step-1" onclick="gsNextStep(1,true)" data-i18n-step="1" onmouseenter="gsHover(1)" onmouseleave="gsHoverOut()" style="cursor:pointer;">
             <div class="gs-step-icon">✎</div>
             <div class="gs-step-body">
               <div class="gs-step-title">1 — Gayrimenkulünüzün Özelliklerini Girin</div>
@@ -1802,7 +1802,7 @@ a, button, .tc, .pc, .dc-chip, .adv-card,
             </div>
             <div class="gs-step-arrow">›</div>
           </div>
-          <div class="gs-step-item" id="gs-step-2" onclick="gsNextStep(2,true)" onmouseenter="gsHover(2)" onmouseleave="gsHoverOut()" style="cursor:pointer;">
+          <div class="gs-step-item" id="gs-step-2" onclick="gsNextStep(2,true)" data-i18n-step="2" onmouseenter="gsHover(2)" onmouseleave="gsHoverOut()" style="cursor:pointer;">
             <div class="gs-step-icon">⊙</div>
             <div class="gs-step-body">
               <div class="gs-step-title">2 — Değerini Öğrenin</div>
@@ -1810,7 +1810,7 @@ a, button, .tc, .pc, .dc-chip, .adv-card,
             </div>
             <div class="gs-step-arrow">›</div>
           </div>
-          <div class="gs-step-item" id="gs-step-3" onclick="gsNextStep(3,true)" onmouseenter="gsHover(3)" onmouseleave="gsHoverOut()" style="cursor:pointer;">
+          <div class="gs-step-item" id="gs-step-3" onclick="gsNextStep(3,true)" data-i18n-step="3" onmouseenter="gsHover(3)" onmouseleave="gsHoverOut()" style="cursor:pointer;">
             <div class="gs-step-icon">👤</div>
             <div class="gs-step-body">
               <div class="gs-step-title">3 — En İyi Danışmanı Bulun</div>
@@ -1818,7 +1818,7 @@ a, button, .tc, .pc, .dc-chip, .adv-card,
             </div>
             <div class="gs-step-arrow">›</div>
           </div>
-          <div class="gs-step-item" id="gs-step-4" onclick="gsNextStep(4,true)" onmouseenter="gsHover(4)" onmouseleave="gsHoverOut()" style="cursor:pointer;">
+          <div class="gs-step-item" id="gs-step-4" onclick="gsNextStep(4,true)" data-i18n-step="4" onmouseenter="gsHover(4)" onmouseleave="gsHoverOut()" style="cursor:pointer;">
             <div class="gs-step-icon">✓</div>
             <div class="gs-step-body">
               <div class="gs-step-title">4 — Güvenle Satın</div>
@@ -2026,8 +2026,8 @@ a, button, .tc, .pc, .dc-chip, .adv-card,
     <h2 class="cta-title rv">Konya'da her <em>emlak kararı</em> veriden geçer</h2>
     <p class="cta-sub rv d1">Gerçek piyasa verileri ve yapay zeka analizi ile doğru fiyatı öğrenin.</p>
     <div style="display:flex;gap:14px;justify-content:center;flex-wrap:wrap;" class="rv d2">
-      <button class="btn-g" onclick="goPage('about')">Bizi Tanıyın →</button>
-      <button class="btn-o" onclick="goPage('valuation')">◎ Ücretsiz Değerleme</button>
+      <button class="btn-g" data-i18n="cta_btn1" onclick="goPage('about')">Bizi Tanıyın →</button>
+      <button class="btn-o" data-i18n="cta_btn2" onclick="goPage('valuation')">◎ Ücretsiz Değerleme</button>
     </div>
   </div>
 </section>
@@ -2037,13 +2037,13 @@ a, button, .tc, .pc, .dc-chip, .adv-card,
   <div class="ftr-in">
     <div>
       <div class="ftr-logo">Öğren-Sat</div>
-      <div class="ftr-desc">Konya'nın yapay zeka destekli emlak analiz platformu.</div>
+      <div class="ftr-desc" data-i18n="ftr_desc">Konya'nın yapay zeka destekli emlak analiz platformu.</div>
     </div>
     <div>
       <div class="ftr-col-ttl">Araçlar</div>
       <ul class="ftr-links">
-        <li><button onclick="goPage('valuation')">Değerleme Aracı</button></li>
-        <li><button onclick="goPage('comparison')">Piyasa Karşılaştırma</button></li>
+        <li><button onclick="goPage('valuation')" data-i18n="ftr_val">Değerleme Aracı</button></li>
+        <li><button onclick="goPage('comparison')" data-i18n="ftr_comp">Piyasa Karşılaştırma</button></li>
       </ul>
     </div>
     <div>
@@ -2056,12 +2056,12 @@ a, button, .tc, .pc, .dc-chip, .adv-card,
     <div>
       <div class="ftr-col-ttl">Abonelik</div>
       <ul class="ftr-links">
-        <li><button onclick="goPage('pricing')">Fiyat Planları</button></li>
+        <li><button onclick="goPage('pricing')" data-i18n="ftr_plans">Fiyat Planları</button></li>
       </ul>
     </div>
   </div>
   <div class="ftr-btm">
-    <div class="ftr-copy">© 2025 Öğren-Sat. Tüm hakları saklıdır.</div>
+    <div class="ftr-copy"><span data-i18n="ftr_copy">© 2025 Öğren-Sat. Tüm hakları saklıdır.</span></div>
     <div class="ftr-note">Veriler bilgi amaçlıdır, yatırım tavsiyesi değildir.</div>
   </div>
 </footer>
@@ -2265,7 +2265,7 @@ a, button, .tc, .pc, .dc-chip, .adv-card,
 <div class="val-page">
   <div class="pg-top" style="padding-left:48px;padding-right:48px;">
     <button class="pg-back" onclick="goPage('landing')">← Ana Sayfa</button>
-    <div class="breadcrumb">Ana Sayfa › <span>Değerleme Aracı</span></div>
+    <div class="breadcrumb">Ana Sayfa › <span data-i18n="ftr_val">Değerleme Aracı</span></div>
   </div>
   <div id="val-content"></div>
 </div>
@@ -2279,7 +2279,7 @@ a, button, .tc, .pc, .dc-chip, .adv-card,
 <div class="cmp-page">
   <div class="pg-top" style="padding-left:48px;padding-right:48px;">
     <button class="pg-back" onclick="goPage('landing')">← Ana Sayfa</button>
-    <div class="breadcrumb">Ana Sayfa › <span>Piyasa Karşılaştırma</span></div>
+    <div class="breadcrumb">Ana Sayfa › <span data-i18n="ftr_comp">Piyasa Karşılaştırma</span></div>
   </div>
 
   <div class="mob-search" id="mob-search">
@@ -2434,7 +2434,7 @@ a, button, .tc, .pc, .dc-chip, .adv-card,
   </div>
   <div class="advisor-hero">
     <div class="adv-title">Konya'da <em>uzman</em><br>danışmanlar</div>
-    <p class="adv-sub">Bölgenizdeki deneyimli gayrimenkul danışmanları ile tanışın. Mülkünüzü en iyi fiyata, en kısa sürede satın.</p>
+    <p class="adv-sub" data-i18n="adv_sub">Bölgenizdeki deneyimli gayrimenkul danışmanları ile tanışın. Mülkünüzü en iyi fiyata, en kısa sürede satın.</p>
     <div class="adv-filter-bar">
       <select class="adv-filter-sel" id="adv-district-filter" onchange="filterAdvisors()">
         <option value="">Tüm İlçeler</option>
@@ -2521,7 +2521,7 @@ a, button, .tc, .pc, .dc-chip, .adv-card,
   <div style="max-width:1300px;margin:0 auto;padding:60px 48px;display:grid;grid-template-columns:1fr 1fr;gap:24px;">
     <div class="mv-card rv from-left" style="background:var(--d2);border:1px solid var(--bd);border-radius:var(--r);padding:40px;">
       <div style="font-size:40px;margin-bottom:18px;">🎯</div>
-      <div data-tr="Misyonumuz" data-en="Our Mission" style="font-family:var(--serif);font-size:24px;font-weight:700;color:var(--gold);margin-bottom:14px;">Misyonumuz</div>
+      <div data-tr="Misyonumuz" data-en="Our Mission" style="font-family:var(--serif);font-size:24px;font-weight:700;color:var(--gold);margin-bottom:14px;" data-i18n="ab_mis_title">Misyonumuz</div>
       <p style="font-size:15px;color:var(--txm);line-height:1.85;margin-bottom:16px;">
         Konya&apos;da gayrimenkul piyasasını <strong style="color:var(--tx);">şeffaf, ölçülebilir ve herkes için erişilebilir</strong> kılmak. Alıcıların pişmanlık duymadan, satıcıların gerçek değerinin altında satmadan karar almasını sağlamak.
       </p>
@@ -2539,7 +2539,7 @@ a, button, .tc, .pc, .dc-chip, .adv-card,
     </div>
     <div class="mv-card rv from-right" style="background:var(--d2);border:1px solid var(--bd);border-radius:var(--r);padding:40px;">
       <div style="font-size:40px;margin-bottom:18px;">🔭</div>
-      <div data-tr="Vizyonumuz" data-en="Our Vision" style="font-family:var(--serif);font-size:24px;font-weight:700;color:var(--gold);margin-bottom:14px;">Vizyonumuz</div>
+      <div data-tr="Vizyonumuz" data-en="Our Vision" style="font-family:var(--serif);font-size:24px;font-weight:700;color:var(--gold);margin-bottom:14px;" data-i18n="ab_vis_title">Vizyonumuz</div>
       <p style="font-size:15px;color:var(--txm);line-height:1.85;margin-bottom:16px;">
         Türkiye&apos;nin her şehrinde yapay zeka destekli değerleme altyapısını yaygınlaştırarak emlak kararlarının <strong style="color:var(--tx);">sezgiye değil veriye</strong> dayanmasını sağlamak.
       </p>
@@ -2572,17 +2572,17 @@ a, button, .tc, .pc, .dc-chip, .adv-card,
       <div class="stat-kpi-card rv">
         <div class="stat-kpi-icon">📊</div>
         <div class="stat-kpi-val counter-anim" data-target="123" data-suffix="+">0</div>
-        <div class="stat-kpi-lbl">Analiz Edilen İlan</div>
+        <div class="stat-kpi-lbl" data-i18n="stat1_lbl">Analiz Edilen İlan</div>
       </div>
       <div class="stat-kpi-card rv d1">
         <div class="stat-kpi-icon">📍</div>
         <div class="stat-kpi-val counter-anim" data-target="31" data-suffix="">0</div>
-        <div class="stat-kpi-lbl">Konya İlçesi</div>
+        <div class="stat-kpi-lbl" data-i18n="stat2_lbl">Konya İlçesi</div>
       </div>
       <div class="stat-kpi-card rv d2">
         <div class="stat-kpi-icon">🎯</div>
         <div class="stat-kpi-val">%94</div>
-        <div class="stat-kpi-lbl">Doğruluk Oranı</div>
+        <div class="stat-kpi-lbl" data-i18n="stat3_lbl">Doğruluk Oranı</div>
       </div>
       <div class="stat-kpi-card rv d3 stat-free" onclick="goPage('valuation')" style="cursor:pointer;">
         <div class="stat-kpi-icon">🎁</div>
@@ -2595,21 +2595,21 @@ a, button, .tc, .pc, .dc-chip, .adv-card,
   <!-- Nasıl Çalışırız -->
   <div style="max-width:1300px;margin:0 auto;padding:60px 48px;">
     <div class="ey" data-tr="Metodoloji" data-en="Methodology">Metodoloji</div>
-    <h2 class="rv" data-tr="Analizimiz nasıl çalışır?" data-en="How does our analysis work?" style="font-family:var(--serif);font-size:clamp(28px,3.5vw,44px);font-weight:700;color:var(--tx);margin-bottom:40px;">Analizimiz nasıl çalışır?</h2>
+    <h2 class="rv" data-tr="Analizimiz nasıl çalışır?" data-en="How does our analysis work?" style="font-family:var(--serif);font-size:clamp(28px,3.5vw,44px);font-weight:700;color:var(--tx);margin-bottom:40px;" data-i18n="ab_how_title">Analizimiz nasıl çalışır?</h2>
     <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:20px;">
       <div class="method-card rv" style="background:var(--d2);border:1px solid var(--bd);border-radius:var(--r);padding:28px;">
         <div style="font-size:28px;margin-bottom:14px;">📡</div>
-        <div style="font-size:15px;font-weight:700;color:var(--tx);margin-bottom:10px;">Gerçek Piyasa Verisi</div>
+        <div style="font-size:15px;font-weight:700;color:var(--tx);margin-bottom:10px;" data-i18n="ab_m1_title">Gerçek Piyasa Verisi</div>
         <p style="font-size:14px;color:var(--txm);line-height:1.7;">Konya genelindeki aktif satış ilanlarından toplanan veriler düzenli olarak güncellenir. Her ilçe ve mahalle için ayrı m² fiyat hesaplanır.</p>
       </div>
       <div class="method-card rv" style="background:var(--d2);border:1px solid var(--bd);border-radius:var(--r);padding:28px;">
         <div style="font-size:28px;margin-bottom:14px;">🤖</div>
-        <div style="font-size:15px;font-weight:700;color:var(--tx);margin-bottom:10px;">Yapay Zeka Motoru</div>
+        <div style="font-size:15px;font-weight:700;color:var(--tx);margin-bottom:10px;" data-i18n="ab_m2_title">Yapay Zeka Motoru</div>
         <p style="font-size:14px;color:var(--txm);line-height:1.7;">Bina yaşı, kat, oda sayısı, ısıtma sistemi ve yapı durumuna göre ağırlıklandırılmış çok değişkenli hesaplama modeli.</p>
       </div>
       <div class="method-card rv" style="background:var(--d2);border:1px solid var(--bd);border-radius:var(--r);padding:28px;">
         <div style="font-size:28px;margin-bottom:14px;">📊</div>
-        <div style="font-size:15px;font-weight:700;color:var(--tx);margin-bottom:10px;">Şeffaf Sonuç</div>
+        <div style="font-size:15px;font-weight:700;color:var(--tx);margin-bottom:10px;" data-i18n="ab_m3_title">Şeffaf Sonuç</div>
         <p style="font-size:14px;color:var(--txm);line-height:1.7;">±%12 sapma bandı, güven puanı ve kaç ilanın analiz edildiği açıkça gösterilir. Sihirli bir kutu değil, açıklanabilir analiz.</p>
       </div>
     </div>
@@ -2619,7 +2619,7 @@ a, button, .tc, .pc, .dc-chip, .adv-card,
   <div style="background:var(--d2);border-top:1px solid var(--bd);">
     <div style="max-width:1300px;margin:0 auto;padding:60px 48px;">
       <div class="ey" data-tr="Ekip" data-en="Team">Ekip</div>
-      <h2 class="rv" data-tr="Kurucu ortaklar" data-en="Co-Founders" style="font-family:var(--serif);font-size:clamp(28px,3.5vw,44px);font-weight:700;color:var(--tx);margin-bottom:40px;">Kurucu ortaklar</h2>
+      <h2 class="rv" data-tr="Kurucu ortaklar" data-en="Co-Founders" style="font-family:var(--serif);font-size:clamp(28px,3.5vw,44px);font-weight:700;color:var(--tx);margin-bottom:40px;" data-i18n="ab_team_title">Kurucu ortaklar</h2>
       <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:24px;">
 
         <!-- Batuhan - ilk sıra, kurucu & geliştirici -->
@@ -2628,7 +2628,7 @@ a, button, .tc, .pc, .dc-chip, .adv-card,
           <div style="position:absolute;top:-12px;left:50%;transform:translateX(-50%);padding:3px 14px;background:var(--gold);border-radius:100px;font-size:10px;font-weight:700;color:var(--dark);letter-spacing:1px;text-transform:uppercase;white-space:nowrap;">Kurucu</div>
           <div class="team-avatar" style="width:72px;height:72px;border-radius:50%;background:linear-gradient(135deg,var(--gold-d),var(--gold));display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-size:28px;font-weight:700;color:var(--dark);">B</div>
           <div style="font-family:var(--serif);font-size:20px;font-weight:700;color:var(--tx);margin-bottom:4px;">Batuhan Y.</div>
-          <div style="font-size:12px;color:var(--gold);font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:14px;">Kurucu & Yazılım Mimarı</div>
+          <div style="font-size:12px;color:var(--gold);font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:14px;" data-i18n="b_role">Kurucu & Yazılım Mimarı</div>
           <p style="font-size:13px;color:var(--txm);line-height:1.7;">Platformun fikir sahibi, mimarı ve baş geliştiricisi. Yapay zeka değerleme motoru, veri altyapısı ve tüm kullanıcı deneyiminin tasarımcısı.</p>
         </div>
 
@@ -2636,7 +2636,7 @@ a, button, .tc, .pc, .dc-chip, .adv-card,
         <div class="team-card team-card-member rv" style="padding:40px 32px;text-align:center;">
           <div class="team-avatar" style="width:72px;height:72px;border-radius:50%;background:linear-gradient(135deg,var(--gold-d),var(--gold));display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-size:28px;font-weight:700;color:var(--dark);">Z</div>
           <div style="font-family:var(--serif);font-size:20px;font-weight:700;color:var(--tx);margin-bottom:4px;">Ziya Gökalp</div>
-          <div style="font-size:12px;color:var(--gold);font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:14px;">Kurucu Ortak & Fikir Babası</div>
+          <div style="font-size:12px;color:var(--gold);font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:14px;" data-i18n="z_role">Kurucu Ortak & Fikir Babası</div>
           <p style="font-size:13px;color:var(--txm);line-height:1.7;">Projenin vizyonunu ortaya koyan isim. Konya emlak piyasası uzmanlığı ve iş geliştirme stratejisiyle platformun büyüme yönünü belirliyor.</p>
         </div>
 
@@ -2644,7 +2644,7 @@ a, button, .tc, .pc, .dc-chip, .adv-card,
         <div class="team-card team-card-member rv from-right" style="padding:40px 32px;text-align:center;">
           <div class="team-avatar" style="width:72px;height:72px;border-radius:50%;background:linear-gradient(135deg,var(--gold-d),var(--gold));display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-size:28px;font-weight:700;color:var(--dark);">A</div>
           <div style="font-family:var(--serif);font-size:20px;font-weight:700;color:var(--tx);margin-bottom:4px;">Ahmet Güler</div>
-          <div style="font-size:12px;color:var(--gold);font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:14px;">Kurucu Ortak & Emlak Direktörü</div>
+          <div style="font-size:12px;color:var(--gold);font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:14px;" data-i18n="a_role">Kurucu Ortak & Emlak Direktörü</div>
           <p style="font-size:13px;color:var(--txm);line-height:1.7;">Konya gayrimenkul sektöründe derin uzmanlık. Danışman ağının kurucusu, sahadan gelen veri ve içgörülerin kaynağı.</p>
         </div>
 
@@ -2680,8 +2680,8 @@ a, button, .tc, .pc, .dc-chip, .adv-card,
   <!-- Sayfa başlık + ilçe seçici -->
   <div style="max-width:100%;margin:0;padding:32px 48px 24px;display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:16px;">
     <div>
-      <div class="ey">TÜİK 2023 Verilerine Dayalı</div>
-      <h1 style="font-family:var(--serif);font-size:clamp(30px,4vw,52px);font-weight:700;color:var(--tx);line-height:1.1;">Konya Piyasa Analizi</h1>
+      <div class="ey" data-i18n="an_ey">TÜİK 2023 Verilerine Dayalı</div>
+      <h1 style="font-family:var(--serif);font-size:clamp(30px,4vw,52px);font-weight:700;color:var(--tx);line-height:1.1;" data-i18n="an_title">Konya Piyasa Analizi</h1>
     </div>
     <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
       <select id="analiz-yil" onchange="renderAnaliz()" style="padding:10px 18px;background:var(--d2);border:1px solid var(--bd);border-radius:var(--rs);color:var(--tx);font-size:14px;font-family:var(--font);outline:none;cursor:pointer;min-width:100px;">
@@ -2713,7 +2713,7 @@ a, button, .tc, .pc, .dc-chip, .adv-card,
 
       <!-- Yaş Dağılımı -->
       <div class="analiz-card" style="grid-column:1/-1;">
-        <div class="analiz-card-title">Yaş Gruplarına Göre Nüfus Dağılımı</div>
+        <div class="analiz-card-title" data-i18n="an_chart1">Yaş Gruplarına Göre Nüfus Dağılımı</div>
         <div class="analiz-card-sub" id="yas-sub">Konya geneli · TÜİK 2023</div>
         <div style="position:relative;height:260px;margin-top:20px;">
           <canvas id="chart-yas"></canvas>
@@ -2722,7 +2722,7 @@ a, button, .tc, .pc, .dc-chip, .adv-card,
 
       <!-- Cinsiyet Donut -->
       <div class="analiz-card">
-        <div class="analiz-card-title">Cinsiyet Dağılımı</div>
+        <div class="analiz-card-title" data-i18n="an_chart2">Cinsiyet Dağılımı</div>
         <div class="analiz-card-sub">Kadın / Erkek oranı</div>
         <div style="position:relative;height:220px;margin-top:16px;display:flex;align-items:center;justify-content:center;">
           <canvas id="chart-cinsiyet"></canvas>
@@ -2732,7 +2732,7 @@ a, button, .tc, .pc, .dc-chip, .adv-card,
 
       <!-- Medeni Hal Donut -->
       <div class="analiz-card">
-        <div class="analiz-card-title">Medeni Hal Dağılımı</div>
+        <div class="analiz-card-title" data-i18n="an_chart3">Medeni Hal Dağılımı</div>
         <div class="analiz-card-sub">Evli · Bekar · Diğer</div>
         <div style="position:relative;height:220px;margin-top:16px;display:flex;align-items:center;justify-content:center;">
           <canvas id="chart-medeni"></canvas>
@@ -2746,7 +2746,7 @@ a, button, .tc, .pc, .dc-chip, .adv-card,
 
       <!-- Eğitim Durumu -->
       <div class="analiz-card">
-        <div class="analiz-card-title">Eğitim Durumu</div>
+        <div class="analiz-card-title" data-i18n="an_chart4">Eğitim Durumu</div>
         <div class="analiz-card-sub">Nüfus · TÜİK 2023</div>
         <div style="position:relative;height:240px;margin-top:16px;">
           <canvas id="chart-egitim"></canvas>
@@ -2755,7 +2755,7 @@ a, button, .tc, .pc, .dc-chip, .adv-card,
 
       <!-- İlçe Fiyat Karşılaştırma -->
       <div class="analiz-card">
-        <div class="analiz-card-title">İlçe Bazlı m² Fiyat Karşılaştırması</div>
+        <div class="analiz-card-title" data-i18n="an_chart5">İlçe Bazlı m² Fiyat Karşılaştırması</div>
         <div class="analiz-card-sub">Ortalama satış fiyatı (TL/m²) · 2025</div>
         <div style="position:relative;height:240px;margin-top:16px;">
           <canvas id="chart-m2"></canvas>
@@ -2764,7 +2764,7 @@ a, button, .tc, .pc, .dc-chip, .adv-card,
 
       <!-- İlçe Nüfus Top 10 -->
       <div class="analiz-card" style="grid-column:1/-1;">
-        <div class="analiz-card-title">İlçe Nüfusları</div>
+        <div class="analiz-card-title" data-i18n="an_chart6">İlçe Nüfusları</div>
         <div class="analiz-card-sub">Konya · TÜİK 2023</div>
         <div style="position:relative;height:260px;margin-top:20px;">
           <canvas id="chart-ilce"></canvas>
@@ -3773,217 +3773,7 @@ function toggleReadMore(id, btn) {
 }
 
 
-// ══════════════════════════════════════
-// DİL SİSTEMİ (TR/EN) — TAM ÇEVİRİ
-// ══════════════════════════════════════
-let currentLang = localStorage.getItem('lang') || 'tr';
-const USD_RATE = 45.24;
 
-// data-tr ile işaretlenmiş elementleri çevir
-const TR_TEXT = {
-  // NAV
-  "nl0":"Ana Sayfa","nl1":"Değerleme","nl2":"Karşılaştırma",
-  "nl3":"Fiyatlar","nl4":"Danışman Bul","nl5":"Hakkımızda","nl6":"Analiz",
-};
-const EN_TEXT = {
-  "nl0":"Home","nl1":"Valuation","nl2":"Compare",
-  "nl3":"Pricing","nl4":"Find Advisor","nl5":"About","nl6":"Analytics",
-};
-
-// Tam çeviri sözlüğü — sayfadaki tüm metinler
-const FULL_TR = {
-  hero_title: "Konya'da her <em>emlak kararı</em><br>veriden geçer",
-  hero_sub: "Gerçek piyasa verileri ve yapay zeka analizi ile doğru fiyatı öğrenin.",
-  btn_val: "◎ Ücretsiz Değerleme", btn_comp: "☰ Piyasayı İncele",
-  login_btn: "Giriş Yap / Kayıt Ol",
-  support_txt: "Destek", lang_label: "Dil",
-  // Değerleme adımları
-  step1_title: "Kategori", step2_title: "Konum", step3_title: "Özellikler",
-  step4_title: "Detaylar", step5_title: "Analiz",
-  cat_konut: "Konut", cat_arsa: "Arsa / Arazi", cat_ticari: "Ticari", cat_kiralik: "Kiralık",
-  cat_konut_sub: "Daire, müstakil ev, villa", cat_arsa_sub: "İmarlı arsa, tarla, bağ bahçe",
-  cat_ticari_sub: "Dükkan, ofis, depo, fabrika", cat_kiralik_sub: "Aylık kira değeri analizi",
-  // Fiyatlar
-  plan_free: "Ücretsiz", plan_monthly: "Aylık Plan", plan_yearly: "Yıllık Plan",
-  // Hakkımızda
-  about_title: "Konya'nın emlak kararlarına veri gücü",
-  mission_title: "Misyonumuz", vision_title: "Vizyonumuz",
-  // Analiz
-  analiz_title: "Konya Piyasa Analizi",
-};
-const FULL_EN = {
-  hero_title: "Every <em>real estate decision</em><br>in Konya starts with data",
-  hero_sub: "Learn the right price with real market data and AI analysis.",
-  btn_val: "◎ Free Valuation", btn_comp: "☰ Explore Market",
-  login_btn: "Sign In / Register",
-  support_txt: "Support", lang_label: "Language",
-  // Valuation steps
-  step1_title: "Category", step2_title: "Location", step3_title: "Features",
-  step4_title: "Details", step5_title: "Analysis",
-  cat_konut: "Residential", cat_arsa: "Land / Plot", cat_ticari: "Commercial", cat_kiralik: "Rental",
-  cat_konut_sub: "Apartment, house, villa", cat_arsa_sub: "Zoned land, field, garden",
-  cat_ticari_sub: "Shop, office, warehouse, factory", cat_kiralik_sub: "Monthly rental value analysis",
-  // Pricing
-  plan_free: "Free", plan_monthly: "Monthly Plan", plan_yearly: "Annual Plan",
-  // About
-  about_title: "Data-powered real estate decisions in Konya",
-  mission_title: "Our Mission", vision_title: "Our Vision",
-  // Analytics
-  analiz_title: "Konya Market Analytics",
-};
-
-function toggleLangMenu() {
-  const menu = document.getElementById('lang-menu');
-  if(!menu) return;
-  const isOpen = menu.style.display === 'block';
-  menu.style.display = isOpen ? 'none' : 'block';
-  // Dışarı tıklayınca kapat
-  if(!isOpen) {
-    setTimeout(() => {
-      document.addEventListener('click', function closeLangMenu(e) {
-        if(!e.target.closest('#lang-btn') && !e.target.closest('#lang-menu')) {
-          document.getElementById('lang-menu').style.display = 'none';
-          document.removeEventListener('click', closeLangMenu);
-        }
-      });
-    }, 50);
-  }
-}
-
-function setLang(lang) {
-  currentLang = lang;
-  localStorage.setItem('lang', lang);
-  document.getElementById('lang-menu').style.display = 'none';
-  document.getElementById('lang-txt').textContent = lang === 'en' ? '🇬🇧 EN' : '🇹🇷 TR';
-  applyLang();
-  // Değerleme sayfasındaysa yeniden render et
-  if(typeof VAL !== 'undefined' && VAL.currentStep) {
-    if(typeof goStep === 'function') goStep(VAL.currentStep);
-  }
-}
-
-function applyLang() {
-  const isEN = currentLang === 'en';
-  const t = isEN ? FULL_EN : FULL_TR;
-
-  // Nav linkleri
-  const navIds = {nl0:0,nl1:1,nl2:2,nl3:3,nl4:4,nl5:5,nl6:6};
-  const navEN = ['Home','Valuation','Compare','Pricing','Find Advisor','About','Analytics'];
-  const navTR = ['Ana Sayfa','Değerleme','Karşılaştırma','Fiyatlar','Danışman Bul','Hakkımızda','Analiz'];
-  Object.keys(navIds).forEach((id,i) => {
-    const el = document.getElementById(id);
-    if(el) el.textContent = isEN ? navEN[i] : navTR[i];
-  });
-
-  // Giriş Yap butonu
-  document.querySelectorAll('.nav-auth-btn, [onclick*="openAuth"]').forEach(el => {
-    if(el.textContent.includes('Giriş') || el.textContent.includes('Sign')) {
-      el.textContent = t.login_btn;
-    }
-  });
-
-  // Destek
-  const supEl = document.getElementById('support-txt');
-  if(supEl) supEl.textContent = t.support_txt;
-
-  // Bot dil
-  const botTitle = document.getElementById('bot-title');
-  if(botTitle) botTitle.textContent = isEN ? 'Öğren-Sat Assistant' : 'Öğren-Sat Asistanı';
-  const botWelcome = document.getElementById('bot-welcome');
-  if(botWelcome) botWelcome.textContent = isEN
-    ? 'Hello! 👋 I am ready to answer your questions about the Konya real estate market. How can I help you?'
-    : 'Merhaba! 👋 Konya gayrimenkul piyasası hakkında sorularınızı yanıtlamaya hazırım. Size nasıl yardımcı olabilirim?';
-
-  // Hero
-  const heroH = document.querySelector('.hero-h1');
-  if(heroH) heroH.innerHTML = t.hero_title;
-  const heroSub = document.querySelector('.hero-sub, .hero p');
-  if(heroSub) heroSub.textContent = t.hero_sub;
-
-  // Fiyat kartları — pc-price
-  document.querySelectorAll('.pc-price').forEach(el => {
-    if(!el.dataset.tryVal) {
-      const num = parseInt(el.textContent.replace(/[^\d]/g,''));
-      if(num) el.dataset.tryVal = num;
-    }
-    const num = parseInt(el.dataset.tryVal || 0);
-    if(num) {
-      if(isEN) {
-        el.textContent = '$' + new Intl.NumberFormat('en-US').format(Math.round(num/USD_RATE));
-      } else {
-        el.textContent = '₺' + new Intl.NumberFormat('tr-TR').format(num);
-      }
-    }
-  });
-
-  // Sayfa başlığı
-  document.title = isEN ? 'Öğren-Sat — Konya Real Estate Analytics' : 'Öğren-Sat — Konya Emlak Analiz Platformu';
-
-  // data-tr / data-en attribute ile işaretli tüm elementler
-  document.querySelectorAll('[data-tr]').forEach(el => {
-    el.innerHTML = isEN ? (el.dataset.en || el.dataset.tr) : el.dataset.tr;
-  });
-
-  // Giriş Yap butonu
-  const loginBtn = document.getElementById('nav-login-btn');
-  if(loginBtn) loginBtn.textContent = isEN ? 'Sign In / Register' : 'Giriş Yap / Kayıt Ol';
-
-  // "NASIL ÇALIŞIR?" bölümü
-  document.querySelectorAll('.ey').forEach(el => {
-    const map = {
-      'NASIL ÇALIŞIR?':'HOW IT WORKS?','Araçlar':'Tools',
-      'İlçeler':'Districts','GAYRİMENKULÜNÜZÜ GÜVENLE SATIN':'SELL WITH CONFIDENCE',
-      'Biz Kimiz?':'Who Are We?'
-    };
-    if(isEN && map[el.textContent.trim()]) el.textContent = map[el.textContent.trim()];
-    else if(!isEN) {
-      const revMap = {'HOW IT WORKS?':'NASIL ÇALIŞIR?','Tools':'Araçlar',
-        'Districts':'İlçeler','SELL WITH CONFIDENCE':'GAYRİMENKULÜNÜZÜ GÜVENLE SATIN',
-        'Who Are We?':'Biz Kimiz?'};
-      if(revMap[el.textContent.trim()]) el.textContent = revMap[el.textContent.trim()];
-    }
-  });
-
-  // Analiz sayfası başlığı
-  const analIlce = document.getElementById('analiz-ilce');
-  if(analIlce) analIlce.options[0].text = isEN ? 'All Districts' : 'Konya Geneli';
-  const analYil = document.getElementById('analiz-yil');
-  // Analiz yıl select label değişmez
-
-  // Değerleme adım progress etiketleri
-  const stepLabels = isEN
-    ? ['Category','Location','Features','Details','Analysis']
-    : ['Kategori','Konum','Özellikler','Detaylar','Analiz'];
-  document.querySelectorAll('.val-step-label').forEach((el,i) => {
-    if(stepLabels[i]) el.textContent = stepLabels[i];
-  });
-
-  // Güvenle Sat adım listesi
-  const gsSteps = {
-    'gs-step-1': {tr:'1 — Gayrimenkulünüzün Özelliklerini Girin', en:'1 — Enter Property Details'},
-    'gs-step-2': {tr:'2 — Değerini Öğrenin', en:'2 — Get Valuation'},
-    'gs-step-3': {tr:'3 — En İyi Danışmanı Bulun', en:'3 — Find the Best Advisor'},
-    'gs-step-4': {tr:'4 — Güvenle Satın', en:'4 — Sell with Confidence'},
-  };
-  Object.entries(gsSteps).forEach(([id, texts]) => {
-    const el = document.getElementById(id);
-    if(el) {
-      const titleEl = el.querySelector('.gs-step-title');
-      if(titleEl) titleEl.textContent = isEN ? texts.en : texts.tr;
-    }
-  });
-}
-
-// Sayfa açılışında dili uygula
-document.addEventListener('DOMContentLoaded', () => {
-  const saved = localStorage.getItem('lang') || 'tr';
-  if(saved === 'en') {
-    document.getElementById('lang-txt').textContent = '🇬🇧 EN';
-  } else {
-    document.getElementById('lang-txt').textContent = '🇹🇷 TR';
-  }
-  setTimeout(applyLang, 300);
-});
 
 // ══════════════════════════════════════
 // DESTEK BOTU
@@ -4029,23 +3819,13 @@ async function sendSupport() {
       ? 'You are a helpful real estate assistant for Öğren-Sat, a Konya real estate analytics platform. Answer questions about real estate in Konya, property valuation, neighborhoods, and investment. Be concise and helpful. Max 3 sentences.'
       : "Sen Öğren-Sat’ın Konya gayrimenkul analiz platformunun yardımcı asistanısın. Konya’daki gayrimenkul, değerleme, mahalleler ve yatırım hakkındaki soruları yanıtla. Kısa ve yardımcı ol. Maksimum 3 cümle.";
 
-    const resp = await fetch('https://api.anthropic.com/v1/messages', {
-      method:'POST',
-      headers:{
-        'Content-Type':'application/json',
-        'x-api-key':'',
-        'anthropic-version':'2023-06-01',
-        'anthropic-dangerous-direct-browser-access':'true'
-      },
-      body:JSON.stringify({
-        model:'claude-sonnet-4-20250514',
-        max_tokens:300,
-        system: systemPrompt,
-        messages:[{role:'user', content: userText}]
-      })
+    const resp = await fetch('/api/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ message: userText, lang: currentLang })
     });
     const data = await resp.json();
-    const botText = data.content?.[0]?.text || (isEN ? 'Sorry, I could not respond.' : 'Üzgünüm, yanıt veremedim.');
+    const botText = data.reply || data.error || (isEN ? 'Sorry, I could not respond.' : 'Üzgünüm, yanıt veremedim.');
 
     typing.textContent = botText;
     typing.style.color = 'var(--tx)';
@@ -4055,6 +3835,140 @@ async function sendSupport() {
   }
   msgs.scrollTop = msgs.scrollHeight;
 }
+
+
+// ══════════════════════════════════════
+// İ18N — TAM ÇEVİRİ SİSTEMİ
+// ══════════════════════════════════════
+const USD_RATE = 45.24;
+let currentLang = localStorage.getItem('lang') || 'tr';
+
+const I18N = {
+  tr: {"nav_home": "Ana Sayfa", "nav_val": "Değerleme", "nav_comp": "Karşılaştırma", "nav_price": "Fiyatlar", "nav_adv": "Danışman Bul", "nav_about": "Hakkımızda", "nav_analiz": "📊 Analiz", "nav_login": "Giriş Yap / Kayıt Ol", "nav_support": "Destek", "hero_h1": "Konya'da her <em>emlak kararı</em><br>veriden geçer", "hero_sub": "Gerçek piyasa verileri ve yapay zeka analizi ile doğru fiyatı öğrenin.", "hero_btn_val": "◎ Ücretsiz Değerleme", "hero_btn_comp": "☰ Piyasayı İncele", "tools_ey": "Araçlar", "tools_title": "İki güçlü araç,<br>bir platform", "tc1_title": "Değerleme Aracı", "tc1_sub": "Yapay zeka ile mülk değerini öğren", "tc2_title": "Piyasa Karşılaştırma", "tc2_sub": "Bölgedeki ilanları filtrele ve karşılaştır", "how_ey": "Nasıl Çalışır?", "how_title": "4 adımda piyasa analizi", "how1_title": "Kategori Seç", "how1_desc": "Konut, arsa, ticari veya kiralık — analiz türünü belirleyin.", "how2_title": "Konum & Özellikler", "how2_desc": "İlçe, mahalle, m², oda sayısı ve ek özelliklerini girin.", "how3_title": "Yapay Zeka Analiz", "how3_desc": "Sistemimiz 123+ gerçek ilandan benzerlerini bulur, yaş ağırlıklandırması uygular.", "how4_title": "Detaylı Rapor", "how4_desc": "Fiyat aralığı, kira getirisi, yatırım skoru ve öneriler ekranınıza gelir.", "dist_ey": "İlçeler", "dist_title": "Konya'da hangi ilçeyi araştırıyorsunuz?", "stat1_lbl": "Analiz Edilen İlan", "stat2_lbl": "Konya İlçesi", "stat3_lbl": "Doğruluk Oranı", "stat4_lbl": "Ücretsiz Sorgu Hakkı", "gs_ey": "Gayrimenkulünüzü Güvenle Satın", "gs_title": "Zamandan kazanın,<br>stresten kurtulun, <em>kazançlı çıkın.</em>", "gs_sub": "Gayrimenkul satmak önemli ve stresli bir süreç. Öğren-Sat ile veriyi yanınıza alarak bu süreci daha kolay ve güvenli tamamlayın.", "gs_old_h": "Geleneksel Yöntem", "gs_new_h": "Öğren-Sat ile", "gs_old1": "Fiyatı sezgiyle belirleme", "gs_old2": "Piyasa karşılaştırması yok", "gs_old3": "Uzun satış süresi", "gs_old4": "Değerinin altında satma riski", "gs_new1": "Gerçek veriye dayalı fiyat", "gs_new2": "123+ ilan analizi", "gs_new3": "Uzman danışman desteği", "gs_new4": "Doğru fiyat, hızlı satış", "gs_proc_title": "Satış Süreciniz", "gs_step1": "Ücretsiz Değerleme", "gs_step1d": "Mülkünüzün gerçek piyasa değerini öğrenin.", "gs_step2": "Piyasa Analizi", "gs_step2d": "Benzer ilanları karşılaştırın, rekabetçi fiyat belirleyin.", "gs_step3": "Danışman Desteği", "gs_step3d": "Bölgenizdeki uzman danışmanla tanışın.", "gs_step4": "Güvenle Sat", "gs_step4d": "Doğru fiyat, doğru alıcı, sorunsuz kapanış.", "gs_btn": "◎ Ücretsiz Değerleme Yap", "gs_btn2": "👤 Danışman Bul", "gsp1_title": "Mülkünüzü Değerlendirin", "gsp1_desc": "Konya'da mülkünüzü satmayı düşünüyor musunuz? Gerçek piyasa değerini saniyeler içinde öğrenin.", "gsp1_stat1": "Aktif İlan", "gsp1_stat2": "Doğruluk Oranı", "gsp1_btn": "Hemen Başla →", "gsp2_title": "Değerleme Sonucu", "gsp2_sub": "Mülkünüzün tahmini değeri", "gsp2_est": "TAHMİNİ DEĞER", "gsp2_conf": "Güven Puanı", "gsp2_min": "Min Değer", "gsp2_max": "Maks Değer", "gsp3_title": "En İyi Danışmanı Bulduk", "gsp3_sub": "Bölgenizdeki en iyi danışmanlar", "gsp4_title": "İşlem Tamam", "gsp4_sub": "Danışmanınız en kısa sürede sizinle iletişime geçecek", "gsp4_val": "DEĞERLEMENİZ", "gsp4_adv": "ATANAN DANIŞMAN", "gsp4_time": "BEKLENEN İLETİŞİM", "gsp4_12h": "12 Saat İçinde", "gsp4_btn": "Kendi Mülkümü Değerle", "gs_adv_btn": "👤 Danışman Bul", "gs_match_btn": "Danışmanla Eşleş →", "gs_hemen": "◎ Hemen Başla", "gss1_title": "1 — Gayrimenkulünüzün Özelliklerini Girin", "gss1_desc": "Gayrimenkulünüzün türünü, konumunu ve detaylı özelliklerini girin.", "gss2_title": "2 — Değerini Öğrenin", "gss2_desc": "Öğren-Sat yapay zeka destekli değerleme modeli ile gerçek değerini saniyeler içinde öğrenin.", "gss3_title": "3 — En İyi Danışmanı Bulun", "gss3_desc": "Bölgenizdeki uzman danışmanları keşfedin ve mülkünüzü en iyi fiyata satın.", "gss4_title": "4 — Güvenle Satın", "gss4_desc": "Doğru fiyatla, doğru danışmanla mülkünüzü kısa sürede satın.", "cta_title": "Konya'da her <em>emlak kararı</em><br>veriden geçer", "cta_sub": "Gerçek piyasa verileri ve yapay zeka analizi ile doğru fiyatı öğrenin.", "cta_btn1": "Bizi Tanıyın →", "cta_btn2": "◎ Ücretsiz Değerleme", "ftr_desc": "Konya'nın yapay zeka destekli emlak analiz platformu.", "ftr_tools": "ARAÇLAR", "ftr_val": "Değerleme Aracı", "ftr_comp": "Piyasa Karşılaştırma", "ftr_account": "HESAP", "ftr_login": "Giriş Yap", "ftr_register": "Kayıt Ol", "ftr_sub": "ABONELİK", "ftr_plans": "Fiyat Planları", "ftr_copy": "© 2025 Öğren-Sat. Tüm hakları saklıdır.", "ftr_disc": "Veriler bilgi amaçlıdır, yatırım tavsiyesi değildir.", "ab_ey": "Biz Kimiz?", "ab_h1": "Konya'nın emlak<br>kararlarına <em>veri gücü</em>", "ab_desc": "Öğren-Sat, Konya'da doğru fiyattan mülk almak ve satmak isteyen bireylere yapay zeka destekli piyasa analizi sunan bir emlak teknoloji platformudur. Gerçek ilan verileri, bölge emsal bilgisi ve şeffaf hesaplama mantığıyla her kararı kolaylaştırıyoruz.", "ab_btn1": "Hemen Dene", "ab_btn2": "👤 Danışman Bul", "ab_mis_ey": "Metodoloji", "ab_mis_title": "Misyonumuz", "ab_vis_title": "Vizyonumuz", "ab_team_ey": "Ekip", "ab_team_title": "Kurucu ortaklar", "ab_how_title": "Analizimiz nasıl çalışır?", "ab_read_more": "Devamını oku ↓", "ab_read_close": "Kapat ↑", "ab_stat1": "Analiz Edilen İlan", "ab_stat2": "Konya İlçesi", "ab_stat3": "Doğruluk Oranı", "ab_stat4": "Ücretsiz Sorgu", "ab_m1_title": "Gerçek Piyasa Verisi", "ab_m1_desc": "Konya genelindeki aktif satış ilanlarından toplanan veriler düzenli olarak güncellenir. Her ilçe ve mahalle için ayrı m² fiyat hesaplanır.", "ab_m2_title": "Yapay Zeka Motoru", "ab_m2_desc": "Bina yaşı, kat, oda sayısı, ısıtma sistemi ve yapı durumuna göre ağırlıklandırılmış çok değişkenli hesaplama modeli.", "ab_m3_title": "Şeffaf Sonuç", "ab_m3_desc": "±%12 sapma bandı, güven puanı ve kaç ilanın analiz edildiği açıkça gösterilir. Sihirli bir kutu değil, açıklanabilir analiz.", "b_role": "Kurucu & Yazılım Mimarı", "b_desc": "Platformun fikir sahibi, mimarı ve baş geliştiricisi. Yapay zeka değerleme motoru, veri altyapısı ve tüm kullanıcı deneyiminin tasarımcısı.", "z_role": "Kurucu Ortak & Fikir Babası", "z_desc": "Projenin vizyonunu ortaya koyan isim. Konya emlak piyasası uzmanlığı ve iş geliştirme stratejisiyle platformun büyüme yönünü belirliyor.", "a_role": "Kurucu Ortak & Emlak Direktörü", "a_desc": "Konya gayrimenkul sektöründe derin uzmanlık. Danışman ağının kurucusu, sahadan gelen veri ve içgörülerin kaynağı.", "pr_ey": "Fiyatlandırma", "pr_title": "Size uygun planı seçin", "pr_free_name": "Ücretsiz", "pr_free_sub": "Başlamak için", "pr_monthly_name": "Aylık Plan", "pr_yearly_name": "Yıllık Plan", "pr_pop": "EN POPÜLER", "pr_btn_free": "Hemen Başla", "pr_btn_pay": "Abone Ol", "pr_feat1": "3 ücretsiz değerleme", "pr_feat2": "Temel piyasa analizi", "pr_feat3": "İlan karşılaştırma", "pr_feat4_x": "Sınırsız sorgulama", "pr_monthly": "/ ay", "pr_yearly": "/ yıl", "adv_title": "Konya'da <em>uzman</em><br>danışmanlar", "adv_sub": "Bölgenizdeki deneyimli gayrimenkul danışmanları ile tanışın. Mülkünüzü en iyi fiyata, en kısa sürede satın.", "adv_all": "Tüm İlçeler", "adv_all_spec": "Tüm Uzmanlıklar", "adv_contact": "İletişime Geç", "adv_sales": "Satış", "adv_years": "Yıl", "adv_score": "Puan", "an_ey": "TÜİK 2023 Verilerine Dayalı", "an_title": "Konya Piyasa Analizi", "an_all": "Konya Geneli", "an_kpi1": "Konya Nüfusu", "an_kpi2": "Yüzölçümü", "an_kpi3": "Nüfus Yoğunluğu", "an_kpi4": "Ort. m² Fiyatı", "an_chart1": "Yaş Gruplarına Göre Nüfus Dağılımı", "an_chart2": "Cinsiyet Dağılımı", "an_chart3": "Medeni Hal Dağılımı", "an_chart4": "Eğitim Durumu", "an_chart5": "İlçe Bazlı m² Fiyat Karşılaştırması", "an_chart6": "İlçe Nüfusları", "val_cat_q": "Ne değerlendirmek istiyorsunuz?", "val_cat_sub": "Mülk tipini seçerek başlayın. Her kategori için farklı analiz kriterleri kullanılmaktadır.", "val_cat_k": "Konut", "val_cat_ks": "Daire, müstakil ev, villa", "val_cat_a": "Arsa / Arazi", "val_cat_as": "İmarlı arsa, tarla, bağ bahçe", "val_cat_t": "Ticari", "val_cat_ts": "Dükkan, ofis, depo, fabrika", "val_cat_r": "Kiralık", "val_cat_rs": "Aylık kira değeri analizi", "val_devam": "Devam Et →", "val_geri": "← Geri", "val_loc_title": "Mülkün konumu nerede?", "val_loc_sub": "Konum, değerleme analizinin en kritik faktörüdür.", "val_ilce": "İLÇE", "val_mahalle": "MAHALLE / SEMT", "val_ilce_sel": "İlçe seçin...", "val_mah_sel": "Mahalle seçin (isteğe bağlı)", "val_feat_title": "Konut özelliklerini girin", "val_feat_sub": "* ile işaretli alanlar değerleme için zorunludur.", "val_konut_tipi": "KONUT TİPİ", "val_apt_tipi": "APARTMAN TİPİ", "val_kull": "KULLANIM DURUMU", "val_yapi": "YAPI DURUMU", "val_oda": "ODA", "val_salon": "SALON", "val_banyo": "BANYO", "val_brut": "BRÜT M²", "val_net": "NET M²", "val_bina_yasi": "BİNA YAŞI", "val_top_kat": "TOPLAM KAT", "val_bul_kat": "BULUNDUĞU KAT", "val_apt_d": "Daire", "val_apt_td": "Teras Dubleks", "val_apt_ad": "Ara Kat Dubleks", "val_apt_bd": "Bahçe Dubleks", "val_apt_rd": "Ters Dubleks", "val_kull_ms": "Mülk Sahibi", "val_kull_k": "Kiracı", "val_kull_b": "Boş", "val_yapi_b": "Bakımlı/Yenilenmiş", "val_yapi_s": "Standart", "val_yapi_t": "Tadilat İhtiyacı Var", "val_detail_title": "Ek özellikleri girin", "val_detail_sub": "Bu bilgiler değerlemeyi daha doğru hale getirir. İsteğe bağlıdır.", "val_cephe": "CEPHE DURUMU (BİRDEN FAZLA SEÇİLEBİLİR)", "val_manzara": "MANZARA (BİRDEN FAZLA SEÇİLEBİLİR)", "val_isitma": "ISITMA SİSTEMİ", "val_olanaklar": "OLANAKLAR (BİRDEN FAZLA SEÇİLEBİLİR)", "val_analiz_btn": "Analizi Başlat →", "val_result_title": "Değerleme Sonucu", "val_est_lbl": "TAHMİNİ DEĞER", "val_conf": "Güven Puanı", "val_min": "Min Değer", "val_max": "Maks Değer", "val_next_steps": "Sonraki Adımlar", "val_s1_done": "1 — Özellikler Girildi", "val_s2_done": "2 — Değer Hesaplandı", "val_s3": "3 — Danışman Bul", "val_s4": "4 — Güvenle Sat", "val_adv_btn": "👤 Danışman Bul", "val_back": "← Geri Dön", "val_new": "+ Yeni Değerleme", "val_invest": "Yatırım Analizi", "val_rent": "Tahmini Aylık Kira", "val_yield": "Brüt Kira Getirisi", "val_amort": "Amortisman Süresi", "val_score": "Fırsat Skoru", "val_ai": "▲ AI ANALİZİ", "val_similar": "Benzer İlanlar", "val_yil": "yıl", "val_disclaimer": "* 23 benzer ilan analiz edilmiştir. Tahmin ±%12 sapma gösterebilir.", "auth_login": "Giriş Yap", "auth_register": "Kayıt Ol", "auth_phone": "Telefon ile Giriş", "auth_email": "E-posta ile Giriş", "auth_social": "Sosyal Hesap", "btn_try_free": "Ücretsiz Dene", "loading": "Yükleniyor...", "new_label": "Yeni", "soon": "Yakında", "yil": "yıl", "satis": "satış", "puan_label": "Puan"},
+  en: {"nav_home": "Home", "nav_val": "Valuation", "nav_comp": "Compare", "nav_price": "Pricing", "nav_adv": "Find Advisor", "nav_about": "About", "nav_analiz": "📊 Analytics", "nav_login": "Sign In / Register", "nav_support": "Support", "hero_h1": "Every <em>real estate decision</em><br>in Konya starts with data", "hero_sub": "Learn the right price with real market data and AI-powered analysis.", "hero_btn_val": "◎ Free Valuation", "hero_btn_comp": "☰ Explore Market", "tools_ey": "Tools", "tools_title": "Two powerful tools,<br>one platform", "tc1_title": "Valuation Tool", "tc1_sub": "Discover property value with AI", "tc2_title": "Market Comparison", "tc2_sub": "Filter and compare listings in your area", "how_ey": "How It Works", "how_title": "Market analysis in 4 steps", "how1_title": "Choose Category", "how1_desc": "Residential, land, commercial or rental — define your analysis type.", "how2_title": "Location & Features", "how2_desc": "Enter district, neighborhood, m², room count and additional features.", "how3_title": "AI Analysis", "how3_desc": "Our system finds similar listings from 123+ real data points and applies age weighting.", "how4_title": "Detailed Report", "how4_desc": "Price range, rental yield, investment score and recommendations appear on screen.", "dist_ey": "Districts", "dist_title": "Which district in Konya are you researching?", "stat1_lbl": "Listings Analyzed", "stat2_lbl": "Konya Districts", "stat3_lbl": "Accuracy Rate", "stat4_lbl": "Free Query Limit", "gs_ey": "Sell Your Property with Confidence", "gs_title": "Save time,<br>reduce stress, <em>maximize your profit.</em>", "gs_sub": "Selling real estate is an important and stressful process. With Öğren-Sat, take data to your side and complete this process more easily and safely.", "gs_old_h": "Traditional Method", "gs_new_h": "With Öğren-Sat", "gs_old1": "Pricing based on intuition", "gs_old2": "No market comparison", "gs_old3": "Long selling period", "gs_old4": "Risk of underselling", "gs_new1": "Data-driven pricing", "gs_new2": "123+ listing analysis", "gs_new3": "Expert advisor support", "gs_new4": "Right price, fast sale", "gs_proc_title": "Your Selling Process", "gs_step1": "Free Valuation", "gs_step1d": "Learn the true market value of your property.", "gs_step2": "Market Analysis", "gs_step2d": "Compare similar listings and set a competitive price.", "gs_step3": "Advisor Support", "gs_step3d": "Meet an expert advisor in your area.", "gs_step4": "Sell with Confidence", "gs_step4d": "Right price, right buyer, smooth closing.", "gs_btn": "◎ Get Free Valuation", "gs_btn2": "👤 Find Advisor", "gsp1_title": "Value Your Property", "gsp1_desc": "Thinking of selling your property in Konya? Learn the real market value in seconds.", "gsp1_stat1": "Active Listings", "gsp1_stat2": "Accuracy Rate", "gsp1_btn": "Get Started →", "gsp2_title": "Valuation Result", "gsp2_sub": "Estimated value of your property", "gsp2_est": "ESTIMATED VALUE", "gsp2_conf": "Confidence Score", "gsp2_min": "Min Value", "gsp2_max": "Max Value", "gsp3_title": "We Found the Best Advisor", "gsp3_sub": "Top advisors in your area", "gsp4_title": "Process Complete", "gsp4_sub": "Your advisor will contact you shortly", "gsp4_val": "YOUR VALUATION", "gsp4_adv": "ASSIGNED ADVISOR", "gsp4_time": "EXPECTED CONTACT", "gsp4_12h": "Within 12 Hours", "gsp4_btn": "Value My Property", "gs_adv_btn": "👤 Find Advisor", "gs_match_btn": "Match with Advisor →", "gs_hemen": "◎ Get Started", "gss1_title": "1 — Enter Property Details", "gss1_desc": "Enter the type, location and detailed features of your property.", "gss2_title": "2 — Get Your Valuation", "gss2_desc": "Learn the real value in seconds with Öğren-Sat's AI-powered valuation model.", "gss3_title": "3 — Find the Best Advisor", "gss3_desc": "Discover expert advisors in your area and sell your property at the best price.", "gss4_title": "4 — Sell with Confidence", "gss4_desc": "Sell your property quickly with the right price and the right advisor.", "cta_title": "Every <em>real estate decision</em><br>in Konya starts with data", "cta_sub": "Learn the right price with real market data and AI analysis.", "cta_btn1": "Learn About Us →", "cta_btn2": "◎ Free Valuation", "ftr_desc": "Konya's AI-powered real estate analytics platform.", "ftr_tools": "TOOLS", "ftr_val": "Valuation Tool", "ftr_comp": "Market Comparison", "ftr_account": "ACCOUNT", "ftr_login": "Sign In", "ftr_register": "Register", "ftr_sub": "SUBSCRIPTION", "ftr_plans": "Pricing Plans", "ftr_copy": "© 2025 Öğren-Sat. All rights reserved.", "ftr_disc": "Data is for informational purposes only, not investment advice.", "ab_ey": "Who Are We?", "ab_h1": "Data-powered<br>real estate decisions <em>in Konya</em>", "ab_desc": "Öğren-Sat is a real estate technology platform providing AI-powered market analysis for individuals looking to buy and sell properties at the right price in Konya. We simplify every decision with real listing data, regional benchmarks and transparent calculations.", "ab_btn1": "Try Now", "ab_btn2": "👤 Find Advisor", "ab_mis_ey": "Methodology", "ab_mis_title": "Our Mission", "ab_vis_title": "Our Vision", "ab_team_ey": "Team", "ab_team_title": "Co-Founders", "ab_how_title": "How does our analysis work?", "ab_read_more": "Read more ↓", "ab_read_close": "Close ↑", "ab_stat1": "Listings Analyzed", "ab_stat2": "Konya Districts", "ab_stat3": "Accuracy Rate", "ab_stat4": "Free Queries", "ab_m1_title": "Real Market Data", "ab_m1_desc": "Data collected from active sales listings across Konya is regularly updated. Separate m² prices are calculated for each district and neighborhood.", "ab_m2_title": "AI Engine", "ab_m2_desc": "Multi-variable calculation model weighted by building age, floor, room count, heating system and structural condition.", "ab_m3_title": "Transparent Results", "ab_m3_desc": "The ±12% deviation band, confidence score and number of listings analyzed are clearly displayed. Explainable analysis, not a black box.", "b_role": "Founder & Software Architect", "b_desc": "Founder, architect and lead developer of the platform. Designer of the AI valuation engine, data infrastructure and entire user experience.", "z_role": "Co-Founder & Visionary", "z_desc": "The visionary behind the project. Shapes the platform's growth direction with Konya real estate expertise and business development strategy.", "a_role": "Co-Founder & Real Estate Director", "a_desc": "Deep expertise in the Konya real estate sector. Founder of the advisor network and source of field data and insights.", "pr_ey": "Pricing", "pr_title": "Choose the right plan for you", "pr_free_name": "Free", "pr_free_sub": "To get started", "pr_monthly_name": "Monthly Plan", "pr_yearly_name": "Annual Plan", "pr_pop": "MOST POPULAR", "pr_btn_free": "Get Started", "pr_btn_pay": "Subscribe", "pr_feat1": "3 free valuations", "pr_feat2": "Basic market analysis", "pr_feat3": "Listing comparison", "pr_feat4_x": "Unlimited queries", "pr_monthly": "/ mo", "pr_yearly": "/ yr", "adv_title": "<em>Expert</em><br>advisors in Konya", "adv_sub": "Meet experienced real estate advisors in your area. Sell your property at the best price, in the shortest time.", "adv_all": "All Districts", "adv_all_spec": "All Specialties", "adv_contact": "Get in Touch", "adv_sales": "Sales", "adv_years": "Yrs", "adv_score": "Score", "an_ey": "Based on TÜİK 2023 Data", "an_title": "Konya Market Analytics", "an_all": "All of Konya", "an_kpi1": "Konya Population", "an_kpi2": "Area", "an_kpi3": "Population Density", "an_kpi4": "Avg. m² Price", "an_chart1": "Population Distribution by Age Group", "an_chart2": "Gender Distribution", "an_chart3": "Marital Status Distribution", "an_chart4": "Education Level", "an_chart5": "District-Based m² Price Comparison", "an_chart6": "District Populations", "val_cat_q": "What would you like to evaluate?", "val_cat_sub": "Start by selecting the property type. Different analysis criteria are used for each category.", "val_cat_k": "Residential", "val_cat_ks": "Apartment, house, villa", "val_cat_a": "Land / Plot", "val_cat_as": "Zoned land, field, garden", "val_cat_t": "Commercial", "val_cat_ts": "Shop, office, warehouse, factory", "val_cat_r": "Rental", "val_cat_rs": "Monthly rental value analysis", "val_devam": "Continue →", "val_geri": "← Back", "val_loc_title": "Where is the property located?", "val_loc_sub": "Location is the most critical factor in valuation analysis.", "val_ilce": "DISTRICT", "val_mahalle": "NEIGHBORHOOD", "val_ilce_sel": "Select district...", "val_mah_sel": "Select neighborhood (optional)", "val_feat_title": "Enter residential features", "val_feat_sub": "* Fields marked with * are required for valuation.", "val_konut_tipi": "PROPERTY TYPE", "val_apt_tipi": "APARTMENT TYPE", "val_kull": "USAGE STATUS", "val_yapi": "STRUCTURAL CONDITION", "val_oda": "ROOMS", "val_salon": "LIVING ROOMS", "val_banyo": "BATHROOMS", "val_brut": "GROSS M²", "val_net": "NET M²", "val_bina_yasi": "BUILDING AGE", "val_top_kat": "TOTAL FLOORS", "val_bul_kat": "FLOOR NUMBER", "val_apt_d": "Apartment", "val_apt_td": "Terrace Duplex", "val_apt_ad": "Mid-Floor Duplex", "val_apt_bd": "Garden Duplex", "val_apt_rd": "Inverted Duplex", "val_kull_ms": "Owner Occupied", "val_kull_k": "Tenant", "val_kull_b": "Vacant", "val_yapi_b": "Well-maintained/Renovated", "val_yapi_s": "Standard", "val_yapi_t": "Needs Renovation", "val_detail_title": "Enter additional features", "val_detail_sub": "This information makes the valuation more accurate. Optional.", "val_cephe": "FAÇADE DIRECTION (MULTIPLE SELECTIONS ALLOWED)", "val_manzara": "VIEW (MULTIPLE SELECTIONS ALLOWED)", "val_isitma": "HEATING SYSTEM", "val_olanaklar": "AMENITIES (MULTIPLE SELECTIONS ALLOWED)", "val_analiz_btn": "Start Analysis →", "val_result_title": "Valuation Result", "val_est_lbl": "ESTIMATED VALUE", "val_conf": "Confidence Score", "val_min": "Min Value", "val_max": "Max Value", "val_next_steps": "Next Steps", "val_s1_done": "1 — Details Entered", "val_s2_done": "2 — Value Calculated", "val_s3": "3 — Find Advisor", "val_s4": "4 — Sell with Confidence", "val_adv_btn": "👤 Find Advisor", "val_back": "← Go Back", "val_new": "+ New Valuation", "val_invest": "Investment Analysis", "val_rent": "Est. Monthly Rent", "val_yield": "Gross Rental Yield", "val_amort": "Payback Period", "val_score": "Opportunity Score", "val_ai": "▲ AI ANALYSIS", "val_similar": "Similar Listings", "val_yil": "yrs", "val_disclaimer": "* 23 similar listings analyzed. Estimate may vary by ±12%.", "auth_login": "Sign In", "auth_register": "Register", "auth_phone": "Sign In with Phone", "auth_email": "Sign In with Email", "auth_social": "Social Account", "btn_try_free": "Try Free", "loading": "Loading...", "new_label": "New", "soon": "Coming Soon", "yil": "yr", "satis": "sales", "puan_label": "Score"}
+};
+
+function t(key) {
+  return I18N[currentLang][key] || I18N['tr'][key] || key;
+}
+
+function toggleLangMenu() {
+  const menu = document.getElementById('lang-menu');
+  if(!menu) return;
+  const isOpen = menu.style.display === 'block';
+  menu.style.display = isOpen ? 'none' : 'block';
+  if(!isOpen) {
+    setTimeout(() => {
+      document.addEventListener('click', function closeLangMenu(e) {
+        if(!e.target.closest('#lang-btn') && !e.target.closest('#lang-menu')) {
+          const m = document.getElementById('lang-menu');
+          if(m) m.style.display = 'none';
+          document.removeEventListener('click', closeLangMenu);
+        }
+      });
+    }, 50);
+  }
+}
+
+function setLang(lang) {
+  currentLang = lang;
+  localStorage.setItem('lang', lang);
+  const menu = document.getElementById('lang-menu');
+  if(menu) menu.style.display = 'none';
+  const ltxt = document.getElementById('lang-txt');
+  if(ltxt) ltxt.textContent = lang === 'en' ? '🇬🇧 EN' : '🇹🇷 TR';
+  applyLang();
+  // Değerleme sayfasındaysa yeniden render
+  if(typeof VAL !== 'undefined' && VAL.currentStep && typeof goStep === 'function') {
+    goStep(VAL.currentStep);
+  }
+}
+
+function applyLang() {
+  const isEN = currentLang === 'en';
+
+  // Sayfa başlığı
+  document.title = isEN ? 'Öğren-Sat — Konya Real Estate Analytics' : 'Öğren-Sat — Konya Emlak Analiz Platformu';
+
+  // Nav linkleri
+  const navKeys = ['nav_home','nav_val','nav_comp','nav_price','nav_adv','nav_about','nav_analiz'];
+  navKeys.forEach((key,i) => {
+    const el = document.getElementById('nl'+i);
+    if(el) el.textContent = t(key);
+  });
+
+  // Giriş butonu
+  const loginBtn = document.getElementById('nav-login-btn');
+  if(loginBtn) loginBtn.textContent = t('nav_login');
+
+  // Destek
+  const supEl = document.getElementById('support-txt');
+  if(supEl) supEl.textContent = t('nav_support');
+
+  // Bot
+  const botTitle = document.getElementById('bot-title');
+  if(botTitle) botTitle.textContent = isEN ? 'Öğren-Sat Assistant' : 'Öğren-Sat Asistanı';
+  const botWelcome = document.getElementById('bot-welcome');
+  if(botWelcome) botWelcome.textContent = isEN
+    ? 'Hello! 👋 I am ready to answer questions about the Konya real estate market. How can I help you?'
+    : 'Merhaba! 👋 Konya gayrimenkul piyasası hakkında sorularınızı yanıtlamaya hazırım.';
+
+  // Hero
+  const heroH = document.querySelector('.hero-h1');
+  if(heroH) heroH.innerHTML = t('hero_h1');
+  const heroSub = document.querySelector('.hero-sub');
+  if(heroSub) heroSub.textContent = t('hero_sub');
+  document.querySelectorAll('.hero-btn').forEach(btn => {
+    if(btn.textContent.includes('Değerleme') || btn.textContent.includes('Valuation')) btn.textContent = t('hero_btn_val');
+    if(btn.textContent.includes('Piyasa') || btn.textContent.includes('Market')) btn.textContent = t('hero_btn_comp');
+  });
+
+  // data-i18n attribute'lu tüm elementler
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.dataset.i18n;
+    if(el.dataset.i18nHtml === '1') el.innerHTML = t(key);
+    else el.textContent = t(key);
+  });
+
+  // Fiyatlar — pc-price
+  document.querySelectorAll('.pc-price').forEach(el => {
+    if(!el.dataset.tryVal) {
+      const num = parseInt(el.textContent.replace(/[^\d]/g,''));
+      if(num > 100) el.dataset.tryVal = num;
+    }
+    const num = parseInt(el.dataset.tryVal || 0);
+    if(num > 100) {
+      el.textContent = isEN
+        ? '$' + new Intl.NumberFormat('en-US').format(Math.round(num/USD_RATE))
+        : '₺' + new Intl.NumberFormat('tr-TR').format(num);
+    }
+  });
+
+  // Güvenle Sat adım listesi
+  const gsStepKeys = {1:['gss1_title','gss1_desc'],2:['gss2_title','gss2_desc'],3:['gss3_title','gss3_desc'],4:['gss4_title','gss4_desc']};
+  document.querySelectorAll('[data-i18n-step]').forEach(el => {
+    const step = parseInt(el.dataset.i18nStep);
+    const keys = gsStepKeys[step];
+    if(!keys) return;
+    const titleEl = el.querySelector('.gs-step-title');
+    const descEl  = el.querySelector('.gs-step-desc');
+    if(titleEl) titleEl.textContent = t(keys[0]);
+    if(descEl)  descEl.textContent  = t(keys[1]);
+  });
+
+  // per month label
+  document.querySelectorAll('.pc-period').forEach(el => {
+    el.textContent = isEN ? '/ mo' : '/ ay';
+  });
+}
+
+// Sayfa açılışında dili uygula
+document.addEventListener('DOMContentLoaded', () => {
+  const saved = localStorage.getItem('lang') || 'tr';
+  const ltxt = document.getElementById('lang-txt');
+  if(ltxt) ltxt.textContent = saved === 'en' ? '🇬🇧 EN' : '🇹🇷 TR';
+  setTimeout(applyLang, 200);
+});
 
 // ── LEGACY COMPAT ──
 function switchTab(t) { if(t==='val') goPage('valuation'); else goPage('comparison'); }
