@@ -1527,6 +1527,307 @@ a, button, .tc, .pc, .dc-chip, .adv-card,
   .val-result-wide { grid-template-columns: 1fr !important; }
 }
 
+/* ════════════════════════════════════════
+   KAPSAMLI MOBİL RESPONSIVE — 600px altı
+   ════════════════════════════════════════ */
+@media(max-width:768px) {
+
+  /* ── NAV ── */
+  .nav-inner { padding: 0 14px; }
+  .nav-links { display: none !important; }
+  .nav-cta { 
+    padding: 7px 12px !important; 
+    font-size: 12px !important;
+    white-space: nowrap;
+  }
+  /* Dil + Destek butonları mobilde küçük */
+  #lang-btn, #support-txt { 
+    padding: 6px 8px !important; 
+    font-size: 11px !important; 
+  }
+  #lang-menu { right: 0; left: auto; }
+
+  /* ── HERO ── */
+  .hero { padding: 80px 20px 50px !important; text-align: center; }
+  .hero-h1 { font-size: clamp(28px,7vw,42px) !important; margin-bottom: 14px; }
+  .hero-sub { font-size: 14px !important; margin-bottom: 24px; }
+  .hero-btns { 
+    flex-direction: column !important; 
+    gap: 10px !important; 
+    width: 100%;
+  }
+  .hero-btn { 
+    width: 100% !important; 
+    padding: 13px 20px !important;
+    font-size: 14px !important;
+  }
+  .hero-badge { font-size: 10px !important; padding: 6px 14px !important; }
+
+  /* ── STAT BAND ── */
+  .stat-band-grid { 
+    grid-template-columns: 1fr 1fr !important; 
+    gap: 10px !important;
+    padding: 20px 14px !important;
+  }
+  .stat-kpi-card { 
+    min-height: 130px !important; 
+    padding: 16px 10px !important;
+  }
+  .stat-kpi-val { font-size: 28px !important; }
+  .stat-kpi-lbl { font-size: 9px !important; }
+  .stat-kpi-icon { font-size: 20px !important; }
+
+  /* ── ARAÇLAR ── */
+  .tc-grid { 
+    grid-template-columns: 1fr !important; 
+    padding: 0 14px !important;
+  }
+  .tc { padding: 20px 16px !important; }
+
+  /* ── NASIL ÇALIŞIR ── */
+  .how-grid { 
+    grid-template-columns: 1fr 1fr !important;
+    gap: 12px !important;
+    padding: 0 14px !important;
+  }
+  .how-card { padding: 20px 14px !important; }
+
+  /* ── İLÇELER ── */
+  .dist-grid {
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 8px !important;
+    padding: 0 14px !important;
+  }
+  .dist-card { padding: 10px 8px !important; font-size: 11px !important; }
+
+  /* ── GÜVENLE SAT ── */
+  .gs-grid { 
+    display: flex !important; 
+    flex-direction: column !important;
+    padding: 0 14px !important;
+    gap: 20px !important;
+  }
+  #gs-panel { order: 2; position: static !important; }
+  .gs-grid > div:not(#gs-panel) { order: 1; }
+  .gs-panel-wrap { height: auto !important; min-height: 480px; }
+  #gs-progress-bar { 
+    padding: 0 !important;
+    margin-bottom: 16px !important;
+  }
+  .gs-prog-num { width: 30px !important; height: 30px !important; font-size: 12px !important; }
+  .gs-step-item { padding: 10px 12px !important; }
+
+  /* ── FİYATLAR ── */
+  .pricing-grid { 
+    grid-template-columns: 1fr !important; 
+    gap: 16px !important;
+  }
+  .pricing-page { padding: 70px 14px 40px !important; }
+  .pc { padding: 24px 16px !important; }
+
+  /* ── DANİŞMAN ── */
+  .adv-grid { padding: 0 14px 40px !important; }
+  .adv-filters { 
+    flex-direction: column !important; 
+    gap: 8px !important;
+    padding: 0 14px 16px !important;
+  }
+  .adv-filters select { width: 100% !important; }
+  .adv-card { padding: 16px 14px !important; }
+
+  /* ── HAKKIMIZDA ── */
+  .about-hero-wrap { padding: 60px 20px 40px !important; }
+  .about-deco-letter { display: none !important; }
+  #page-about [style*="grid-template-columns:1fr 1fr 1fr"],
+  #page-about [style*="grid-template-columns: 1fr 1fr 1fr"] {
+    grid-template-columns: 1fr !important;
+    padding: 0 14px !important;
+  }
+  #page-about [style*="grid-template-columns:1fr 1fr"],
+  #page-about [style*="grid-template-columns: 1fr 1fr"] {
+    grid-template-columns: 1fr !important;
+  }
+  .team-card { padding: 44px 20px 24px !important; }
+  .method-card { padding: 20px 14px !important; }
+  .mv-card { padding: 24px 16px !important; }
+  #page-about [style*="padding:60px 48px"],
+  #page-about [style*="padding: 60px 48px"] {
+    padding: 32px 14px !important;
+  }
+  #page-about [style*="padding:44px 48px"] {
+    padding: 24px 14px !important;
+  }
+
+  /* ── ANALİZ ── */
+  #page-analiz [style*="padding:32px 48px"],
+  #page-analiz [style*="padding: 32px 48px"] {
+    padding: 20px 14px 16px !important;
+  }
+  #page-analiz [style*="padding:0 48px"],
+  #page-analiz [style*="padding: 0 48px"] {
+    padding: 0 14px !important;
+  }
+  .analiz-grid { grid-template-columns: 1fr !important; }
+  .analiz-card { padding: 14px 12px !important; }
+  .analiz-card canvas { height: 180px !important; }
+  .analiz-kpi-grid { grid-template-columns: 1fr 1fr !important; }
+
+  /* ── DEĞERLEME ── */
+  .val-container { 
+    grid-template-columns: 1fr !important;
+    padding: 0 14px 60px !important;
+    gap: 16px !important;
+  }
+  #val-info-area { position: static !important; }
+  .val-form-card { padding: 20px 14px !important; }
+  .val-progress { padding: 16px 14px 20px !important; }
+  .cat-card { padding: 16px 10px !important; }
+  .cat-card-icon { font-size: 24px !important; }
+  .cat-card-title { font-size: 14px !important; }
+  .vrow2, .vrow3 { 
+    grid-template-columns: 1fr 1fr !important; 
+    gap: 10px !important;
+  }
+  .vchip { font-size: 11px !important; padding: 5px 8px !important; }
+  .num-input { padding: 10px 6px !important; }
+
+  /* ── DEĞERLEME SONUÇ ── */
+  .vre-main { 
+    grid-template-columns: 1fr !important; 
+    gap: 14px !important;
+  }
+  .vre-bottom-row { 
+    grid-template-columns: 1fr !important; 
+    gap: 14px !important;
+  }
+  .vre-price-card { padding: 20px 16px !important; }
+  .vre-price-big { font-size: clamp(24px,6vw,36px) !important; }
+  .vre-invest-grid { grid-template-columns: 1fr 1fr !important; }
+
+  /* ── FOOTER ── */
+  .ftr-grid { 
+    grid-template-columns: 1fr 1fr !important; 
+    gap: 24px !important;
+    padding: 40px 20px 24px !important;
+  }
+  .ftr-brand { grid-column: 1 / -1; }
+
+  /* ── DESTEK BOTU ── */
+  #support-modal {
+    bottom: 0 !important;
+    right: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    border-radius: var(--r) var(--r) 0 0 !important;
+  }
+  #support-fab {
+    bottom: 16px !important;
+    right: 16px !important;
+  }
+
+  /* ── GENEL SEKSİYON BAŞLIKLARI ── */
+  .sec-title { font-size: clamp(24px,6vw,38px) !important; }
+  .sec-sub { font-size: 14px !important; padding: 0 14px !important; }
+  .ey { font-size: 10px !important; }
+  section, .sec { padding: 48px 0 !important; }
+}
+
+/* 480px altı ek düzeltmeler */
+@media(max-width:480px) {
+  .nav-cta { display: none !important; }
+  /* Mobil hamburger menüde Giriş Yap var zaten */
+  
+  .hero-h1 { font-size: clamp(24px,8vw,36px) !important; }
+  
+  .how-grid { grid-template-columns: 1fr !important; }
+  
+  .dist-grid { grid-template-columns: repeat(2,1fr) !important; }
+  
+  .vre-invest-grid { grid-template-columns: 1fr !important; }
+  
+  .ftr-grid { grid-template-columns: 1fr !important; }
+
+  /* Dil ve destek butonları gizle — hamburger menüde var */
+  #lang-btn span:last-child { display: none; }
+}
+
+/* ══════════════════════════════════════
+   HERO — PREMIUM ARKA PLAN
+   Konya şehir görseli + altın overlay
+   ══════════════════════════════════════ */
+.hero {
+  position: relative;
+  overflow: hidden;
+  background: var(--dark) !important;
+  /* Unsplash'tan Konya/şehir silüeti — ücretsiz */
+  background-image:
+    /* Üst katman: çok katmanlı overlay — derinlik ve sıcaklık */
+    linear-gradient(
+      180deg,
+      rgba(8,8,8,.88) 0%,
+      rgba(8,6,2,.45) 25%,
+      rgba(15,10,2,.50) 55%,
+      rgba(8,8,8,.92) 85%,
+      rgba(8,8,8,1) 100%
+    ),
+    linear-gradient(
+      90deg,
+      rgba(8,8,8,.6) 0%,
+      transparent 30%,
+      transparent 70%,
+      rgba(8,8,8,.6) 100%
+    ),
+    /* Yan ışık efektleri */
+    radial-gradient(ellipse 70% 80% at 15% 50%, rgba(201,168,76,.12) 0%, transparent 65%),
+    radial-gradient(ellipse 50% 60% at 85% 40%, rgba(201,168,76,.07) 0%, transparent 60%),
+    /* Şehir fotoğrafı */
+    url('https://images.unsplash.com/photo-1519501025264-65ba15a82390?w=1920&q=85&auto=format&fit=crop') !important;
+  background-size: cover !important;
+  background-position: center 40% !important;
+  background-repeat: no-repeat !important;
+  background-attachment: fixed !important;
+}
+
+/* Parallax disable on mobile */
+@media(max-width:768px) {
+  .hero { background-attachment: scroll !important; }
+}
+
+/* Animasyonlu ışık huzmeleri */
+.hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 40% 50% at 50% 50%, rgba(201,168,76,.06) 0%, transparent 70%);
+  animation: heroPulse 6s ease-in-out infinite alternate;
+  pointer-events: none;
+  z-index: 0;
+}
+.hero::after {
+  content: '';
+  position: absolute;
+  width: 800px; height: 800px;
+  background: radial-gradient(circle, rgba(201,168,76,.08) 0%, transparent 65%);
+  border-radius: 50%;
+  bottom: -200px; right: -200px;
+  animation: heroGlow 9s ease-in-out infinite alternate;
+  pointer-events: none;
+  z-index: 0;
+}
+@keyframes heroPulse {
+  0%   { opacity: .4; transform: scale(1); }
+  100% { opacity: .9; transform: scale(1.08); }
+}
+@keyframes heroGlow {
+  0%   { transform: translate(0,0) scale(1); opacity: .4; }
+  100% { transform: translate(-80px,-60px) scale(1.2); opacity: .7; }
+}
+
+/* Hero içeriği z-index */
+.hero > * { position: relative; z-index: 1; }
+.hero-grid { display: none !important; }
+
 </style>
 </head>
 <body>
@@ -1574,6 +1875,11 @@ a, button, .tc, .pc, .dc-chip, .adv-card,
   <button class="nav-lnk" onclick="goPage('about');closeMob()">Hakkımızda</button>
   <button class="nav-lnk" onclick="goPage('analiz');closeMob()">📊 Analiz</button>
   <div style="margin-top:18px;padding-top:18px;border-top:1px solid var(--bd);">
+    <!-- Dil seçimi mobil -->
+    <div style="display:flex;gap:8px;margin-bottom:12px;">
+      <button onclick="setLang('tr');closeMob()" style="flex:1;padding:9px;background:var(--d3);border:1px solid var(--bd);border-radius:var(--rs);color:var(--tx);font-size:13px;font-family:var(--font);cursor:pointer;" id="mob-lang-tr">🇹🇷 Türkçe</button>
+      <button onclick="setLang('en');closeMob()" style="flex:1;padding:9px;background:var(--d3);border:1px solid var(--bd);border-radius:var(--rs);color:var(--tx);font-size:13px;font-family:var(--font);cursor:pointer;" id="mob-lang-en">🇬🇧 English</button>
+    </div>
     <button class="btn-g" style="width:100%;justify-content:center;" id="mob-login-btn" onclick="goPage('auth');closeMob()">Giriş Yap / Kayıt Ol</button>
     <div id="mob-user-sec" style="display:none;text-align:center;padding:14px 0;">
       <div style="font-size:15px;color:var(--tx);margin-bottom:10px;">Hoş geldin, <strong id="mob-uname">—</strong></div>
