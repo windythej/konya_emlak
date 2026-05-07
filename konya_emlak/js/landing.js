@@ -127,29 +127,7 @@ function gsHoverOut() {
   }
 }
 
-// Devamını oku
-function toggleReadMore(id, btn) {
-  const el = document.getElementById(id);
-  if (!el) return;
-  const isOpen = el.classList.toggle('open');
-  btn.textContent = isOpen ? 'Kapat ↑' : 'Devamını oku ↓';
-}
 
-// Sayaç animasyonu
-function animateCounter(el) {
-  const target = parseInt(el.dataset.target);
-  const suffix = el.dataset.suffix || '';
-  const duration = 1800;
-  const start = performance.now();
-  function step(now) {
-    const elapsed = now - start;
-    const progress = Math.min(elapsed / duration, 1);
-    const eased = progress === 1 ? 1 : 1 - Math.pow(2, -10 * progress);
-    el.textContent = Math.floor(eased * target) + suffix;
-    if (progress < 1) requestAnimationFrame(step);
-  }
-  requestAnimationFrame(step);
-}
 
 // Init
 document.addEventListener('DOMContentLoaded', () => {
@@ -172,14 +150,4 @@ document.addEventListener('DOMContentLoaded', () => {
     obs.observe(sec);
   }
 
-  // Sayaç observer
-  const counterObs = new IntersectionObserver(entries => {
-    entries.forEach(e => {
-      if (e.isIntersecting && e.target.classList.contains('counter-anim')) {
-        animateCounter(e.target);
-        counterObs.unobserve(e.target);
-      }
-    });
-  }, { threshold: 0.3 });
-  document.querySelectorAll('.counter-anim').forEach(el => counterObs.observe(el));
 });

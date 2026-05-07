@@ -192,3 +192,90 @@ window.addEventListener('load', () => {
   const ldr = document.getElementById('page-loader');
   if (ldr) ldr.classList.add('hide');
 });
+
+
+// ── ORTAK YARDIMCI FONKSİYONLAR ──
+function closeLoginReq() {
+  const ov = document.getElementById('login-req-overlay');
+  if (ov) ov.style.display = 'none';
+}
+
+function goBack() {
+  if (history.length > 1) history.back();
+  else location.href = '/';
+}
+
+function handleSub(name, price, period) {
+  if (!currentUser) {
+    const ov = document.getElementById('login-req-overlay');
+    if (ov) ov.style.display = 'flex';
+    return;
+  }
+  localStorage.setItem('selPlan', JSON.stringify({ name, price, period }));
+  location.href = '/odeme';
+}
+
+function processPayment() {
+  showPopup('Ödeme sistemi yakında aktif olacak. Demo mod.', 'Ödeme', '💳', 'info');
+}
+
+function showStep(id) {
+  document.querySelectorAll('.auth-step').forEach(s => s.classList.remove('on'));
+  const el = document.getElementById(id);
+  if (el) el.classList.add('on');
+}
+
+// Ödeme sayfası — plan bilgisini yükle
+document.addEventListener('DOMContentLoaded', () => {
+  const ps = document.getElementById('ps-plan-nm');
+  if (!ps) return;
+  const plan = JSON.parse(localStorage.getItem('selPlan') || '{}');
+  if (plan.name) {
+    ps.textContent = plan.name;
+    const pr = document.getElementById('ps-price');
+    if (pr) pr.innerHTML = '<span>₺</span>' + plan.price;
+    const pe = document.getElementById('ps-period');
+    if (pe) pe.textContent = plan.period + ' · Otomatik yenileme';
+    const bc = document.getElementById('pay-bc');
+    if (bc) bc.textContent = plan.name;
+  }
+});
+
+
+// ── Devamını oku (hakkımızda vb.) ──
+function toggleReadMore(id, btn) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  const isOpen = el.classList.toggle('open');
+  btn.textContent = isOpen ? 'Kapat ↑' : 'Devamını oku ↓';
+}
+
+// ── Sayaç animasyonu ──
+function animateCounter(el) {
+  const target = parseInt(el.dataset.target) || 0;
+  const suffix = el.dataset.suffix || '';
+  const duration = 1800;
+  const start = performance.now();
+  function step(now) {
+    const progress = Math.min((now - start) / duration, 1);
+    const eased = progress === 1 ? 1 : 1 - Math.pow(2, -10 * progress);
+    el.textContent = Math.floor(eased * target) + suffix;
+    if (progress < 1) requestAnimationFrame(step);
+  }
+  requestAnimationFrame(step);
+}
+
+// Counter observer — viewport'a girince başla
+document.addEventListener('DOMContentLoaded', () => {
+  const counterEls = document.querySelectorAll('.counter-anim');
+  if (!counterEls.length) return;
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        animateCounter(e.target);
+        obs.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.3 });
+  counterEls.forEach(el => obs.observe(el));
+});
