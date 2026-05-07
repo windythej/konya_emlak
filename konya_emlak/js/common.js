@@ -179,3 +179,16 @@ document.addEventListener('DOMContentLoaded',()=>{
   const saved=localStorage.getItem('lang')||'tr';
   const lt=document.getElementById('lang-txt');if(lt)lt.textContent=saved==='en'?'🇬🇧 EN':'🇹🇷 TR';
 });
+
+
+// Sayfa yüklendiğinde loader'ı kapat
+document.addEventListener('DOMContentLoaded', () => {
+  setTimeout(() => {
+    const ldr = document.getElementById('page-loader');
+    if (ldr) ldr.classList.add('hide');
+  }, 250);
+});
+window.addEventListener('load', () => {
+  const ldr = document.getElementById('page-loader');
+  if (ldr) ldr.classList.add('hide');
+});

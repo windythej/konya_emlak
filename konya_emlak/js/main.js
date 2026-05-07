@@ -11,7 +11,7 @@ async function load(){
   const lv=document.getElementById('listv');if(lv)lv.innerHTML='<div class="loader"><div class="spin"></div><p>İlanlar getiriliyor...</p></div>';
   try{
     const r=await fetch(`${SU}/rest/v1/listings?select=*`,{headers:{'apikey':SK,'Authorization':`Bearer ${SK}`}});
-    all=await r.json();buildD();buildQ();apply();populateValDistricts();
+    all=await r.json();buildD();buildQ();apply();populateValDistricts();selectDistrictFromURL();
   }catch(e){const lve=document.getElementById('listv');if(lve)lve.innerHTML=`<div class="empty"><h3>Hata</h3><p>${e.message}</p></div>`;}
   if(btn){btn.textContent='İlanları Getir';btn.disabled=false;}
 }
@@ -178,3 +178,13 @@ const KONYA_MAHALLELER={'Selçuklu':['Yazır Mh.','Sancak Mh.','Şeker Mh.','Bey
 function populateValDistricts(){const sel=document.getElementById('v-district');if(!sel)return;const ds=[...new Set(all.map(l=>l.district).filter(Boolean))].sort();const cur=sel.value;sel.innerHTML='<option value="">İlçe seçin...</option>';ds.forEach(d=>{const o=document.createElement('option');o.value=d;o.textContent=d;sel.appendChild(o);});const extra=['Akşehir','Beyşehir','Cihanbeyli','Çumra','Ereğli','Ilgın','Kadınhanı','Kulu','Sarayönü','Seydişehir'];extra.forEach(d=>{if(!ds.includes(d)){const o=document.createElement('option');o.value=d;o.textContent=d;sel.appendChild(o);}});if(cur)sel.value=cur;}
 function populateValQuarters(district){const sel=document.getElementById('v-quarter');if(!sel)return;const fromDB=[...new Set(all.filter(l=>l.district===district).map(l=>l.quarter).filter(Boolean))].sort();const fromList=KONYA_MAHALLELER[district]||[];const combined=[...new Set([...fromDB,...fromList])].sort();sel.innerHTML='<option value="">Mahalle seçin (isteğe bağlı)</option>';combined.forEach(q=>{const o=document.createElement('option');o.value=q;o.textContent=q;sel.appendChild(o);});}
 async function loadForVal(){try{const r=await fetch(SU+'/rest/v1/listings?select=*',{headers:{'apikey':SK,'Authorization':'Bearer '+SK}});all=await r.json();populateValDistricts();}catch(e){console.warn('Val veri yüklenemedi:',e);}}
+
+
+// URL'den ?d= parametresi ile gelen ilçeyi seç
+function selectDistrictFromURL() {
+  const params = new URLSearchParams(location.search);
+  const d = params.get('d');
+  if (!d || !all.length) return;
+  const chip = document.querySelector(`#dc .chip[data-value="${d}"]`);
+  if (chip) chip.click();
+}
