@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Konya Emlak — Admin Panel</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/admin.css">
+</head>
+<body>
+
+<!-- MOBİL MENÜ -->
+<button class="mob-menu-btn" id="mob-menu" onclick="toggleSidebar()">☰</button>
+<div class="sidebar-overlay" id="sidebar-overlay" onclick="toggleSidebar()"></div>
+
+<!-- GİRİŞ SAYFASI -->
+<div class="login-page" id="login-page">
+  <div class="login-card">
+    <div class="login-logo">
+      <div class="login-logo-icon">◎</div>
+      <div class="login-logo-title">Konya Emlak</div>
+      <div class="login-logo-sub">Admin Paneli</div>
+    </div>
+    <label class="lfl">Kullanıcı Adı</label>
+    <input type="text" class="linput" id="admin-user" placeholder="admin">
+    <label class="lfl">Şifre</label>
+    <input type="password" class="linput" id="admin-pass" placeholder="••••••••">
+    <button class="lbtn" onclick="adminLogin()">GİRİŞ YAP</button>
+    <div class="lerr" id="login-err">Kullanıcı adı veya şifre hatalı.</div>
+  </div>
+</div>
+
+<!-- ADMIN SAYFASI -->
+<div class="admin-page" id="admin-page">
+
+  <!-- SIDEBAR -->
+  <div class="sidebar" id="sidebar">
+    <div class="sidebar-logo">
+      <div class="sidebar-logo-title">◎ Konya Emlak</div>
+      <div class="sidebar-logo-sub">Admin Paneli</div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="nav-item on" onclick="showSection('dashboard')"><span class="nav-icon">📊</span> Genel Bakış</div>
+      <div class="nav-item" onclick="showSection('users')"><span class="nav-icon">👥</span> Kullanıcılar</div>
+      <div class="nav-item" onclick="showSection('subscriptions')"><span class="nav-icon">💳</span> Abonelikler</div>
+      <div class="nav-item" onclick="showSection('revenue')"><span class="nav-icon">💰</span> Gelir Raporu</div>
+      <div class="nav-item" onclick="showSection('listings')"><span class="nav-icon">🏠</span> İlanlar</div>
+      <div class="nav-item" onclick="showSection('admins')"><span class="nav-icon">👤</span> Adminler</div>
+      <div class="nav-item" onclick="showSection('logs')"><span class="nav-icon">📋</span> İşlem Logları</div>
+    </nav>
+    <div class="sidebar-footer">
+      <a href="/" style="display:flex;align-items:center;gap:8px;padding:10px;background:rgba(201,168,76,.06);border:1px solid var(--bd);border-radius:var(--rs);color:var(--txm);text-decoration:none;font-size:12px;margin-bottom:8px;transition:all .2s;" onmouseover="this.style.borderColor='var(--gold)';this.style.color='var(--gold)'" onmouseout="this.style.borderColor='var(--bd)';this.style.color='var(--txm)'">🏠 Ana Siteye Dön</a>
+      <div style="font-size:11px;color:var(--txm);margin-bottom:8px;" id="admin-name-display"></div>
+      <button class="logout-btn" onclick="adminLogout()">Çıkış Yap</button>
+    </div>
+  </div>
+
+  <!-- MAIN -->
+  <main class="main">
+
+    <!-- DASHBOARD -->
+    <div class="section on" id="sec-dashboard">
+      <div class="page-header">
+        <div class="page-title">Genel Bakış</div>
+        <div class="page-sub" id="dash-date"></div>
+      </div>
+      <div class="stat-grid">
+        <div class="stat-card">
+          <div class="stat-icon">👥</div>
+          <div class="stat-val" id="stat-total-users">—</div>
+          <div class="stat-label">Toplam Kullanıcı</div>
+          <div class="stat-change" id="stat-new-users"></div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">💳</div>
+          <div class="stat-val" id="stat-active-subs">—</div>
+          <div class="stat-label">Aktif Abonelik</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">💰</div>
+          <div class="stat-val" id="stat-total-rev">—</div>
+          <div class="stat-label">Toplam Gelir</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">🏠</div>
+          <div class="stat-val" id="stat-listings">—</div>
+          <div class="stat-label">Aktif İlan</div>
+        </div>
+      </div>
+
+      <!-- Son Kayıtlar -->
+      <div class="table-card">
+        <div class="table-header">
+          <div class="table-title">Son Kayıt Olan Kullanıcılar</div>
+        </div>
+        <table>
+          <thead><tr><th>Ad Soyad</th><th>Telefon</th><th>Kayıt Tarihi</th><th>Son Giriş</th></tr></thead>
+          <tbody id="dash-recent-users"><tr><td colspan="4"><div class="loading"><div class="spin"></div></div></td></tr></tbody>
+        </table>
+      </div>
+
+      <!-- Son Abonelikler -->
+      <div class="table-card">
+        <div class="table-header">
+          <div class="table-title">Son Abonelikler</div>
+          <button onclick="openAddSub()" style="padding:7px 14px;background:var(--gold);border:none;border-radius:var(--rs);color:var(--dark);font-size:12px;font-weight:600;font-family:'DM Sans',sans-serif;cursor:pointer;">+ Abonelik Ekle</button>
+        </div>
+        <table>
+          <thead><tr><th>Kullanıcı</th><th>Plan</th><th>Fiyat</th><th>Başlangıç</th><th>Bitiş</th><th>Durum</th></tr></thead>
+          <tbody id="dash-recent-subs"><tr><td colspan="6"><div class="loading"><div class="spin"></div></div></td></tr></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- KULLANICILAR -->
+    <div class="section" id="sec-users">
+      <div class="page-header">
+        <div class="page-title">Kullanıcılar</div>
+        <div class="page-sub">Sisteme kayıtlı tüm kullanıcılar</div>
+      </div>
+      <div class="table-card">
+        <div class="table-header">
+          <div class="table-title" id="users-count">Yükleniyor...</div>
+          <input type="text" class="table-search" placeholder="Ara..." oninput="filterUsers(this.value)">
+        </div>
+        <table>
+          <thead><tr><th>Ad</th><th>Soyad</th><th>Telefon</th><th>Kayıt Tarihi</th><th>Son Giriş</th><th>Abonelik</th></tr></thead>
+          <tbody id="users-table"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ABONELİKLER -->
+    <div class="section" id="sec-subscriptions">
+      <div class="page-header">
+        <div class="page-title">Abonelikler</div>
+        <div class="page-sub">Tüm abonelik kayıtları</div>
+      </div>
+      <div class="table-card">
+        <div class="table-header">
+          <div class="table-title" id="subs-count">Yükleniyor...</div>
+          <button onclick="openAddSub()" style="padding:7px 14px;background:var(--gold);border:none;border-radius:var(--rs);color:var(--dark);font-size:12px;font-weight:600;font-family:'DM Sans',sans-serif;cursor:pointer;">+ Abonelik Ekle</button>
+        </div>
+        <table>
+          <thead><tr><th>Kullanıcı</th><th>Telefon</th><th>Plan</th><th>Fiyat</th><th>Başlangıç</th><th>Bitiş</th><th>Durum</th><th>İşlem</th></tr></thead>
+          <tbody id="subs-table"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- GELİR RAPORU -->
+    <div class="section" id="sec-revenue">
+      <div class="page-header">
+        <div class="page-title">Gelir Raporu</div>
+        <div class="page-sub">Abonelik gelirleri özeti</div>
+      </div>
+      <div class="stat-grid" style="grid-template-columns:repeat(3,1fr);">
+        <div class="stat-card">
+          <div class="stat-icon">💰</div>
+          <div class="stat-val" id="rev-total">—</div>
+          <div class="stat-label">Toplam Gelir</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">📅</div>
+          <div class="stat-val" id="rev-monthly">—</div>
+          <div class="stat-label">Bu Ay</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">📈</div>
+          <div class="stat-val" id="rev-active-val">—</div>
+          <div class="stat-label">Aktif Abonelik Değeri</div>
+        </div>
+      </div>
+      <div class="table-card">
+        <div class="table-header"><div class="table-title">Aylık Gelir Dağılımı</div></div>
+        <div style="padding:20px;">
+          <div class="chart-bar-wrap" id="rev-chart"></div>
+        </div>
+      </div>
+      <div class="table-card">
+        <div class="table-header"><div class="table-title">Plan Bazlı Özet</div></div>
+        <table>
+          <thead><tr><th>Plan</th><th>Abone Sayısı</th><th>Toplam Gelir</th><th>Ortalama Fiyat</th></tr></thead>
+          <tbody id="rev-plans"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ADMİNLER -->
+    <div class="section" id="sec-admins">
+      <div class="page-header">
+        <div class="page-title">Adminler</div>
+        <div class="page-sub">Sisteme erişim yetkisi olan adminler</div>
+      </div>
+      <div class="table-card">
+        <div class="table-header"><div class="table-title">3 Admin</div></div>
+        <table>
+          <thead><tr><th>Kullanıcı Adı</th><th>Yetki</th><th>Durum</th></tr></thead>
+          <tbody>
+            <tr><td style="color:var(--gold);font-weight:600;">ziya</td><td>Tam Yetki</td><td><span class="badge active">Aktif</span></td></tr>
+            <tr><td style="color:var(--gold);font-weight:600;">ahmet</td><td>Tam Yetki</td><td><span class="badge active">Aktif</span></td></tr>
+            <tr><td style="color:var(--gold);font-weight:600;">batuhan</td><td>Tam Yetki</td><td><span class="badge active">Aktif</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- İŞLEM LOGLARI -->
+    <div class="section" id="sec-logs">
+      <div class="page-header">
+        <div class="page-title">İşlem Logları</div>
+        <div class="page-sub">Adminlerin yaptığı tüm işlemler</div>
+      </div>
+      <div class="table-card">
+        <div class="table-header">
+          <div class="table-title" id="logs-count">Yükleniyor...</div>
+          <select class="table-search" style="width:160px;" onchange="filterLogs(this.value)">
+            <option value="">Tüm Adminler</option>
+            <option value="ziya">ziya</option>
+            <option value="ahmet">ahmet</option>
+            <option value="batuhan">batuhan</option>
+          </select>
+        </div>
+        <table>
+          <thead><tr><th>Admin</th><th>İşlem</th><th>Detay</th><th>Tarih</th></tr></thead>
+          <tbody id="logs-table"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- İLANLAR -->
+    <div class="section" id="sec-listings">
+      <div class="page-header">
+        <div class="page-title">İlanlar</div>
+        <div class="page-sub">Supabase'deki aktif ilan veritabanı</div>
+      </div>
+      <div class="table-card">
+        <div class="table-header">
+          <div class="table-title" id="listings-count">Yükleniyor...</div>
+          <input type="text" class="table-search" placeholder="İlçe, mahalle ara..." oninput="filterListings(this.value)">
+        </div>
+        <table>
+          <thead><tr><th>Başlık</th><th>İlçe</th><th>Mahalle</th><th>Oda</th><th>m²</th><th>Fiyat</th></tr></thead>
+          <tbody id="listings-table"></tbody>
+        </table>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<!-- ABONELİK EKLE MODAL -->
+<div class="modal-ov" id="add-sub-modal">
+  <div class="modal-box">
+    <div class="modal-title">Abonelik Ekle / Düzenle</div>
+    <div class="mfg">
+      <span class="mfl">Kullanıcı (Telefon ile ara)</span>
+      <input type="text" class="minput" id="sub-user-search" placeholder="05xx..." oninput="searchUserForSub(this.value)">
+      <div id="sub-user-results" style="margin-top:6px;"></div>
+      <input type="hidden" id="sub-user-id">
+      <div id="sub-user-selected" style="font-size:12px;color:var(--gold);margin-top:4px;"></div>
+    </div>
+    <div class="mfg">
+      <span class="mfl">Plan</span>
+      <select class="msel" id="sub-plan">
+        <option value="Aylık">Aylık</option>
+        <option value="3 Aylık">3 Aylık</option>
+        <option value="Yıllık">Yıllık</option>
+        <option value="Özel">Özel</option>
+      </select>
+    </div>
+    <div class="mfg">
+      <span class="mfl">Fiyat (₺)</span>
+      <input type="number" class="minput" id="sub-price" placeholder="1500">
+    </div>
+    <div class="mfg">
+      <span class="mfl">Başlangıç Tarihi</span>
+      <input type="date" class="minput" id="sub-start">
+    </div>
+    <div class="mfg">
+      <span class="mfl">Bitiş Tarihi</span>
+      <input type="date" class="minput" id="sub-end">
+    </div>
+    <div class="mbtn-row">
+      <button class="mbtn secondary" onclick="closeModal()">İptal</button>
+      <button class="mbtn primary" onclick="saveSub()">Kaydet</button>
+    </div>
+  </div>
+</div>
+
+<script src="js/admin.js"></script>
+</body>
+</html>
