@@ -60,17 +60,18 @@ function renderStep(step) {
           ${step === 6 ? renderStep6() : ''}
         </div>
       </div>
-      <div id="val-info-area">${step < 6 ? renderInfoPanel(step) : ''}</div>
+      <div id="val-info-area"></div>
     </div>`;
 
   bindStepEvents(step);
   if (step === 6) {
-    calcAndRender();
+    calcAndRender(); // içinde val-info-area'yı benzer ilanlarla doldurur
     freeUsed = Math.min(freeUsed + 1, FREE_LIMIT);
     localStorage.setItem('freeUsed', freeUsed);
   } else {
+    const infoArea = document.getElementById('val-info-area');
+    if (infoArea) infoArea.innerHTML = renderInfoPanel(step);
     initInfoPanelListeners(step);
-    // Varsayılan kart göster
     const defaultCard = VAL_INFO_CARDS[step] && VAL_INFO_CARDS[step][0];
     if (defaultCard) showInfoCard(defaultCard);
   }
@@ -189,20 +190,23 @@ function showInfoCard(card) {
   const inner = document.getElementById('vis-inner');
   if (!icon) return;
 
-  // Fade out → güncelle → fade in
-  if (inner) inner.classList.add('vis-fade-out');
-  setTimeout(() => {
-    icon.textContent  = card.icon;
+  // Anında güncelle (delay yok)
+  icon.textContent  = card.icon;
+  if (badge) {
     badge.textContent = card.badge || '';
-    badge.style.background = card.badgeColor ? card.badgeColor + '22' : 'rgba(201,168,76,.12)';
-    badge.style.color = card.badgeColor || 'var(--gold)';
+    badge.style.background  = card.badgeColor ? card.badgeColor + '22' : 'rgba(201,168,76,.12)';
+    badge.style.color       = card.badgeColor || 'var(--gold)';
     badge.style.borderColor = card.badgeColor ? card.badgeColor + '44' : 'rgba(201,168,76,.25)';
-    title.textContent = card.title;
-    body.textContent  = card.body;
-    bullets.innerHTML = (card.bullets||[]).map(b => `<li>${b}</li>`).join('');
-    if (inner) { inner.classList.remove('vis-fade-out'); inner.classList.add('vis-fade-in'); }
-    setTimeout(() => { if(inner) inner.classList.remove('vis-fade-in'); }, 300);
-  }, 150);
+  }
+  title.textContent = card.title;
+  body.textContent  = card.body;
+  if (bullets) bullets.innerHTML = (card.bullets||[]).map(b => `<li>${b}</li>`).join('');
+  // Kısa flash animasyonu
+  if (inner) {
+    inner.style.transition = 'opacity 0.1s';
+    inner.style.opacity = '0.7';
+    requestAnimationFrame(() => { inner.style.opacity = '1'; });
+  }
 }
 
 function initInfoPanelListeners(step) {
@@ -265,6 +269,18 @@ function initInfoPanelListeners(step) {
 }
 
 function goStep(step) {
+  // Adım 5 = SMS doğrulama: giriş yapılmışsa direkt adım 6'ya geç
+  if (step === 5) {
+    const tok = localStorage.getItem('emlak_token');
+    let loggedIn = false;
+    if (tok) {
+      try {
+        const p = JSON.parse(atob(tok));
+        if (p.exp > Date.now()) loggedIn = true;
+      } catch(e) {}
+    }
+    if (loggedIn) { step = 6; } // SMS'i atla
+  }
   VAL.currentStep = step;
   if (_aiTypewriterInterval) { clearInterval(_aiTypewriterInterval); _aiTypewriterInterval = null; }
   renderStep(step);

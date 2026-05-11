@@ -1,7 +1,7 @@
 
-// Dil sayfası yönlendirme
+// Dil geçişi: TR→orijinal TR sayfa, EN→/en/ karşılığı
 (function(){
-  const EN_PAGES = {
+  const EN_MAP = {
     '/': '/en/',
     '/hakkimizda': '/en/about',
     '/fiyatlar': '/en/pricing',
@@ -11,34 +11,31 @@
     '/degerleme': '/en/valuation',
     '/karsilastirma': '/en/comparison',
     '/analiz': '/en/analytics',
-    '/en/': '/',
-    '/en/about': '/hakkimizda',
-    '/en/pricing': '/fiyatlar',
-    '/en/login': '/giris',
-    '/en/payment': '/odeme',
-    '/en/advisors': '/danisman',
-    '/en/valuation': '/degerleme',
-    '/en/comparison': '/karsilastirma',
-    '/en/analytics': '/analiz',
   };
+  const TR_MAP = {};
+  Object.keys(EN_MAP).forEach(k => { TR_MAP[EN_MAP[k]] = k; });
+
   window._switchLang = function(lang) {
     const path = location.pathname.replace(/\/+$/,'') || '/';
-    if(lang === 'en') {
-      const enPath = EN_PAGES[path];
-      if(enPath) { location.href = enPath; return; }
-      // /en/ altındaysak zaten EN
-      if(path.startsWith('/en')) return;
+    if (lang === 'en') {
+      if (path.startsWith('/en')) return; // zaten EN
+      const enPath = EN_MAP[path];
+      if (enPath) { location.href = enPath; return; }
       location.href = '/en/';
     } else {
-      const trPath = EN_PAGES[path];
-      if(trPath) { location.href = trPath; return; }
+      if (!path.startsWith('/en')) return; // zaten TR, hiçbir şey yapma
+      const trPath = TR_MAP[path];
+      if (trPath) { location.href = trPath; return; }
       location.href = '/';
     }
   };
-  // setLang'ı override et — sayfa yönlendirsin
-  const _origSetLang = window.setLang;
+
   window.setLang = function(lang) {
     localStorage.setItem('lang', lang);
+    const m = document.getElementById('lang-menu');
+    if (m) m.style.display = 'none';
+    const lt = document.getElementById('lang-txt');
+    if (lt) lt.textContent = lang === 'en' ? '🇬🇧 EN' : '🇹🇷 TR';
     window._switchLang(lang);
   };
 })();
@@ -278,4 +275,27 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }, { threshold: 0.3 });
   counterEls.forEach(el => obs.observe(el));
+});
+
+// ── NAV AKTİF LİNK (mobil + desktop) ──
+document.addEventListener('DOMContentLoaded', () => {
+  const path = location.pathname.replace(/\/+$/, '') || '/';
+  document.querySelectorAll('.nav-lnk[href]').forEach(lnk => {
+    const lPath = (lnk.getAttribute('href') || '').replace(/\/+$/, '') || '/';
+    if (lPath === path) lnk.classList.add('act');
+    else lnk.classList.remove('act');
+  });
+});
+
+// ── HAMBURGEr Z-INDEX güvencesi ──
+document.addEventListener('DOMContentLoaded', () => {
+  const mobSheet = document.getElementById('mob-sheet');
+  const mobOv    = document.getElementById('mob-ov');
+  const nav      = document.getElementById('main-nav');
+  if (mobSheet) mobSheet.style.zIndex = '3000';
+  if (mobOv)    mobOv.style.zIndex    = '2999';
+  if (nav)      nav.style.zIndex      = '1000';
+  // Ham butonu her zaman nav'ın üstünde
+  const ham = document.getElementById('nav-ham');
+  if (ham) ham.style.zIndex = '1001';
 });

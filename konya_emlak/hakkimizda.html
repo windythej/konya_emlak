@@ -148,7 +148,7 @@
   </div>
 
   <!-- Misyon & Vizyon -->
-  <div style="max-width:1300px;margin:0 auto;padding:60px 48px;display:grid;grid-template-columns:1fr 1fr;gap:24px;">
+  <div style="max-width:1300px;margin:0 auto;padding:clamp(32px,4vw,60px) clamp(16px,4vw,48px);display:grid;grid-template-columns:1fr 1fr;gap:24px;" class="mv-grid">
     <div class="mv-card rv from-left" style="background:var(--d2);border:1px solid var(--bd);border-radius:var(--r);padding:40px;">
       <div style="font-size:40px;margin-bottom:18px;">🎯</div>
       <div data-tr="Misyonumuz" data-en="Our Mission" style="font-family:var(--serif);font-size:24px;font-weight:700;color:var(--gold);margin-bottom:14px;" data-i18n="ab_mis_title">Misyonumuz</div>
@@ -223,7 +223,7 @@
   </div>
 
   <!-- Nasıl Çalışırız -->
-  <div style="max-width:1300px;margin:0 auto;padding:60px 48px;">
+  <div style="max-width:1300px;margin:0 auto;padding:clamp(32px,4vw,60px) clamp(16px,4vw,48px);">
     <div class="ey" data-tr="Metodoloji" data-en="Methodology">Metodoloji</div>
     <h2 class="rv" data-tr="Analizimiz nasıl çalışır?" data-en="How does our analysis work?" style="font-family:var(--serif);font-size:clamp(28px,3.5vw,44px);font-weight:700;color:var(--tx);margin-bottom:40px;" data-i18n="ab_how_title">Analizimiz nasıl çalışır?</h2>
     <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:20px;">
@@ -247,10 +247,10 @@
 
   <!-- Kurucu Ekip -->
   <div style="background:var(--d2);border-top:1px solid var(--bd);">
-    <div style="max-width:1300px;margin:0 auto;padding:60px 48px;">
+    <div style="max-width:1300px;margin:0 auto;padding:clamp(32px,4vw,60px) clamp(16px,4vw,48px);">
       <div class="ey" data-tr="Ekip" data-en="Team">Ekip</div>
       <h2 class="rv" data-tr="Kurucu ortaklar" data-en="Co-Founders" style="font-family:var(--serif);font-size:clamp(28px,3.5vw,44px);font-weight:700;color:var(--tx);margin-bottom:40px;" data-i18n="ab_team_title">Kurucu ortaklar</h2>
-      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:24px;">
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:24px;" class="team-grid">
 
         <!-- Batuhan - ilk sıra, kurucu & geliştirici -->
         <div class="team-card team-card-founder rv from-left" style="padding:52px 32px 40px;text-align:center;position:relative;overflow:visible;margin-top:18px;">
@@ -283,7 +283,7 @@
   </div>
 
   <!-- Alt CTA -->
-  <div style="max-width:1300px;margin:0 auto;padding:60px 48px;text-align:center;">
+  <div style="max-width:1300px;margin:0 auto;padding:clamp(32px,4vw,60px) clamp(16px,4vw,48px);text-align:center;">
     <h2 style="font-family:var(--serif);font-size:clamp(28px,3.5vw,44px);font-weight:700;color:var(--tx);margin-bottom:16px;">Platformu deneyin</h2>
     <p style="font-size:16px;color:var(--txm);margin-bottom:36px;">3 ücretsiz değerleme hakkınız sizi bekliyor.</p>
     <div style="display:flex;gap:14px;justify-content:center;flex-wrap:wrap;">
@@ -326,7 +326,7 @@
   </div>
 </div>
 <!-- Sabit destek butonu (sağ alt) -->
-<button onclick="openSupport()" id="support-fab" style="position:fixed;bottom:20px;right:20px;width:52px;height:52px;background:var(--grad);border:none;border-radius:50%;font-size:22px;cursor:pointer;z-index:8999;box-shadow:0 8px 24px rgba(201,168,76,.35);transition:all .3s;display:flex;align-items:center;justify-content:center;" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'">💬</button>
+<button onclick="openSupport()" id="support-fab" style="display:none!important;position:fixed;bottom:20px;right:20px;width:52px;height:52px;background:var(--grad);border:none;border-radius:50%;font-size:22px;cursor:pointer;z-index:8999;box-shadow:0 8px 24px rgba(201,168,76,.35);transition:all .3s;display:flex;align-items:center;justify-content:center;" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'">💬</button>
 
 <a href="/admin" style="position:fixed;bottom:20px;right:20px;width:36px;height:36px;background:var(--d2);border:1px solid var(--bd);border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--txd);font-size:14px;text-decoration:none;z-index:997;opacity:0.2;transition:all .3s;" onmouseover="this.style.opacity='.8'" onmouseout="this.style.opacity='.2'">⚙</a>
 
