@@ -1,4 +1,24 @@
 /* ===== DEĞERLEME CSS ===== */
+
+/* Adım 1-4: tek sütun ortalı form */
+.val-container {
+  display: block !important;
+  max-width: 760px !important;
+  margin: 0 auto !important;
+  padding: 0 clamp(16px,4vw,48px) 80px !important;
+}
+
+/* Adım 5 sonuç: iki sütun (sol geniş + sağ dar panel) */
+.val-container.val-result-wide {
+  display: grid !important;
+  grid-template-columns: minmax(0,1fr) 340px !important;
+  max-width: 1300px !important;
+  margin: 0 auto !important;
+  align-items: start !important;
+  gap: 24px !important;
+}
+
+/* ===== DEĞERLEME CSS ===== */
 .val-container {
   display: block;
   max-width: 760px;
