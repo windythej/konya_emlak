@@ -3,11 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Konya Emlak — Akıllı Fiyat Karşılaştırma</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<title>Konya Akıllı Emlak Platformu — Öğren-Sat</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=Montserrat:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
 
@@ -23,480 +23,667 @@
   </div>
 </div>
 
-<!-- AUTH EKRANI -->
-<div class="auth-overlay" id="auth-overlay">
-  <div class="auth-card">
-    <div class="auth-logo">
-      <div class="auth-logo-icon">◎</div>
-      <div class="auth-logo-title">Konya Emlak</div>
-      <div class="auth-logo-sub">Akıllı Piyasa Analizi Platformu</div>
-    </div>
-
-    <div class="auth-tabs">
-      <button class="auth-tab on" id="atab-login" onclick="switchAuthTab('login')">Giriş Yap</button>
-      <button class="auth-tab" id="atab-register" onclick="switchAuthTab('register')">Hesap Oluştur</button>
-    </div>
-
-    <!-- GİRİŞ -->
-    <div class="auth-step on" id="astep-login-tel">
-      <div class="auth-title">Hoş Geldiniz</div>
-      <div class="auth-sub">Telefon numaranızı girin, size doğrulama kodu gönderelim.</div>
-      <div class="auth-error" id="login-error"></div>
-      <div class="afg">
-        <label class="afl">Telefon Numarası</label>
-        <input type="tel" class="ainput" id="login-tel" placeholder="05xx xxx xx xx" maxlength="11">
-      </div>
-      <button class="abtn" id="login-send-btn" onclick="loginSend()">KOD GÖNDER</button>
-    </div>
-
-    <div class="auth-step" id="astep-login-code">
-      <div class="auth-title">Doğrulama Kodu</div>
-      <div class="auth-sub" id="login-code-sub">Numaranıza gönderilen 4 haneli kodu girin.</div>
-      <div class="auth-error" id="login-code-error"></div>
-      <div class="afg">
-        <input type="number" class="ainput auth-code-input" id="login-code" placeholder="0000" maxlength="4">
-        <div class="auth-hint">Kodu almadıysanız tekrar gönderebilirsiniz.</div>
-      </div>
-      <button class="abtn" onclick="loginVerify()">GİRİŞ YAP</button>
-      <button class="auth-resend" onclick="loginResend()">Tekrar gönder</button>
-    </div>
-
-    <!-- KAYIT -->
-    <div class="auth-step" id="astep-register-info">
-      <div class="auth-title">Hesap Oluştur</div>
-      <div class="auth-sub">Bilgilerinizi girin, SMS ile doğrulayın.</div>
-      <div class="auth-error" id="register-error"></div>
-      <div class="arow2">
-        <div class="afg">
-          <label class="afl">Ad</label>
-          <input type="text" class="ainput" id="reg-first" placeholder="Adınız">
-        </div>
-        <div class="afg">
-          <label class="afl">Soyad</label>
-          <input type="text" class="ainput" id="reg-last" placeholder="Soyadınız">
-        </div>
-      </div>
-      <div class="afg">
-        <label class="afl">Telefon Numarası</label>
-        <input type="tel" class="ainput" id="reg-tel" placeholder="05xx xxx xx xx" maxlength="11">
-      </div>
-      <button class="abtn" onclick="registerSend()">KOD GÖNDER</button>
-    </div>
-
-    <div class="auth-step" id="astep-register-code">
-      <div class="auth-title">Doğrulama Kodu</div>
-      <div class="auth-sub" id="register-code-sub">Numaranıza gönderilen 4 haneli kodu girin.</div>
-      <div class="auth-error" id="register-code-error"></div>
-      <div class="afg">
-        <input type="number" class="ainput auth-code-input" id="register-code" placeholder="0000" maxlength="4">
-        <div class="auth-hint">Kodu almadıysanız tekrar gönderebilirsiniz.</div>
-      </div>
-      <button class="abtn" onclick="registerVerify()">HESABI OLUŞTUR</button>
-      <button class="auth-resend" onclick="registerResend()">Tekrar gönder</button>
-    </div>
-
+<!-- GİRİŞ GEREKLİ POPUP -->
+<div id="login-req-overlay">
+  <div class="lrp-box">
+    <div class="lrp-icon">🔒</div>
+    <div class="lrp-title">Önce Giriş Yapın</div>
+    <div class="lrp-sub">Abonelik satın almak için lütfen hesabınıza giriş yapın veya yeni hesap oluşturun.</div>
+    <button class="lrp-btn" onclick="closeLoginReq();location.href='/giris'">Giriş Yap / Kayıt Ol</button>
+    <button class="lrp-cancel" onclick="closeLoginReq()">İptal</button>
   </div>
 </div>
 
-<!-- KULLANICI BAR -->
-<div class="user-bar" id="user-bar">
-  <div class="user-info">Hoş geldin, <span id="user-name-display">—</span></div>
-  <button class="logout-btn" onclick="logout()">Çıkış Yap</button>
+
+<!-- LOADER -->
+<div class="float-orb float-orb-1"></div>
+<div class="float-orb float-orb-2"></div>
+<div id="page-loader">
+  <div class="ldr-brand">Öğren-Sat</div>
+  <div class="ldr-spinner"></div>
 </div>
 
-<div class="site-content" id="site-content">
 
-<!-- MOBİL SEARCH BAR -->
-<div class="mob-search">
-  <div class="mob-search-inner">
-    <button class="mob-filter-btn" id="mob-filter-btn">Filtreler &amp; Ara <span id="mob-filter-count"></span></button>
-    <button class="mob-go-btn" id="mob-go-btn">Getir</button>
+<div class="float-orb float-orb-1"></div>
+<div class="float-orb float-orb-2"></div>
+
+<div id="login-req-overlay" style="position:fixed;inset:0;background:rgba(0,0,0,.82);z-index:9998;display:none;align-items:center;justify-content:center;backdrop-filter:blur(8px);"><div class="lrp-box"><div class="lrp-icon">🔒</div><div class="lrp-title">Önce Giriş Yapın</div><div class="lrp-sub">Devam etmek için giriş yapın.</div><button class="lrp-btn" onclick="location.href='/giris'">Giriş Yap</button><button class="lrp-cancel" onclick="this.closest('#login-req-overlay').style.display='none'">İptal</button></div></div>
+
+<!-- MOBİL MENÜ -->
+<div class="mob-ov" id="mob-ov" onclick="closeMob()"></div>
+<div class="mob-sheet" id="mob-sheet">
+  <div style="padding:14px 20px 12px;border-bottom:1px solid var(--bd);flex-shrink:0;">
+    <span style="font-family:var(--serif);font-size:16px;font-weight:700;color:var(--gold);">Öğren-Sat</span>
+  </div>
+  <div style="flex:1;overflow-y:auto;padding:16px 24px;display:flex;flex-direction:column;gap:4px;scrollbar-width:none;">
+    <a class="nav-lnk" href="/">Ana Sayfa</a>
+    <a class="nav-lnk" href="/degerleme">Değerleme</a>
+    <a class="nav-lnk" href="/karsilastirma">Karşılaştırma</a>
+    <a class="nav-lnk" href="/fiyatlar">Fiyatlar</a>
+    <a class="nav-lnk" href="/danisman">Danışman Bul</a>
+    <a class="nav-lnk" href="/hakkimizda">Hakkımızda</a>
+    <a class="nav-lnk" href="/analiz">📊 Analiz</a>
+  </div>
+  <div style="padding:16px 24px;border-top:1px solid var(--bd);flex-shrink:0;">
+    <div style="display:flex;gap:8px;margin-bottom:10px;">
+      <button onclick="setLang('tr');closeMob()" style="flex:1;padding:9px;background:var(--d3);border:1px solid var(--bd);border-radius:var(--rs);color:var(--tx);font-size:13px;font-family:var(--font);cursor:pointer;">🇹🇷 Türkçe</button>
+      <button onclick="setLang('en');closeMob()" style="flex:1;padding:9px;background:var(--d3);border:1px solid var(--bd);border-radius:var(--rs);color:var(--tx);font-size:13px;font-family:var(--font);cursor:pointer;">🇬🇧 English</button>
+    </div>
+    <a href="/giris" class="btn-g" style="width:100%;justify-content:center;display:flex;text-decoration:none;" id="mob-login-btn">Giriş Yap / Kayıt Ol</a>
+    <div id="mob-user-sec" style="display:none;text-align:center;padding:14px 0;">
+      <div style="font-size:15px;color:var(--tx);margin-bottom:10px;">Hoş geldin, <strong id="mob-uname">—</strong></div>
+      <button onclick="logout()" style="font-size:13px;color:var(--txm);background:none;border:none;cursor:pointer;font-family:var(--font);text-decoration:underline;">Çıkış Yap</button>
+    </div>
   </div>
 </div>
-
-<!-- MOBİL FİLTRE SHEET -->
-<div class="fsheet" id="fsheet">
-  <div class="fsheet-ov" id="fsheet-ov"></div>
-  <div class="fsheet-body">
-    <div class="fsheet-handle"></div>
-    <div class="fsheet-title">Filtreler <button class="fsheet-close" id="fsheet-close">✕</button></div>
-    <div class="fsheet-content">
-      <div class="fg"><span class="fl">İlçe</span><div class="chips" id="dc-m"><button class="chip on" data-value="">Tümü</button></div></div>
-      <div class="fg"><span class="fl">Mahalle</span><div class="chips" id="qc-m"><button class="chip on" data-value="">Tümü</button></div></div>
-      <div class="fg"><span class="fl">Oda Sayısı</span>
-        <div class="chips" id="rc-m">
-          <button class="chip on" data-value="">Tümü</button>
-          <button class="chip" data-value="1+1">1+1</button>
-          <button class="chip" data-value="2+1">2+1</button>
-          <button class="chip" data-value="3+1">3+1</button>
-          <button class="chip" data-value="4+1">4+1</button>
-          <button class="chip" data-value="5+1">5+1</button>
-        </div>
-      </div>
-      <div class="fg"><span class="fl">Isıtma</span>
-        <div class="chips" id="hc-m">
-          <button class="chip on" data-value="">Tümü</button>
-          <button class="chip" data-value="Kombi">Kombi</button>
-          <button class="chip" data-value="Merkezi">Merkezi</button>
-          <button class="chip" data-value="Yerden">Yerden</button>
-          <button class="chip" data-value="Soba">Soba</button>
-        </div>
-      </div>
-      <div class="fg"><span class="fl">Özellikler</span>
-        <div class="togs" id="togs-m">
-          <div class="tog" data-feat="Ebeveyn Banyosu"><span class="tname">Ebeveyn Banyosu</span><div class="tdot"></div></div>
-          <div class="tog" data-feat="balcony"><span class="tname">Balkon</span><div class="tdot"></div></div>
-          <div class="tog" data-feat="elevator"><span class="tname">Asansör</span><div class="tdot"></div></div>
-          <div class="tog" data-feat="parking"><span class="tname">Otopark</span><div class="tdot"></div></div>
-          <div class="tog" data-feat="inComplex"><span class="tname">Site İçi</span><div class="tdot"></div></div>
-        </div>
-      </div>
-      <div class="fg"><span class="fl">Fiyat Aralığı (TL)</span>
-        <div class="prow">
-          <input type="number" class="pi" id="mnp-m" placeholder="Min" step="100000">
-          <input type="number" class="pi" id="mxp-m" placeholder="Max" step="100000">
-        </div>
+<!-- NAVBAR -->
+<nav class="nav" id="main-nav">
+  <a class="nav-brand" href="/">
+    <div class="nav-brand-mark">Ö</div>Öğren-Sat
+  </a>
+  <div class="nav-links" id="nav-links">
+    <a class="nav-lnk" data-page="/" href="/">Ana Sayfa</a>
+    <a class="nav-lnk" data-page="/degerleme" href="/degerleme">Değerleme</a>
+    <a class="nav-lnk" data-page="/karsilastirma" href="/karsilastirma">Karşılaştırma</a>
+    <a class="nav-lnk" data-page="/fiyatlar" href="/fiyatlar">Fiyatlar</a>
+    <a class="nav-lnk" data-page="/danisman" href="/danisman">Danışman Bul</a>
+    <a class="nav-lnk" data-page="/hakkimizda" href="/hakkimizda">Hakkımızda</a>
+    <a class="nav-lnk" data-page="/analiz" href="/analiz">📊 Analiz</a>
+  </div>
+  <div style="display:flex;align-items:center;">
+    <div style="display:flex;align-items:center;gap:14px;margin-right:14px;">
+    <div style="position:relative;">
+      <button id="lang-btn" onclick="toggleLangMenu()" style="display:flex;align-items:center;gap:6px;padding:7px 14px;background:var(--d2);border:1px solid var(--bd);border-radius:var(--rs);color:var(--txm);font-size:12px;font-weight:600;font-family:var(--font);cursor:pointer;transition:all .25s;" onmouseover="this.style.borderColor='var(--gold)';this.style.color='var(--gold)'" onmouseout="this.style.borderColor='var(--bd)';this.style.color='var(--txm)'">
+        🌐 <span id="lang-txt">TR</span>
+      </button>
+      <div id="lang-menu" style="display:none;position:absolute;top:calc(100% + 8px);right:0;background:var(--d2);border:1px solid var(--bd);border-radius:var(--rs);overflow:hidden;min-width:150px;z-index:5000;box-shadow:0 8px 32px rgba(0,0,0,.5);">
+        <button onclick="setLang('tr')" style="width:100%;padding:10px 16px;background:none;border:none;color:var(--tx);font-size:13px;font-family:var(--font);cursor:pointer;display:flex;align-items:center;gap:10px;transition:background .2s;" onmouseover="this.style.background='rgba(201,168,76,.08)'" onmouseout="this.style.background='none'">🇹🇷 Türkçe</button>
+        <button onclick="setLang('en')" style="width:100%;padding:10px 16px;background:none;border:none;color:var(--tx);font-size:13px;font-family:var(--font);cursor:pointer;display:flex;align-items:center;gap:10px;transition:background .2s;" onmouseover="this.style.background='rgba(201,168,76,.08)'" onmouseout="this.style.background='none'">🇬🇧 English</button>
       </div>
     </div>
-    <button class="fsheet-sbtn" id="fsheet-apply">İlanları Getir</button>
+    <button onclick="openSupport()" style="display:flex;align-items:center;gap:5px;padding:6px 12px;background:var(--d2);border:1px solid var(--bd);border-radius:var(--rs);color:var(--txm);font-size:12px;font-weight:600;font-family:var(--font);cursor:pointer;transition:all .25s;position:relative;" onmouseover="this.style.borderColor='var(--gold)';this.style.color='var(--gold)'" onmouseout="this.style.borderColor='var(--bd)';this.style.color='var(--txm)'">
+      <span>💬</span><span id="support-txt">Destek</span>
+      <span style="position:absolute;top:-3px;right:-3px;width:8px;height:8px;background:#4CAF82;border-radius:50%;border:2px solid var(--dark);"></span>
+    </button>
   </div>
-</div>
-
-<!-- MOBİL NAV BAR -->
-<nav class="mob-nav">
-  <div class="mob-nav-inner">
-    <button class="mnb on" id="mnb-list"><div class="mico">☰</div>Liste</button>
-    <button class="mnb" id="mnb-map"><div class="mico">⊙</div>Harita</button>
-    <button class="mnb" id="mnb-filter"><div class="mico">⚙</div>Filtreler</button>
+  <button class="nav-cta" id="nav-login-btn" onclick="location.href='/giris'">Giriş Yap / Kayıt Ol</button>
+  <div class="nav-user" id="nav-user" style="display:none;">
+    <div class="nav-avatar" id="nav-av">K</div>
+    <span class="nav-uname" id="nav-uname">—</span>
+    <button class="nav-out" onclick="logout()">Çıkış</button>
+  </div>
+  <button class="nav-ham" id="nav-ham" onclick="toggleMob()">
+    <div class="hbar" id="hbar1"></div>
+    <div class="hbar" id="hbar2"></div>
+    <div class="hbar" id="hbar3"></div>
+  </button>
   </div>
 </nav>
 
-<div class="hero">
-  <p class="ey">Konya Emlak Platformu</p>
-  <h1>Akıllı Emlak<br>Platformu</h1>
-  <p>Sahibinden.com verisiyle piyasa analizi ve evinizin tahmini değerini öğrenin.</p>
-  <div class="tabs">
-    <button class="tab on" id="tab-list">☰ Piyasa Karşılaştırma</button>
-    <button class="tab" id="tab-val">◎ Değerleme Aracı</button>
+<section class="hero">
+  <div class="hero-particles" id="hero-particles"></div>
+  <div class="hero-inner">
+    <div class="hero-badge"><div class="bdot"></div>Konya'nın Akıllı Emlak Platformu</div>
+    <h1 class="hero-h1">Evi <em>satmadan önce</em><br>piyasayı öğren</h1>
+    <p class="hero-sub">Konya'daki <strong>gerçek satış verilerinden</strong> üretilen yapay zeka destekli fiyat analizi. Doğru kararı, doğru fiyatla ver.</p>
+    <div class="hero-btns">
+      <button class="btn-g" onclick="location.href='/degerleme'">◎ Ücretsiz Değerleme Yap</button>
+      <button class="btn-o" onclick="location.href='/karsilastirma'">☰ Piyasayı İncele</button>
+    </div>
   </div>
-</div>
+</section>
 
-<!-- DEĞERLEME SAYFASI -->
-<div id="page-val" style="display:none;">
-<div class="val-wrap">
-  <div class="val-card">
+<!-- ARAÇLAR -->
+<section class="sec">
+  <div class="sec-in">
+    <div class="ey">Araçlarımız</div>
+    <h2 class="sec-title rv">İki araç, tam bir analiz</h2>
+    <p class="sec-sub rv d1">Evinizin değerini öğrenin veya bölgedeki tüm piyasayı inceleyin. Yapay zeka destekli, güncel verilerle.</p>
+    <div class="tools-g">
+      <div class="tc rv from-left" onclick="location.href='/degerleme'">
+        <div class="tc-badge">3 Ücretsiz</div>
+        <div class="tc-icon">◎</div>
+        <div class="tc-title" data-i18n="ftr_val">Değerleme Aracı</div>
+        <div class="tc-desc">Adres ve özelliklerinizi girin, yapay zeka Konya piyasasındaki gerçek verilerden evinizin tahmini değerini hesaplasın. Kira getirisi ve yatırım skoru dahil.</div>
+        <div class="tc-cta">Değerleme Yap →</div>
+      </div>
+      <div class="tc rv d1 from-right" onclick="location.href='/karsilastirma'">
+        <div class="tc-icon">⊞</div>
+        <div class="tc-title" data-i18n="ftr_comp">Piyasa Karşılaştırma</div>
+        <div class="tc-desc">İlçe, mahalle, oda sayısı ve onlarca filtreyle Konya'daki mevcut ilanları karşılaştırın. Harita görünümü ve detaylı ilan incelemesi.</div>
+        <div class="tc-cta">Piyasayı İncele →</div>
+      </div>
+      <div class="tc tc-wide rv">
+        <div class="tc-icon">📍</div>
+        <div class="tc-title">Konya Geneli Özet</div>
+        <div class="tc-desc">Platform genelindeki canlı istatistikler</div>
+        <div class="sum-g">
+          <div><div class="sg-v" id="sum-avg">—</div><div class="sg-l">Ortalama Fiyat</div></div>
+          <div><div class="sg-v" id="sum-m2">—</div><div class="sg-l">Ort. m² Fiyatı</div></div>
+          <div><div class="sg-v" id="sum-top">—</div><div class="sg-l">En Aktif İlçe</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 
-    <div class="val-header">
-      <div class="val-icon">◎</div>
+<!-- NASIL ÇALIŞIR -->
+<section class="sec how-sec">
+  <div class="sec-in">
+    <div class="ey">Nasıl Çalışır?</div>
+    <h2 class="sec-title rv">4 adımda piyasa analizi</h2>
+    <div class="how-g">
+      <div class="how-step rv"><div class="how-num">1</div><div class="how-ttl">Kategori Seç</div><div class="how-desc">Konut, arsa, ticari veya kiralık — analiz türünü belirleyin.</div></div>
+      <div class="how-step rv d1"><div class="how-num">2</div><div class="how-ttl">Konum & Özellikler</div><div class="how-desc">İlçe, mahalle, m², oda sayısı ve ek özellikleri girin.</div></div>
+      <div class="how-step rv d2"><div class="how-num">3</div><div class="how-ttl">Yapay Zeka Analiz</div><div class="how-desc">Sistemimiz 123+ gerçek ilandan benzerlerini bulur, yaş ağırlıklandırması uygular.</div></div>
+      <div class="how-step rv d3"><div class="how-num">4</div><div class="how-ttl">Detaylı Rapor</div><div class="how-desc">Fiyat aralığı, kira getirisi, yatırım skoru ve öneriler ekranınıza gelir.</div></div>
+    </div>
+  </div>
+</section>
+
+
+
+<!-- İLÇELER -->
+<section class="sec" style="background:var(--d2);border-top:1px solid var(--bd);">
+  <div class="sec-in">
+    <div class="ey">Kapsam</div>
+    <h2 class="sec-title rv">Şu an Konya'yı analiz ediyoruz</h2>
+    <div class="kony-banner rv d1">
+      <div style="font-size:36px;">🏙️</div>
+      <div><div class="kb-ttl">Konya İli</div><div class="kb-sub">Tüm ilçeler dahil — veriler sürekli güncelleniyor</div></div>
+    </div>
+    <div class="dc-list" id="dc-list">
+      <div class="dc-chip"><div class="dc-n">Yükleniyor...</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+
+
+
+<!-- ── GÜVENLE SAT — İNTERAKTİF AKIŞ ── -->
+<section class="sec" id="guvenle-sat-sec" style="background:var(--d2);border-bottom:1px solid var(--bd);padding-top:80px;padding-bottom:80px;">
+  <div class="sec-in">
+
+    <!-- Başlık -->
+    <div style="margin-bottom:52px;">
+      <div class="ey">Gayrimenkulünüzü Güvenle Satın</div>
+      <h2 class="sec-title rv from-left" style="margin-bottom:14px;">Zamandan kazanın,<br>stresten kurtulun, <em style="color:var(--gold);font-style:italic;">kazançlı çıkın.</em></h2>
+      <p style="font-size:15px;color:var(--txm);max-width:560px;line-height:1.75;">
+        Gayrimenkul satmak önemli ve stresli bir süreç. Öğren-Sat ile veriyi yanınıza alarak bu süreci daha kolay ve güvenli tamamlayın.
+      </p>
+    </div>
+
+    <!-- 2 kolon: Sol dinamik panel + Sağ sabit adım listesi -->
+    <div style="display:grid;grid-template-columns:420px 1fr;gap:40px;align-items:start;" class="gs-grid">
+
+      <!-- SOL: Dinamik Panel -->
+      <div id="gs-panel" style="position:sticky;top:90px;">
+        <div class="gs-panel-wrap">
+
+        <!-- PANEL 1: Başlangıç -->
+        <div class="gs-pane active" id="gs-pane-1">
+          <div class="gs-card">
+            <div style="text-align:center;padding:32px 24px;">
+              <div style="font-size:48px;margin-bottom:16px;">🏠</div>
+              <div style="font-family:var(--serif);font-size:22px;font-weight:700;color:var(--tx);margin-bottom:10px;">Mülkünüzü Değerlendirin</div>
+              <p style="font-size:14px;color:var(--txm);line-height:1.7;margin-bottom:28px;">Konya'da mülkünüzü satmayı düşünüyor musunuz? Gerçek piyasa değerini saniyeler içinde öğrenin.</p>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:24px;">
+                <div style="background:rgba(201,168,76,.06);border:1px solid rgba(201,168,76,.15);border-radius:var(--rs);padding:14px;text-align:center;">
+                  <div style="font-family:var(--serif);font-size:26px;font-weight:700;color:var(--gold);">123+</div>
+                  <div style="font-size:11px;color:var(--txm);margin-top:3px;">Aktif İlan</div>
+                </div>
+                <div style="background:rgba(201,168,76,.06);border:1px solid rgba(201,168,76,.15);border-radius:var(--rs);padding:14px;text-align:center;">
+                  <div style="font-family:var(--serif);font-size:26px;font-weight:700;color:var(--gold);">%94</div>
+                  <div style="font-size:11px;color:var(--txm);margin-top:3px;">Doğruluk Oranı</div>
+                </div>
+              </div>
+              <button class="btn-g" style="width:100%;justify-content:center;" onclick="gsNextStep(2,true)">Hemen Başla →</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- PANEL 2: Değerleme Sonucu -->
+        <div class="gs-pane" id="gs-pane-2">
+          <div class="gs-card">
+            <div style="padding:28px 24px;">
+              <div style="font-family:var(--serif);font-size:18px;font-weight:700;color:var(--tx);margin-bottom:4px;">Değerleme Sonucu</div>
+              <div style="font-size:12px;color:var(--txm);margin-bottom:22px;">Mülkünüzün tahmini değeri</div>
+              <!-- Örnek sonuç kartı -->
+              <div style="background:linear-gradient(145deg,#1a0808,#120505);border:1px solid rgba(201,168,76,.3);border-radius:var(--rs);padding:24px;text-align:center;margin-bottom:16px;">
+                <div style="font-size:32px;margin-bottom:10px;">🏠</div>
+                <div style="font-size:11px;color:var(--txm);letter-spacing:2px;text-transform:uppercase;margin-bottom:8px;">TAHMİNİ DEĞER</div>
+                <div style="font-family:var(--serif);font-size:38px;font-weight:700;color:var(--gold);margin-bottom:12px;">6.197.455 ₺</div>
+                <div style="height:3px;background:rgba(201,168,76,.15);border-radius:100px;overflow:hidden;margin-bottom:10px;">
+                  <div style="height:100%;width:95%;background:linear-gradient(90deg,var(--gold-d),var(--gold));border-radius:100px;"></div>
+                </div>
+                <div style="font-size:12px;color:var(--gold);">⊙ 95 Güven Puanı</div>
+              </div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px;">
+                <div style="background:var(--d3);border:1px solid var(--bd);border-radius:var(--rs);padding:14px;">
+                  <div style="font-size:11px;color:var(--txm);margin-bottom:5px;">↓ Min Değer</div>
+                  <div style="font-size:15px;font-weight:700;color:var(--tx);">5.453.760 ₺</div>
+                </div>
+                <div style="background:var(--d3);border:1px solid var(--bd);border-radius:var(--rs);padding:14px;">
+                  <div style="font-size:11px;color:var(--txm);margin-bottom:5px;">↑ Maks Değer</div>
+                  <div style="font-size:15px;font-weight:700;color:var(--tx);">6.941.150 ₺</div>
+                </div>
+              </div>
+              <button class="btn-g" style="width:100%;justify-content:center;" onclick="gsNextStep(3,true)">Danışman Bul →</button>
+              <button class="btn-o" style="width:100%;justify-content:center;margin-top:10px;" onclick="location.href='/degerleme'">Kendi Mülkümü Değerle</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- PANEL 3: Danışman Listesi -->
+        <div class="gs-pane" id="gs-pane-3">
+          <div class="gs-card">
+            <div style="padding:28px 24px;">
+              <div style="font-family:var(--serif);font-size:18px;font-weight:700;color:var(--tx);margin-bottom:4px;">En İyi Danışmanı Bulduk</div>
+              <div style="font-size:12px;color:var(--txm);margin-bottom:20px;">Bölgenizdeki en iyi danışmanlar</div>
+              <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:20px;">
+                <div class="gs-advisor-row">
+                  <div class="gs-advisor-av">AY</div>
+                  <div style="flex:1;">
+                    <div style="font-size:14px;font-weight:700;color:var(--tx);">Ahmet Yılmaz</div>
+                    <div style="font-size:12px;color:var(--txm);">📍 Selçuklu</div>
+                  </div>
+                  <div style="text-align:right;">
+                    <div style="font-size:12px;color:var(--gold);font-weight:700;">★ 4.9</div>
+                    <div style="font-size:11px;color:var(--txm);">47 satış</div>
+                  </div>
+                </div>
+                <div class="gs-advisor-row">
+                  <div class="gs-advisor-av">ZA</div>
+                  <div style="flex:1;">
+                    <div style="font-size:14px;font-weight:700;color:var(--tx);">Zeynep Arslan</div>
+                    <div style="font-size:12px;color:var(--txm);">📍 Selçuklu</div>
+                  </div>
+                  <div style="text-align:right;">
+                    <div style="font-size:12px;color:var(--gold);font-weight:700;">★ 4.9</div>
+                    <div style="font-size:11px;color:var(--txm);">52 satış</div>
+                  </div>
+                </div>
+                <div class="gs-advisor-row">
+                  <div class="gs-advisor-av">HY</div>
+                  <div style="flex:1;">
+                    <div style="font-size:14px;font-weight:700;color:var(--tx);">Hasan Yıldız</div>
+                    <div style="font-size:12px;color:var(--txm);">📍 Meram</div>
+                  </div>
+                  <div style="text-align:right;">
+                    <div style="font-size:12px;color:var(--gold);font-weight:700;">★ 4.7</div>
+                    <div style="font-size:11px;color:var(--txm);">41 satış</div>
+                  </div>
+                </div>
+              </div>
+              <button class="btn-g" style="width:100%;justify-content:center;" onclick="gsNextStep(4,true)">Danışmanla Eşleş →</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- PANEL 4: İşlem Tamam -->
+        <div class="gs-pane" id="gs-pane-4">
+          <div class="gs-card">
+            <div style="padding:32px 24px;text-align:center;">
+              <div style="width:72px;height:72px;border-radius:50%;background:linear-gradient(135deg,#1a4a1a,#2d7a2d);border:2px solid var(--ok);display:flex;align-items:center;justify-content:center;margin:0 auto 18px;font-size:32px;">✓</div>
+              <div style="font-family:var(--serif);font-size:24px;font-weight:700;color:var(--ok);margin-bottom:8px;">İşlem Tamam</div>
+              <div style="font-size:13px;color:var(--txm);margin-bottom:28px;">Danışmanınız en kısa sürede sizinle iletişime geçecek</div>
+              <div style="display:flex;flex-direction:column;gap:10px;text-align:left;margin-bottom:24px;">
+                <div style="background:var(--d3);border:1px solid var(--bd);border-radius:var(--rs);padding:14px;display:flex;gap:12px;align-items:center;">
+                  <span style="font-size:18px;">🏠</span>
+                  <div><div style="font-size:11px;color:var(--txm);letter-spacing:1px;text-transform:uppercase;">DEĞERLEMENİZ</div><div style="font-size:15px;font-weight:700;color:var(--gold);">6.197.455 ₺</div></div>
+                </div>
+                <div style="background:var(--d3);border:1px solid var(--bd);border-radius:var(--rs);padding:14px;display:flex;gap:12px;align-items:center;">
+                  <span style="font-size:18px;">👤</span>
+                  <div><div style="font-size:11px;color:var(--txm);letter-spacing:1px;text-transform:uppercase;">ATANAN DANIŞMAN</div><div style="font-size:15px;font-weight:700;color:var(--tx);">Ahmet Yılmaz</div></div>
+                </div>
+                <div style="background:var(--d3);border:1px solid var(--bd);border-radius:var(--rs);padding:14px;display:flex;gap:12px;align-items:center;">
+                  <span style="font-size:18px;">⏱</span>
+                  <div><div style="font-size:11px;color:var(--txm);letter-spacing:1px;text-transform:uppercase;">BEKLENEN İLETİŞİM</div><div style="font-size:15px;font-weight:700;color:var(--tx);">12 Saat İçinde</div></div>
+                </div>
+              </div>
+              <button class="btn-g" style="width:100%;justify-content:center;" onclick="location.href='/degerleme'">Kendi Mülkümü Değerle</button>
+            </div>
+          </div>
+        </div>
+
+        </div><!-- /gs-panel-wrap -->
+      </div><!-- /gs-panel -->
+
+      <!-- SAĞ: Sabit Adım Listesi -->
       <div>
-        <div class="val-title">Piyasa Değerleme</div>
-        <div class="val-sub">Evinizin bilgilerini girin, Konya piyasasına göre tahmini değer öğrenin</div>
+        <!-- Progress bar -->
+        <div style="display:flex;align-items:center;gap:0;margin-bottom:36px;position:relative;" id="gs-progress-bar">
+          <div class="gs-prog-step active" id="gs-prog-1">
+            <div class="gs-prog-num">1</div>
+            <div class="gs-prog-line"></div>
+          </div>
+          <div class="gs-prog-step" id="gs-prog-2">
+            <div class="gs-prog-num">2</div>
+            <div class="gs-prog-line"></div>
+          </div>
+          <div class="gs-prog-step" id="gs-prog-3">
+            <div class="gs-prog-num">3</div>
+            <div class="gs-prog-line"></div>
+          </div>
+          <div class="gs-prog-step last" id="gs-prog-4">
+            <div class="gs-prog-num">4</div>
+          </div>
+        </div>
+
+        <!-- Adım Listesi -->
+        <div style="display:flex;flex-direction:column;gap:12px;">
+          <div class="gs-step-item active" id="gs-step-1" onclick="gsNextStep(1,true)" data-i18n-step="1" onmouseenter="gsHover(1)" onmouseleave="gsHoverOut()" style="cursor:pointer;">
+            <div class="gs-step-icon">✎</div>
+            <div class="gs-step-body">
+              <div class="gs-step-title">1 — Gayrimenkulünüzün Özelliklerini Girin</div>
+              <div class="gs-step-desc">Gayrimenkulünüzün türünü, konumunu ve detaylı özelliklerini girin.</div>
+            </div>
+            <div class="gs-step-arrow">›</div>
+          </div>
+          <div class="gs-step-item" id="gs-step-2" onclick="gsNextStep(2,true)" data-i18n-step="2" onmouseenter="gsHover(2)" onmouseleave="gsHoverOut()" style="cursor:pointer;">
+            <div class="gs-step-icon">⊙</div>
+            <div class="gs-step-body">
+              <div class="gs-step-title">2 — Değerini Öğrenin</div>
+              <div class="gs-step-desc">Öğren-Sat yapay zeka destekli değerleme modeli ile gerçek değerini saniyeler içinde öğrenin.</div>
+            </div>
+            <div class="gs-step-arrow">›</div>
+          </div>
+          <div class="gs-step-item" id="gs-step-3" onclick="gsNextStep(3,true)" data-i18n-step="3" onmouseenter="gsHover(3)" onmouseleave="gsHoverOut()" style="cursor:pointer;">
+            <div class="gs-step-icon">👤</div>
+            <div class="gs-step-body">
+              <div class="gs-step-title">3 — En İyi Danışmanı Bulun</div>
+              <div class="gs-step-desc">Bölgenizdeki uzman danışmanları keşfedin ve mülkünüzü en iyi fiyata satın.</div>
+            </div>
+            <div class="gs-step-arrow">›</div>
+          </div>
+          <div class="gs-step-item" id="gs-step-4" onclick="gsNextStep(4,true)" data-i18n-step="4" onmouseenter="gsHover(4)" onmouseleave="gsHoverOut()" style="cursor:pointer;">
+            <div class="gs-step-icon">✓</div>
+            <div class="gs-step-body">
+              <div class="gs-step-title">4 — Güvenle Satın</div>
+              <div class="gs-step-desc">Doğru fiyatla, doğru danışmanla mülkünüzü kısa sürede satın.</div>
+            </div>
+            <div class="gs-step-arrow">›</div>
+          </div>
+        </div>
+
+        <!-- Hemen Başla butonu -->
+        <div style="margin-top:32px;">
+          <button class="btn-g" style="width:100%;justify-content:center;padding:16px;" onclick="location.href='/degerleme'">◎ Hemen Başla</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<style>
+/* ── GÜVENLE SAT STİLLERİ ── */
+.gs-panel-wrap {
+  background: var(--d3);
+  border: 1px solid var(--bd);
+  border-radius: var(--r);
+  overflow: hidden;
+  /* Panel 4 "İşlem Tamam" en uzun içerik — ona göre sabit yükseklik */
+  height: 580px;
+  position: relative;
+  transition: border-color .3s;
+}
+.gs-card {
+  position: absolute;
+  inset: 0;
+  overflow-y: auto;
+  scrollbar-width: none;
+}
+.gs-card::-webkit-scrollbar { display: none; }
+.gs-pane {
+  opacity: 0;
+  transform: translateY(14px);
+  pointer-events: none;
+  position: absolute; inset: 0;
+  transition: opacity .5s cubic-bezier(.4,0,.2,1),
+              transform .5s cubic-bezier(.4,0,.2,1);
+  background: var(--d3);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.gs-pane.active {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+/* Progress bar - sabit yükseklik, çizgi kaymasın */
+#gs-progress-bar {
+  height: 48px;
+  margin-bottom: 32px;
+  align-items: center;
+}
+
+/* Progress bar */
+.gs-prog-step {
+  display: flex;
+  align-items: center;
+  flex: 1;
+  position: relative;
+}
+.gs-prog-step.last { flex: 0; }
+.gs-prog-num {
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  background: var(--d3);
+  border: 2px solid var(--bd);
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--serif);
+  font-size: 15px; font-weight: 700;
+  color: var(--txm);
+  flex-shrink: 0;
+  transition: all .45s cubic-bezier(.4,0,.2,1);
+  z-index: 1;
+}
+.gs-prog-step.active .gs-prog-num {
+  background: linear-gradient(135deg,#C9A84C,#E8A020);
+  border-color: transparent;
+  color: var(--dark);
+  box-shadow: 0 0 0 4px rgba(201,168,76,.2);
+  transform: scale(1.1);
+}
+.gs-prog-step.done .gs-prog-num {
+  background: linear-gradient(135deg,#E8A020,#F5C842);
+  border-color: transparent;
+  color: var(--dark);
+}
+.gs-prog-line {
+  flex: 1;
+  height: 2px;
+  background: var(--bd);
+  margin: 0 4px;
+  position: relative;
+  overflow: hidden;
+  border-radius: 2px;
+}
+.gs-prog-line::after {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(90deg, #C9A84C, #E8A020, #F5C842);
+  transform: scaleX(var(--hover-scale, 0));
+  transform-origin: left;
+  transition: transform .4s cubic-bezier(.4,0,.2,1);
+  border-radius: 2px;
+}
+/* Done adımlar: hover-scale override edilmedikçe tam dolu */
+.gs-prog-step.done .gs-prog-line::after {
+  transform: scaleX(var(--hover-scale, 1));
+}
+/* Active ve diğerleri: JS'den gelen scale */
+.gs-prog-step.active .gs-prog-line::after,
+.gs-prog-step:not(.done) .gs-prog-line::after {
+  transform: scaleX(var(--hover-scale, 0));
+}
+
+/* Adım listesi */
+.gs-step-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 18px 20px;
+  background: var(--d3);
+  border: 1px solid var(--bd);
+  border-radius: var(--rs);
+  transition: all .25s;
+  user-select: none;
+}
+.gs-step-item:hover { border-color: var(--bdh); background: var(--d4); }
+.gs-step-item.active {
+  background: linear-gradient(135deg, #C9A84C, #E8A020, #F5C842);
+  border-color: transparent;
+}
+.gs-step-icon {
+  width: 40px; height: 40px;
+  border-radius: 10px;
+  background: var(--d4);
+  border: 1px solid var(--bd);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 17px; flex-shrink: 0;
+  transition: all .25s;
+}
+.gs-step-item.active .gs-step-icon {
+  background: rgba(0,0,0,.2);
+  border-color: rgba(0,0,0,.2);
+  color: #000;
+}
+.gs-step-item.done .gs-step-icon {
+  background: rgba(76,175,130,.1);
+  border-color: var(--ok);
+}
+.gs-step-body { flex: 1; }
+.gs-step-title {
+  font-size: 14px; font-weight: 700;
+  color: var(--txm); margin-bottom: 5px;
+  transition: color .25s;
+}
+.gs-step-item.active .gs-step-title { color: #1a1200; text-shadow: none; font-weight: 800; }
+.gs-step-item.done .gs-step-title { color: var(--ok); }
+.gs-step-desc { font-size: 13px; color: var(--txm); line-height: 1.55; }
+.gs-step-item.active .gs-step-desc { color: rgba(20,12,0,.75); }
+.gs-step-desc { font-size: 13px; color: var(--txm); line-height: 1.55; }
+.gs-step-arrow {
+  font-size: 20px; color: var(--txd);
+  align-self: center;
+  transition: all .25s;
+}
+.gs-step-item.active .gs-step-arrow { color: rgba(0,0,0,.5); transform: translateX(3px); }
+
+/* Danışman satırı */
+.gs-advisor-row {
+  display: flex; align-items: center; gap: 14px;
+  padding: 14px 16px;
+  background: var(--d4);
+  border: 1px solid var(--bd);
+  border-radius: var(--rs);
+  transition: border-color .2s;
+  cursor: pointer;
+}
+.gs-advisor-row:hover { border-color: var(--gold); }
+.gs-advisor-av {
+  width: 40px; height: 40px; border-radius: 50%;
+  background: linear-gradient(135deg,var(--gold-d),var(--gold));
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--serif); font-size: 15px; font-weight: 700;
+  color: var(--dark); flex-shrink: 0;
+}
+
+@media(max-width:900px) {
+  .gs-grid { grid-template-columns: 1fr !important; }
+  #gs-panel { position: static !important; }
+}
+</style></section>
+
+<section class="cta-wrap sec cta-sec">
+  <div class="cta-in">
+    <h2 class="cta-title rv">Konya'da her <em>emlak kararı</em> veriden geçer</h2>
+    <p class="cta-sub rv d1">Gerçek piyasa verileri ve yapay zeka analizi ile doğru fiyatı öğrenin.</p>
+    <div style="display:flex;gap:14px;justify-content:center;flex-wrap:wrap;" class="rv d2">
+      <button class="btn-g" data-i18n="cta_btn1" onclick="location.href='/hakkimizda'">Bizi Tanıyın →</button>
+      <button class="btn-o" data-i18n="cta_btn2" onclick="location.href='/degerleme'">◎ Ücretsiz Değerleme</button>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="ftr">
+  <div class="ftr-in">
+    <div>
+      <div class="ftr-logo">Öğren-Sat</div>
+      <div class="ftr-desc" data-i18n="ftr_desc">Konya'nın yapay zeka destekli emlak analiz platformu.</div>
+    </div>
+    <div>
+      <div class="ftr-col-ttl">Araçlar</div>
+      <ul class="ftr-links">
+        <li><button onclick="location.href='/degerleme'" data-i18n="ftr_val">Değerleme Aracı</button></li>
+        <li><button onclick="location.href='/karsilastirma'" data-i18n="ftr_comp">Piyasa Karşılaştırma</button></li>
+      </ul>
+    </div>
+    <div>
+      <div class="ftr-col-ttl">Hesap</div>
+      <ul class="ftr-links">
+        <li><button onclick="location.href='/giris'">Giriş Yap / Kayıt Ol</button></li>
+        <li><button onclick="location.href='/giris'">Kayıt Ol</button></li>
+      </ul>
+    </div>
+    <div>
+      <div class="ftr-col-ttl">Abonelik</div>
+      <ul class="ftr-links">
+        <li><button onclick="location.href='/fiyatlar'" data-i18n="ftr_plans">Fiyat Planları</button></li>
+      </ul>
+    </div>
+  </div>
+  <div class="ftr-btm">
+    <div class="ftr-copy"><span data-i18n="ftr_copy">© 2025 Öğren-Sat. Tüm hakları saklıdır.</span></div>
+    <div class="ftr-note">Veriler bilgi amaçlıdır, yatırım tavsiyesi değildir.</div>
+  </div>
+</footer>
+</div><!-- /landing -->
+
+
+<!-- ═══════════════════════════════════════
+     2. GİRİŞ / KAYIT
+═══════════════════════════════════════ -->
+
+<!-- ── DESTEK BOTU ── -->
+<div id="support-modal" style="display:none;position:fixed;bottom:80px;right:24px;width:min(380px,92vw);background:var(--d2);border:1px solid var(--bd);border-radius:var(--r);z-index:9000;box-shadow:0 24px 80px rgba(0,0,0,.6);overflow:hidden;flex-direction:column;">
+  <!-- Başlık -->
+  <div style="padding:16px 20px;background:var(--grad);display:flex;align-items:center;justify-content:space-between;">
+    <div style="display:flex;align-items:center;gap:10px;">
+      <div style="width:36px;height:36px;background:rgba(0,0,0,.2);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;">🤖</div>
+      <div>
+        <div style="font-size:14px;font-weight:700;color:var(--dark);" id="bot-title">Öğren-Sat Asistanı</div>
+        <div style="font-size:11px;color:rgba(0,0,0,.6);">● Çevrimiçi</div>
       </div>
     </div>
-
-    <!-- ADIM 1: KONUM -->
-    <div class="vstep" id="vstep-1">
-      <div class="vstep-label">1 / 4 — Konum</div>
-      <div class="vfg">
-        <label class="vfl">İlçe</label>
-        <select class="vsel" id="v-district">
-          <option value="">İlçe seçin...</option>
-          <option value="Selçuklu">Selçuklu</option>
-          <option value="Meram">Meram</option>
-          <option value="Karatay">Karatay</option>
-          <option value="Akşehir">Akşehir</option>
-          <option value="Beyşehir">Beyşehir</option>
-          <option value="Cihanbeyli">Cihanbeyli</option>
-          <option value="Çumra">Çumra</option>
-          <option value="Ereğli">Ereğli</option>
-          <option value="Ilgın">Ilgın</option>
-          <option value="Kadınhanı">Kadınhanı</option>
-          <option value="Kulu">Kulu</option>
-          <option value="Sarayönü">Sarayönü</option>
-          <option value="Seydişehir">Seydişehir</option>
-          <option value="Yunak">Yunak</option>
-          <option value="Ahırlı">Ahırlı</option>
-          <option value="Akören">Akören</option>
-          <option value="Altınekin">Altınekin</option>
-          <option value="Bozkır">Bozkır</option>
-          <option value="Derbent">Derbent</option>
-          <option value="Derebucak">Derebucak</option>
-          <option value="Doğanhisar">Doğanhisar</option>
-          <option value="Emirgazi">Emirgazi</option>
-          <option value="Güneysınır">Güneysınır</option>
-          <option value="Hadim">Hadim</option>
-          <option value="Halkapınar">Halkapınar</option>
-          <option value="Hüyük">Hüyük</option>
-          <option value="Korkuteli">Korkuteli</option>
-          <option value="Taşkent">Taşkent</option>
-          <option value="Tuzlukçu">Tuzlukçu</option>
-          <option value="Yalıhüyük">Yalıhüyük</option>
-          <option value="Çeltik">Çeltik</option>
-        </select>
-      </div>
-      <div class="vfg">
-        <label class="vfl">Mahalle / Semt</label>
-        <select class="vsel" id="v-quarter">
-          <option value="">Önce ilçe seçin</option>
-        </select>
-      </div>
-      <button class="vstep-next" onclick="vstepNext(2)">Devam →</button>
+    <button onclick="closeSupport()" style="background:rgba(0,0,0,.15);border:none;border-radius:50%;width:28px;height:28px;color:var(--dark);font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;">✕</button>
+  </div>
+  <!-- Sohbet alanı -->
+  <div id="support-messages" style="height:280px;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:10px;scrollbar-width:thin;scrollbar-color:rgba(201,168,76,.2) transparent;">
+    <div class="bot-msg" style="background:var(--d3);border-radius:12px 12px 12px 2px;padding:10px 14px;font-size:13px;color:var(--tx);max-width:85%;line-height:1.6;" id="bot-welcome">
+      Merhaba! 👋 Konya gayrimenkul piyasası hakkında sorularınızı yanıtlamaya hazırım. Size nasıl yardımcı olabilirim?
     </div>
-
-    <!-- ADIM 2: EV BİLGİLERİ -->
-    <div class="vstep" id="vstep-2" style="display:none;">
-      <div class="vstep-label">2 / 4 — Ev Bilgileri</div>
-      <div class="vfg">
-        <label class="vfl">Oda Sayısı</label>
-        <div class="vchips" id="v-rooms-chips">
-          <button class="vchip" data-value="1+1">1+1</button>
-          <button class="vchip" data-value="2+1">2+1</button>
-          <button class="vchip" data-value="3+1">3+1</button>
-          <button class="vchip" data-value="4+1">4+1</button>
-          <button class="vchip" data-value="5+1">5+1</button>
-          <button class="vchip" data-value="6+1">6+1</button>
-        </div>
-      </div>
-      <div class="vrow2">
-        <div class="vfg">
-          <label class="vfl">Net m²</label>
-          <input type="number" class="vinput" id="v-m2" placeholder="örn. 120" min="20" max="2000">
-        </div>
-        <div class="vfg">
-          <label class="vfl">Bina Yaşı</label>
-          <input type="number" class="vinput" id="v-age" placeholder="örn. 10" min="0" max="100">
-        </div>
-      </div>
-      <div class="vfg">
-        <label class="vfl">Isıtma Tipi</label>
-        <div class="vchips" id="v-heat-chips">
-          <button class="vchip" data-value="Kombi">Kombi</button>
-          <button class="vchip" data-value="Merkezi">Merkezi</button>
-          <button class="vchip" data-value="Yerden">Yerden Isıtma</button>
-          <button class="vchip" data-value="Soba">Soba</button>
-        </div>
-      </div>
-      <div style="display:flex;gap:10px;">
-        <button class="vstep-back" onclick="vstepNext(1)">← Geri</button>
-        <button class="vstep-next" style="flex:1;" onclick="vstepNext(3)">Devam →</button>
-      </div>
-    </div>
-
-    <!-- ADIM 3: ÖZELLİKLER -->
-    <div class="vstep" id="vstep-3" style="display:none;">
-      <div class="vstep-label">3 / 4 — Özellikler</div>
-      <div class="vfg">
-        <label class="vfl">Mevcut Özellikler</label>
-        <div class="vtogs">
-          <div class="vtog" data-feat="Ebeveyn Banyosu"><span>Ebeveyn Banyosu</span><div class="vtdot"></div></div>
-          <div class="vtog" data-feat="balcony"><span>Balkon</span><div class="vtdot"></div></div>
-          <div class="vtog" data-feat="elevator"><span>Asansör</span><div class="vtdot"></div></div>
-          <div class="vtog" data-feat="parking"><span>Otopark</span><div class="vtdot"></div></div>
-          <div class="vtog" data-feat="inComplex"><span>Site İçi</span><div class="vtdot"></div></div>
-          <div class="vtog" data-feat="Jakuzi"><span>Jakuzi</span><div class="vtdot"></div></div>
-          <div class="vtog" data-feat="Ankastre Fırın"><span>Ankastre Fırın</span><div class="vtdot"></div></div>
-          <div class="vtog" data-feat="24 Saat Güvenlik"><span>24 Saat Güvenlik</span><div class="vtdot"></div></div>
-        </div>
-      </div>
-      <div style="display:flex;gap:10px;">
-        <button class="vstep-back" onclick="vstepNext(2)">← Geri</button>
-        <button class="vstep-next" style="flex:1;" onclick="vstepNext(4)">Devam →</button>
-      </div>
-    </div>
-
-    <!-- ADIM 4: SMS DOĞRULAMA -->
-    <div class="vstep" id="vstep-4" style="display:none;">
-      <div class="vstep-label">4 / 4 — Raporu Görüntüle</div>
-      <div class="sms-box">
-        <div class="sms-icon">📱</div>
-        <div class="sms-title">Raporunuz Hazır!</div>
-        <div class="sms-sub">Fiyat analizini görmek için telefon numaranızı doğrulayın</div>
-      </div>
-      <div id="sms-tel-step">
-        <div class="vfg">
-          <label class="vfl">Telefon Numarası</label>
-          <input type="tel" class="vinput" id="v-tel" placeholder="05xx xxx xx xx" maxlength="11">
-        </div>
-        <div style="display:flex;gap:10px;">
-          <button class="vstep-back" onclick="vstepNext(3)">← Geri</button>
-          <button class="vstep-next" style="flex:1;" id="sms-send-btn" onclick="smsSend()">KOD GÖNDER</button>
-        </div>
-      </div>
-      <div id="sms-code-step" style="display:none;">
-        <div class="vfg">
-          <label class="vfl">Doğrulama Kodu</label>
-          <input type="number" class="vinput sms-code-input" id="v-code" placeholder="0000" maxlength="4">
-          <div class="sms-hint">Numaranıza gönderilen 4 haneli kodu girin</div>
-        </div>
-        <button class="vstep-next" id="sms-verify-btn" onclick="smsVerify()">RAPORU GÖRÜNTÜLE</button>
-        <button class="sms-resend" onclick="smsResend()">Tekrar gönder</button>
-      </div>
-    </div>
-
-    <!-- SONUÇ -->
-    <div id="v-result" style="display:none;">
-      <div class="vres-source">📊 VERİ KAYNAĞI: SAHİBİNDEN</div>
-      <div class="vres-row">
-        <span class="vres-label">Eşleşen İlan</span>
-        <span class="vres-val" id="vr-count">—</span>
-      </div>
-      <div class="vres-row">
-        <span class="vres-label">Piyasa Ortalaması</span>
-        <span class="vres-val" id="vr-avg">—</span>
-      </div>
-      <div class="vres-row">
-        <span class="vres-label">Ortalama m² Fiyatı</span>
-        <span class="vres-val" id="vr-m2">—</span>
-      </div>
-      <div class="vres-main">
-        <div class="vres-main-label">TAHMİNİ PİYASA DEĞERİ</div>
-        <div class="vres-main-val" id="vr-est">—</div>
-        <div class="vres-main-note" id="vr-note"></div>
-      </div>
-      <div class="vres-row">
-        <span class="vres-label">Gerçek Satış Fiyatı</span>
-        <span class="vres-val vres-green" id="vr-real">—</span>
-      </div>
-      <div class="vres-range" id="vr-range"></div>
-      <div class="vres-footer">
-        * Mahalle, oda sayısı ve m² verileri Konya 2026 piyasa ilanlarına göre analiz edilmiştir.<br>
-        * Tahmini değer, benzer ilanların istatistiksel ortalamasına dayanmaktadır. Gerçek satış fiyatı piyasa koşullarına göre <strong style="color:var(--gold)">±%15 farklılık</strong> gösterebilir.
-      </div>
-
-      <!-- AI ANALİZİ -->
-      <div id="vr-ai" class="vr-ai-box" style="display:none;">
-        <div class="vr-ai-header">
-          <span class="vr-ai-badge">▲ AI ANALİZİ · CLAUDE</span>
-        </div>
-        <p id="vr-ai-text" class="vr-ai-text"></p>
-      </div>
-
-      <!-- BENZER İLANLAR -->
-      <div class="vr-similar-box">
-        <div class="vr-similar-title">BENZER İLANLAR</div>
-        <table class="vr-table">
-          <thead>
-            <tr>
-              <th>Konum</th>
-              <th>Alan</th>
-              <th>Yaş</th>
-              <th>Fiyat</th>
-            </tr>
-          </thead>
-          <tbody id="vr-similar"></tbody>
-        </table>
-      </div>
-
-      <button class="vbtn" style="margin-top:16px;" onclick="valReset()">Yeni Değerleme</button>
-    </div>
-
-    <div id="v-empty" class="v-empty-msg" style="display:none;">
-      Bu kriterlere uyan yeterli ilan bulunamadı. Daha geniş bir bölge veya farklı oda sayısı deneyin.
-      <br><button class="vstep-back" style="margin-top:12px;width:auto;padding:8px 20px;" onclick="valReset()">Tekrar Dene</button>
-    </div>
-
+  </div>
+  <!-- Input -->
+  <div style="padding:12px 16px;border-top:1px solid var(--bd);display:flex;gap:8px;">
+    <input id="support-input" type="text" placeholder="Mesajınızı yazın..." style="flex:1;background:var(--d3);border:1px solid var(--bd);border-radius:var(--rs);padding:9px 14px;color:var(--tx);font-size:13px;font-family:var(--font);outline:none;transition:border-color .2s;" onkeydown="if(event.key==='Enter')sendSupport()" onfocus="this.style.borderColor='var(--gold)'" onblur="this.style.borderColor='var(--bd)'">
+    <button onclick="sendSupport()" style="padding:9px 16px;background:var(--grad);border:none;border-radius:var(--rs);color:var(--dark);font-size:13px;font-weight:700;font-family:var(--font);cursor:pointer;">→</button>
   </div>
 </div>
-</div>
+<!-- Sabit destek butonu (sağ alt) -->
+<button onclick="openSupport()" id="support-fab" style="position:fixed;bottom:20px;right:20px;width:52px;height:52px;background:var(--grad);border:none;border-radius:50%;font-size:22px;cursor:pointer;z-index:8999;box-shadow:0 8px 24px rgba(201,168,76,.35);transition:all .3s;display:flex;align-items:center;justify-content:center;" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'">💬</button>
 
-<div class="wrap" id="main-wrap">
-<div class="layout">
+<a href="/admin" style="position:fixed;bottom:20px;right:20px;width:36px;height:36px;background:var(--d2);border:1px solid var(--bd);border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--txd);font-size:14px;text-decoration:none;z-index:997;opacity:0.2;transition:all .3s;" onmouseover="this.style.opacity='.8'" onmouseout="this.style.opacity='.2'">⚙</a>
 
-<aside class="panel">
-  <div class="ptitle">Filtreler</div>
-  <div class="fg"><span class="fl">İlçe</span><div class="chips" id="dc"><button class="chip on" data-value="">Tümü</button></div></div>
-  <div class="fg"><span class="fl">Mahalle / Semt</span><div class="chips" id="qc"><button class="chip on" data-value="">Tümü</button></div></div>
-  <div class="fg"><span class="fl">Oda Sayısı</span>
-    <div class="chips" id="rc">
-      <button class="chip on" data-value="">Tümü</button>
-      <button class="chip" data-value="1+1">1+1</button>
-      <button class="chip" data-value="2+1">2+1</button>
-      <button class="chip" data-value="3+1">3+1</button>
-      <button class="chip" data-value="4+1">4+1</button>
-      <button class="chip" data-value="5+1">5+1</button>
-    </div>
-  </div>
-  <div class="fg"><span class="fl">Isıtma Tipi</span>
-    <div class="chips" id="hc">
-      <button class="chip on" data-value="">Tümü</button>
-      <button class="chip" data-value="Kombi">Kombi</button>
-      <button class="chip" data-value="Merkezi">Merkezi</button>
-      <button class="chip" data-value="Yerden">Yerden</button>
-      <button class="chip" data-value="Soba">Soba</button>
-    </div>
-  </div>
-  <div class="fg"><span class="fl">Özellikler</span>
-    <div class="togs">
-      <div class="tog" data-feat="Ebeveyn Banyosu"><span class="tname">Ebeveyn Banyosu</span><div class="tdot"></div></div>
-      <div class="tog" data-feat="balcony"><span class="tname">Balkon</span><div class="tdot"></div></div>
-      <div class="tog" data-feat="elevator"><span class="tname">Asansör</span><div class="tdot"></div></div>
-      <div class="tog" data-feat="parking"><span class="tname">Otopark</span><div class="tdot"></div></div>
-      <div class="tog" data-feat="inComplex"><span class="tname">Site İçi</span><div class="tdot"></div></div>
-    </div>
-  </div>
-  <div class="fg"><span class="fl">Fiyat Aralığı (TL)</span>
-    <div class="prow">
-      <input type="number" class="pi" id="mnp" placeholder="Min" step="100000">
-      <input type="number" class="pi" id="mxp" placeholder="Max" step="100000">
-    </div>
-  </div>
-  <button class="sbtn" id="sbtn">İlanları Getir</button>
-</aside>
-
-<main>
-  <div id="stats" class="stats" style="display:none;">
-    <div class="sc"><div class="sv" id="sc">—</div><div class="sl">İlan</div></div>
-    <div class="sc"><div class="sv" id="sa">—</div><div class="sl">Ortalama Fiyat</div></div>
-    <div class="sc"><div class="sv" id="sm">—</div><div class="sl">Ort. m² Fiyatı</div></div>
-  </div>
-  <div id="rh" class="rhead" style="display:none;">
-    <div class="rcnt"><span id="rcnt">0</span> ilan</div>
-    <div style="display:flex;gap:8px;align-items:center;">
-      <div class="vtg">
-        <button class="vb on" id="vl">☰ Liste</button>
-        <button class="vb" id="vm">⊙ Harita</button>
-      </div>
-      <select class="ss" id="sort">
-        <option value="price_asc">Fiyat ↑</option>
-        <option value="price_desc">Fiyat ↓</option>
-        <option value="m2_asc">m²  ↑</option>
-        <option value="m2_desc">m² ↓</option>
-      </select>
-    </div>
-  </div>
-  <div id="mapv"></div>
-  <div id="listv" class="grid">
-    <div class="empty"><h3>Filtrelerinizi seçin</h3><p>Özellikleri belirleyip "İlanları Getir" butonuna basın.</p></div>
-  </div>
-</main>
-</div>
-</div>
-
-<div class="ov" id="ov"></div>
-<div class="drawer" id="drawer">
-  <button class="dclose" id="dclose">✕</button>
-  <div class="gal" id="dgal"></div>
-  <div class="thumbs" id="dthumbs"></div>
-  <div class="dc">
-    <div class="dloc" id="dloc"></div>
-    <div class="dline"></div>
-    <div class="dtitle" id="dtitle"></div>
-    <div class="dpr"><div class="dprice" id="dpr"></div><div class="dm2" id="dm2p"></div></div>
-    <div class="dgrid" id="dgrid"></div>
-    <div class="dst">Özellikler</div>
-    <div class="dfeats" id="dfeats"></div>
-    <div class="dst">Satıcı</div>
-    <div class="dsel" id="dsel"></div>
-    <div class="dst">Konum</div>
-    <div class="dmap" id="dmap"></div>
-    <div class="dcta" id="dcta"></div>
-  </div>
-</div>
-
-<script src="js/main.js"></script>
-</div><!-- /site-content -->
-<!-- GİZLİ ADMİN BUTONU -->
-<a href="/admin" style="position:fixed;bottom:20px;right:20px;width:36px;height:36px;background:var(--d2);border:1px solid var(--bd);border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--txd);font-size:14px;text-decoration:none;z-index:999;transition:all .3s;opacity:0.3;" onmouseover="this.style.opacity='1';this.style.borderColor='var(--gold)';this.style.color='var(--gold)'" onmouseout="this.style.opacity='0.3';this.style.borderColor='var(--bd)';this.style.color='var(--txd)'">⚙</a>
-
+<script src="/js/common.js"></script>
+<script src="/js/main.js"></script>
+<script src="/js/landing.js"></script>
 </body>
 </html>

@@ -1,5 +1,23 @@
 {
   "rewrites": [
-    { "source": "/admin", "destination": "/admin.html" }
+    {"source": "/admin", "destination": "/admin.html"},
+    {"source": "/degerleme", "destination": "/degerleme.html"},
+    {"source": "/karsilastirma", "destination": "/karsilastirma.html"},
+    {"source": "/fiyatlar", "destination": "/fiyatlar.html"},
+    {"source": "/giris", "destination": "/giris.html"},
+    {"source": "/odeme", "destination": "/odeme.html"},
+    {"source": "/danisman", "destination": "/danisman.html"},
+    {"source": "/hakkimizda", "destination": "/hakkimizda.html"},
+    {"source": "/analiz", "destination": "/analiz.html"},
+    {"source": "/en", "destination": "/en/index.html"},
+    {"source": "/en/", "destination": "/en/index.html"},
+    {"source": "/en/about", "destination": "/en/about.html"},
+    {"source": "/en/pricing", "destination": "/en/pricing.html"},
+    {"source": "/en/login", "destination": "/en/login.html"},
+    {"source": "/en/payment", "destination": "/en/payment.html"},
+    {"source": "/en/advisors", "destination": "/en/advisors.html"},
+    {"source": "/en/valuation", "destination": "/en/valuation.html"},
+    {"source": "/en/comparison", "destination": "/en/comparison.html"},
+    {"source": "/en/analytics", "destination": "/en/analytics.html"}
   ]
 }
