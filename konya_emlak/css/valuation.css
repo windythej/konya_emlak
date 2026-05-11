@@ -1,5 +1,16 @@
 /* ===== DEĞERLEME CSS — TAM SÜRÜM ===== */
 
+/* Adım 1-5: iki sütun — sol form | sağ info panel */
+.val-container.val-form-wide {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 300px;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 clamp(16px,4vw,48px) 80px;
+  gap: 28px;
+  align-items: start;
+}
+
 /* Adım 1-4 ve 5: tek sütun, ortalanmış form */
 .val-container {
   display: block;
@@ -316,6 +327,175 @@
   color: var(--tx);
 }
 
+/* ─── SAĞ INFO PANELİ (adım 1-5) ─── */
+.val-info-sticky {
+  position: sticky;
+  top: 90px;
+}
+
+.vis-inner {
+  background: var(--d2);
+  border: 1px solid var(--bd);
+  border-radius: var(--r);
+  padding: 24px 22px;
+  transition: border-color .3s;
+}
+
+.vis-inner:hover {
+  border-color: var(--bdh);
+}
+
+.vis-icon {
+  font-size: 36px;
+  margin-bottom: 14px;
+  display: block;
+  transition: transform .3s;
+}
+
+.vis-badge {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  padding: 4px 10px;
+  border-radius: 100px;
+  border: 1px solid rgba(201,168,76,.25);
+  background: rgba(201,168,76,.1);
+  color: var(--gold);
+  margin-bottom: 12px;
+  transition: all .25s;
+}
+
+.vis-title {
+  font-family: var(--serif);
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--tx);
+  margin-bottom: 12px;
+  line-height: 1.2;
+}
+
+.vis-body {
+  font-size: 13px;
+  color: var(--txm);
+  line-height: 1.7;
+  margin-bottom: 18px;
+}
+
+.vis-bullets {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  border-top: 1px solid var(--bd);
+  padding-top: 16px;
+}
+
+.vis-bullets li {
+  font-size: 12px;
+  color: var(--txm);
+  padding: 7px 0;
+  border-bottom: 1px solid rgba(255,255,255,.04);
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  line-height: 1.5;
+}
+
+.vis-bullets li::before {
+  content: '→';
+  color: var(--gold);
+  font-size: 11px;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+/* Fade animasyon */
+.vis-fade-out {
+  opacity: 0;
+  transform: translateY(6px);
+  transition: opacity .15s ease, transform .15s ease;
+}
+
+.vis-fade-in {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity .25s ease, transform .25s ease;
+}
+
+/* vfield hover highlight */
+.vfield[data-info] {
+  border-radius: var(--rs);
+  padding: 10px;
+  margin-bottom: 10px;
+  transition: background .2s;
+  cursor: default;
+}
+
+.vfield[data-info]:hover {
+  background: rgba(201,168,76,.04);
+}
+
+/* Stepper button (−/+) */
+.vstep-wrap {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  background: var(--d3);
+  border: 1px solid var(--bd);
+  border-radius: var(--rs);
+  overflow: hidden;
+  transition: border-color .2s;
+}
+
+.vstep-wrap:focus-within {
+  border-color: var(--gold);
+  box-shadow: 0 0 0 2px rgba(201,168,76,.1);
+}
+
+.vstep-btn {
+  width: 42px;
+  height: 46px;
+  background: transparent;
+  border: none;
+  color: var(--txm);
+  font-size: 18px;
+  font-family: var(--font);
+  cursor: pointer;
+  transition: all .15s;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.vstep-btn:hover {
+  background: rgba(201,168,76,.08);
+  color: var(--gold);
+}
+
+.vstep-input {
+  flex: 1;
+  text-align: center;
+  background: transparent !important;
+  border: none !important;
+  border-left: 1px solid var(--bd) !important;
+  border-right: 1px solid var(--bd) !important;
+  border-radius: 0 !important;
+  padding: 10px 6px !important;
+  font-size: 16px !important;
+  font-weight: 700 !important;
+  box-shadow: none !important;
+  outline: none !important;
+  -moz-appearance: textfield;
+}
+
+.vstep-input::-webkit-inner-spin-button,
+.vstep-input::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
 /* Mobil */
 @media(max-width:1100px) {
   .val-container.val-result-wide {
@@ -330,6 +510,15 @@
   }
 }
 @media(max-width:900px) {
+  .val-container.val-form-wide {
+    grid-template-columns: 1fr !important;
+    gap: 0 !important;
+  }
+  .val-info-sticky {
+    position: static !important;
+    order: -1;
+    margin-bottom: 20px;
+  }
   .val-container { padding: 0 16px 60px !important; }
   .vre-main { grid-template-columns: 1fr !important; }
   .vre-bottom-row { grid-template-columns: 1fr !important; }

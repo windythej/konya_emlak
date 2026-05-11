@@ -46,9 +46,9 @@ function renderStep(step) {
   const container = document.getElementById('val-content');
   if (!container) return;
 
-  const isWide = step === 6;
+  const isResult = step === 6;
   container.innerHTML = `
-    <div class="val-container${isWide ? ' val-result-wide' : ''}" id="val-container-inner">
+    <div class="val-container${isResult ? ' val-result-wide' : ' val-form-wide'}" id="val-container-inner">
       <div id="val-form-area">
         ${step < 6 ? renderProgress(step) : ''}
         <div class="${step < 6 ? 'val-form-card' : ''}" id="val-form-card">
@@ -60,7 +60,7 @@ function renderStep(step) {
           ${step === 6 ? renderStep6() : ''}
         </div>
       </div>
-      ${isWide ? '<div id="val-info-area"></div>' : ''}
+      <div id="val-info-area">${step < 6 ? renderInfoPanel(step) : ''}</div>
     </div>`;
 
   bindStepEvents(step);
@@ -68,6 +68,199 @@ function renderStep(step) {
     calcAndRender();
     freeUsed = Math.min(freeUsed + 1, FREE_LIMIT);
     localStorage.setItem('freeUsed', freeUsed);
+  } else {
+    initInfoPanelListeners(step);
+    // Varsayılan kart göster
+    const defaultCard = VAL_INFO_CARDS[step] && VAL_INFO_CARDS[step][0];
+    if (defaultCard) showInfoCard(defaultCard);
+  }
+}
+
+/* ─── SAĞ INFO PANEL SİSTEMİ ─── */
+
+// Her adım için hover kartları
+const VAL_INFO_CARDS = {
+  1: [
+    { id:'konut',   icon:'🏠', title:'Konut',       badge:'En Popüler',  badgeColor:'var(--gold)',
+      body:'Daire, müstakil ev ve villa gibi konutlar için piyasa değeri analizi yapılır. Oda sayısı, metrekare ve bina yaşı gibi kriterler hesaba katılır.',
+      bullets:['Sahibinden.com verileri baz alınır','Benzer ilanlarla karşılaştırılır','±%12 sapma bandı ile değer aralığı verilir'] },
+    { id:'arsa',    icon:'🌿', title:'Arsa / Arazi', badge:'İmar Bazlı',   badgeColor:'var(--ok)',
+      body:'İmarlı arsa, tarla, bağ ve bahçe gibi taşınmazlar için konum ve imar durumuna göre değerleme yapılır.',
+      bullets:['İmar durumu fiyatı doğrudan etkiler','Bölge emsal satışları incelenir','Yatırım getiri tahmini sunulur'] },
+    { id:'ticari',  icon:'🏢', title:'Ticari',       badge:'Yatırım',      badgeColor:'#7C9EFF',
+      body:'Dükkan, ofis, depo ve fabrika gibi ticari taşınmazlar için kira getirisi ve satış değeri analizi yapılır.',
+      bullets:['Kira çarpanı ile değerleme','Bölge ticari emsal fiyatları','Amortisman süresi hesaplanır'] },
+    { id:'kiralik', icon:'🔑', title:'Kiralık',      badge:'Kira Analizi', badgeColor:'#E07B4B',
+      body:'Konutunuzun aylık kira değerini öğrenin. Bölgedeki güncel kira ilanları ile karşılaştırmalı analiz yapılır.',
+      bullets:['Aylık kira tahmin aralığı','Brüt kira getiri oranı','Amortisman süresi tahmini'] },
+  ],
+  2: [
+    { id:'default', icon:'📍', title:'Konum Seçimi',  badge:'Kritik Faktör', badgeColor:'var(--gold)',
+      body:'Konum, bir mülkün değerini belirleyen en önemli faktördür. İlçe ve mahalle seçimi, değerlemenin doğruluğunu doğrudan etkiler.',
+      bullets:['Mahalle bazlı fiyat farklılıkları %30\'a ulaşabilir','Merkezi konumlar prim yapar','Okul ve ulaşım yakınlığı değeri artırır'] },
+    { id:'district', icon:'🗺️', title:'İlçe Seçimi',  badge:'Zorunlu Alan', badgeColor:'var(--err)',
+      body:'Konya\'nın her ilçesinde m² birim fiyatları farklıdır. Selçuklu ve Meram en yüksek fiyatlı ilçeler arasında yer alır.',
+      bullets:['Selçuklu: En yüksek m² fiyatı','Meram: Konut yoğunluğu yüksek','Karatay: Yatırım fırsatları mevcut'] },
+    { id:'quarter', icon:'🏘️', title:'Mahalle Seçimi', badge:'İsteğe Bağlı', badgeColor:'var(--txm)',
+      body:'Mahalle seçimi değerlemenin doğruluğunu artırır. En az 3 benzer ilan olan mahallelerde analiz daha güvenilirdir.',
+      bullets:['Mahalle bazlı analiz daha isabetli','Güven puanı yükselir','Benzer ilanlar daha doğru eşleşir'] },
+  ],
+  3: [
+    { id:'apt-type', icon:'🏗️', title:'Konut Tipi',    badge:'Fiyatı Etkiler', badgeColor:'var(--gold)',
+      body:'Dubleks ve teras daireler, standart dairelere göre %10-25 daha yüksek fiyatlanır. Bahçe dubleksler geniş aileler için tercih edilir.',
+      bullets:['Teras Dubleks: +%15-20 prim','Bahçe Dubleks: Özel yaşam alanı','Ara Kat Dubleks: Konforlu ve değerli'] },
+    { id:'rooms',    icon:'🛏️', title:'Oda Sayısı',    badge:'Zorunlu Alan',   badgeColor:'var(--err)',
+      body:'Oda sayısı, değerleme havuzunu oluşturmak için kullanılır. Benzer oda sayısındaki ilanlar karşılaştırılır. Konya\'da 3+1 daireler en fazla işlem gören segment.',
+      bullets:['3+1 daireler en likit segment','2+1 fiyat/m² oranı en yüksek','4+1 ve üzeri daha az işlem hacmi'] },
+    { id:'living',   icon:'🛋️', title:'Salon',         badge:'Opsiyonel',      badgeColor:'var(--txm)',
+      body:'Salon sayısı konutun kullanım alanını ve konforunu gösterir. Çift salonlu evler genellikle geniş aileler tarafından tercih edilir.',
+      bullets:['Çift salon konfor artırır','Değerlemeyi dolaylı etkiler','Kiracı profili değişir'] },
+    { id:'bath',     icon:'🚿', title:'Banyo',          badge:'Değere Etkisi',  badgeColor:'var(--ok)',
+      body:'Birden fazla banyo özellikle büyük dairelerde değeri artırır. Ebeveyn banyosu olan daireler %5-8 prim yapabilir.',
+      bullets:['2+ banyo değere +%5 katkı','Ebeveyn banyosu prim yapar','Duşakabin kalitesi önemli'] },
+    { id:'gross-m2', icon:'📐', title:'Brüt Metrekare', badge:'Zorunlu Alan',   badgeColor:'var(--err)',
+      body:'Brüt m², ortak alanlar dahil toplam yapı alanıdır. Değerleme birim fiyatı (₺/m²) brüt m² ile hesaplanır.',
+      bullets:['Hesaplamanın temel girdisi','Piyasa m² fiyatı ile çarpılır','Tapu senedindeki değeri girin'] },
+    { id:'net-m2',   icon:'📏', title:'Net Metrekare',  badge:'Tavsiye Edilir', badgeColor:'var(--gold)',
+      body:'Net m², koridorlar ve duvarlar hariç kullanılabilir yaşam alanıdır. Brüt/net oranı genellikle %75-85 arasındadır.',
+      bullets:['Kullanılabilir yaşam alanı','Net/Brüt oranı %75-85 beklenir','Alıcılar net m²ye önem verir'] },
+    { id:'age',      icon:'📅', title:'Bina Yaşı',      badge:'Çarpan Etkisi',  badgeColor:'var(--gold)',
+      body:'Bina yaşı fiyatı doğrudan etkiler. 0-2 yaş binalarda +%10, 20+ yaş binalarda -%14 değerleme çarpanı uygulanır.',
+      bullets:['0-2 yaş: +%10 prim','3-10 yaş: +%0 ile +%5','20+ yaş: -%6 ile -%22 iskonto'] },
+    { id:'total-floors', icon:'🏢', title:'Toplam Kat', badge:'Konum Hesabı', badgeColor:'var(--txm)',
+      body:'Toplam kat sayısı, mülkün hangi konumda olduğunu belirlemek için kullanılır. Çatı ve zemin kat pozisyonları fiyatı etkiler.',
+      bullets:['Zemin kat: -%4 çarpan','Çatı kat: +%4 çarpan','Orta katlar standart değer'] },
+    { id:'floor',    icon:'🪜', title:'Bulunduğu Kat',  badge:'Değer Etkisi',   badgeColor:'var(--gold)',
+      body:'Kat pozisyonu değeri etkiler. Çatı katlar manzara avantajıyla prim yaparken, zemin katlar güvenlik endişesiyle iskontolu işlem görür.',
+      bullets:['Yüksek kat = manzara = prim','Zemin kat -%4 iskonto','Çatı kat +%4 prim'] },
+    { id:'usage',    icon:'👤', title:'Kullanım Durumu', badge:'Piyasa Etkisi', badgeColor:'var(--ok)',
+      body:'Mülk sahibi oturumu genellikle boş veya kiracılı mülklere göre %3-8 daha yüksek değerlenir. Oturumun düzenliği ve bakım kalitesi fiyatı etkiler.',
+      bullets:['Mülk sahibi: en yüksek değer','Boş mülk: hızlı satış avantajı','Kiracılı: %3-5 iskonto olağan'] },
+    { id:'condition', icon:'🔨', title:'Yapı Durumu',   badge:'Çarpan Etkisi',  badgeColor:'var(--gold)',
+      body:'Yapı durumu değerleme çarpanını doğrudan değiştirir. Bakımlı mülkler +%6, tadilat ihtiyacı olan mülkler -%12 çarpanı alır.',
+      bullets:['Bakımlı/Yenilenmiş: +%6','Standart: ±0 çarpan','Tadilat İhtiyacı: -%12'] },
+  ],
+  4: [
+    { id:'facade',   icon:'🧭', title:'Cephe Durumu',   badge:'Manzara Etkisi', badgeColor:'var(--gold)',
+      body:'Her ek cephe seçimi değerlemeye +%0.8 katkı sağlar. Güney cephe ışık avantajıyla en çok tercih edilen yöndür.',
+      bullets:['Güney cephe en çok tercih edilen','Her cephe +%0.8 katkı','Çift cephe konfor artırır'] },
+    { id:'view',     icon:'🌅', title:'Manzara',         badge:'+%0.8 / Seçim',  badgeColor:'var(--ok)',
+      body:'Her manzara seçimi değerlemeye +%0.8 ek katkı sağlar. Şehir ve doğa manzaraları alıcılar için önemli artı değer taşır.',
+      bullets:['Her seçim +%0.8 değer katkısı','Şehir manzarası en değerli','Doğal manzaralar giderek önem kazanıyor'] },
+    { id:'heating',  icon:'🔥', title:'Isıtma Sistemi',  badge:'+%1.5 Prim',     badgeColor:'var(--gold)',
+      body:'Kombi ve yerden ısıtma sistemleri değerlemeye +%1.5 katkı sağlar. Enerji verimliliği alıcılar için kritik kriter haline geldi.',
+      bullets:['Kombi/Yerden: +%1.5 katkı','Merkezi ısıtma orta değer','Soba/Klima değeri düşürür'] },
+    { id:'amenities',icon:'✨', title:'Olanaklar',       badge:'+%0.7 / Olanak', badgeColor:'var(--ok)',
+      body:'Her seçilen olanak değerlemeye +%0.7 katkı sağlar. Asansör, otopark ve site güvenliği en çok değer katan olanaklar arasındadır.',
+      bullets:['Her olanak +%0.7 katkı','Asansör + Otopark en değerli ikili','24 saat güvenlik prim yapar'] },
+  ],
+  5: [
+    { id:'default',  icon:'🔐', title:'Güvenli Doğrulama', badge:'Ücretsiz', badgeColor:'var(--ok)',
+      body:'Telefon doğrulaması, değerleme sonuçlarının kötüye kullanımını önlemek için uygulanmaktadır. Numaran kimseyle paylaşılmaz.',
+      bullets:['Kişisel veriler saklanmaz','Sonuçlar anında görüntülenir','Ayda 3 ücretsiz değerleme hakkı'] },
+  ],
+};
+
+function renderInfoPanel(step) {
+  return `<div class="val-info-sticky" id="val-info-sticky">
+    <div class="vis-inner" id="vis-inner">
+      <div class="vis-icon" id="vis-icon">🏠</div>
+      <div class="vis-badge" id="vis-badge"></div>
+      <div class="vis-title" id="vis-title">Nasıl Çalışır?</div>
+      <div class="vis-body" id="vis-body">
+        Değerleme aracımız, Sahibinden.com\'daki gerçek ilan verileri kullanılarak yapay zeka destekli piyasa analizi yapar.
+      </div>
+      <ul class="vis-bullets" id="vis-bullets">
+        <li>Bölgenizdeki benzer ilanlar karşılaştırılır</li>
+        <li>Bina yaşı, kat, özellikler hesaba katılır</li>
+        <li>Yatırım getiri tahmini sunulur</li>
+        <li>±%15 sapma bandı ile değer aralığı verilir</li>
+      </ul>
+    </div>
+  </div>`;
+}
+
+function showInfoCard(card) {
+  const icon  = document.getElementById('vis-icon');
+  const badge = document.getElementById('vis-badge');
+  const title = document.getElementById('vis-title');
+  const body  = document.getElementById('vis-body');
+  const bullets = document.getElementById('vis-bullets');
+  const inner = document.getElementById('vis-inner');
+  if (!icon) return;
+
+  // Fade out → güncelle → fade in
+  if (inner) inner.classList.add('vis-fade-out');
+  setTimeout(() => {
+    icon.textContent  = card.icon;
+    badge.textContent = card.badge || '';
+    badge.style.background = card.badgeColor ? card.badgeColor + '22' : 'rgba(201,168,76,.12)';
+    badge.style.color = card.badgeColor || 'var(--gold)';
+    badge.style.borderColor = card.badgeColor ? card.badgeColor + '44' : 'rgba(201,168,76,.25)';
+    title.textContent = card.title;
+    body.textContent  = card.body;
+    bullets.innerHTML = (card.bullets||[]).map(b => `<li>${b}</li>`).join('');
+    if (inner) { inner.classList.remove('vis-fade-out'); inner.classList.add('vis-fade-in'); }
+    setTimeout(() => { if(inner) inner.classList.remove('vis-fade-in'); }, 300);
+  }, 150);
+}
+
+function initInfoPanelListeners(step) {
+  const cards = VAL_INFO_CARDS[step] || [];
+  if (!cards.length) return;
+
+  // Varsayılan kart zaten renderStep'te gösteriliyor
+  // Cat-card hover (adım 1)
+  if (step === 1) {
+    document.querySelectorAll('.cat-card').forEach(card => {
+      const key = card.dataset.cat;
+      const info = cards.find(c => c.id === key);
+      if (info) {
+        card.addEventListener('mouseenter', () => showInfoCard(info));
+        card.addEventListener('mouseleave', () => {
+          const selected = cards.find(c => c.id === VAL.category) || cards[0];
+          showInfoCard(selected);
+        });
+      }
+    });
+  }
+
+  // Adım 2: select hover/focus
+  if (step === 2) {
+    const distEl = document.getElementById('v-district');
+    const qEl    = document.getElementById('v-quarter');
+    const defCard = cards.find(c => c.id === 'default') || cards[0];
+    const dCard   = cards.find(c => c.id === 'district') || defCard;
+    const qCard   = cards.find(c => c.id === 'quarter')  || defCard;
+    if (distEl) { distEl.addEventListener('focus', () => showInfoCard(dCard)); distEl.addEventListener('blur', () => showInfoCard(defCard)); }
+    if (qEl)    { qEl.addEventListener('focus', () => showInfoCard(qCard)); qEl.addEventListener('blur', () => showInfoCard(defCard)); }
+  }
+
+  // Adım 3 & 4: data-info attribute ile genel listener
+  if (step === 3 || step === 4) {
+    const handleEnter = (el) => {
+      const infoId = el.dataset.info;
+      if (!infoId) return;
+      const card = cards.find(c => c.id === infoId);
+      if (card) showInfoCard(card);
+    };
+    const handleLeave = () => {
+      const defCard = cards[0];
+      if (defCard) showInfoCard(defCard);
+    };
+
+    document.querySelectorAll('[data-info]').forEach(el => {
+      el.addEventListener('mouseenter', () => handleEnter(el));
+      el.addEventListener('focusin',    () => handleEnter(el));
+      el.addEventListener('mouseleave', handleLeave);
+      el.addEventListener('focusout',   handleLeave);
+    });
+  }
+
+  // Adım 5
+  if (step === 5) {
+    const defCard = cards.find(c => c.id === 'default') || cards[0];
+    if (defCard) showInfoCard(defCard);
   }
 }
 
@@ -148,15 +341,16 @@ function renderStep3() {
   return `
     <div class="val-form-title">Konut özelliklerini girin</div>
     <p class="val-form-sub">* ile işaretli alanlar değerleme için zorunludur.</p>
+    <p style="font-size:12px;color:var(--txm);margin-bottom:20px;padding:8px 12px;background:rgba(201,168,76,.05);border-left:2px solid var(--gold);border-radius:0 var(--rs) var(--rs) 0;">💡 Alanlara tıklayarak sağ panelde detaylı bilgi alabilirsiniz.</p>
 
-    <div class="vfield">
+    <div class="vfield" data-info="apt-type">
       <label class="vlbl">KONUT TİPİ</label>
       <div class="vchips" id="v-apt-chips">
         ${aptTypes.map(t => `<button class="vchip ${VAL.aptType===t?'on':''}" data-val="${t}" onclick="VAL.aptType='${t}';document.querySelectorAll('#v-apt-chips .vchip').forEach(x=>x.classList.remove('on'));this.classList.add('on');">${t}</button>`).join('')}
       </div>
     </div>
 
-    <div class="vfield">
+    <div class="vfield" data-info="rooms">
       <label class="vlbl">ODA SAYISI *</label>
       <div class="vchips" id="v-rooms-chips">
         ${rooms.map(r => `<button class="vchip ${VAL.rooms===r?'on':''}" data-val="${r}" onclick="VAL.rooms='${r}';document.querySelectorAll('#v-rooms-chips .vchip').forEach(x=>x.classList.remove('on'));this.classList.add('on');">${r}</button>`).join('')}
@@ -164,53 +358,73 @@ function renderStep3() {
     </div>
 
     <div class="vrow3">
-      <div class="vfield">
+      <div class="vfield" data-info="living">
         <label class="vlbl">SALON</label>
-        <input type="number" class="vinput" id="v-living" value="${VAL.livingRooms}" min="0" max="5" placeholder="1" oninput="VAL.livingRooms=parseInt(this.value)||1;">
+        <div class="vstep-wrap">
+          <button class="vstep-btn" onclick="VAL.livingRooms=Math.max(0,VAL.livingRooms-1);document.getElementById('v-living').value=VAL.livingRooms;">−</button>
+          <input type="number" class="vinput vstep-input" id="v-living" value="${VAL.livingRooms}" min="0" max="5" placeholder="1" oninput="VAL.livingRooms=parseInt(this.value)||1;">
+          <button class="vstep-btn" onclick="VAL.livingRooms=Math.min(5,VAL.livingRooms+1);document.getElementById('v-living').value=VAL.livingRooms;">+</button>
+        </div>
       </div>
-      <div class="vfield">
-        <label class="vlbl">BANYO</label>
-        <input type="number" class="vinput" id="v-bath" value="${VAL.bathrooms}" min="1" max="10" placeholder="1" oninput="VAL.bathrooms=parseInt(this.value)||1;">
+      <div class="vfield" data-info="bath">
+        <label class="vlbl">BANYO *</label>
+        <div class="vstep-wrap">
+          <button class="vstep-btn" onclick="VAL.bathrooms=Math.max(1,VAL.bathrooms-1);document.getElementById('v-bath').value=VAL.bathrooms;">−</button>
+          <input type="number" class="vinput vstep-input" id="v-bath" value="${VAL.bathrooms}" min="1" max="10" placeholder="1" oninput="VAL.bathrooms=parseInt(this.value)||1;">
+          <button class="vstep-btn" onclick="VAL.bathrooms=Math.min(10,VAL.bathrooms+1);document.getElementById('v-bath').value=VAL.bathrooms;">+</button>
+        </div>
       </div>
     </div>
 
     <div class="vrow2">
-      <div class="vfield">
+      <div class="vfield" data-info="gross-m2">
         <label class="vlbl">BRÜT M² *</label>
-        <input type="number" class="vinput num-input" id="v-gross-m2" value="${VAL.grossM2}" min="20" max="2000" placeholder="120" oninput="VAL.grossM2=this.value;">
+        <input type="number" class="vinput num-input" id="v-gross-m2" value="${VAL.grossM2}" min="20" max="2000" placeholder="örn. 140" oninput="VAL.grossM2=this.value;">
       </div>
-      <div class="vfield">
-        <label class="vlbl">NET M²</label>
-        <input type="number" class="vinput num-input" id="v-net-m2" value="${VAL.netM2}" min="15" max="1800" placeholder="100" oninput="VAL.netM2=this.value;">
+      <div class="vfield" data-info="net-m2">
+        <label class="vlbl">NET M² *</label>
+        <input type="number" class="vinput num-input" id="v-net-m2" value="${VAL.netM2}" min="15" max="1800" placeholder="örn. 120" oninput="VAL.netM2=this.value;">
       </div>
     </div>
 
     <div class="vrow2">
-      <div class="vfield">
-        <label class="vlbl">BİNA YAŞI</label>
-        <input type="number" class="vinput num-input" id="v-age" value="${VAL.age}" min="0" max="80" placeholder="5" oninput="VAL.age=this.value;">
+      <div class="vfield" data-info="age">
+        <label class="vlbl">BİNA YAŞI *</label>
+        <div class="vstep-wrap">
+          <button class="vstep-btn" onclick="VAL.age=Math.max(0,(parseInt(VAL.age)||0)-1);document.getElementById('v-age').value=VAL.age;">−</button>
+          <input type="number" class="vinput vstep-input" id="v-age" value="${VAL.age}" min="0" max="80" placeholder="0" oninput="VAL.age=this.value;">
+          <button class="vstep-btn" onclick="VAL.age=Math.min(80,(parseInt(VAL.age)||0)+1);document.getElementById('v-age').value=VAL.age;">+</button>
+        </div>
       </div>
-      <div class="vfield">
+      <div class="vfield" data-info="total-floors">
         <label class="vlbl">TOPLAM KAT</label>
-        <input type="number" class="vinput num-input" id="v-total-floors" value="${VAL.totalFloors}" min="1" max="60" placeholder="8" oninput="VAL.totalFloors=this.value;">
+        <div class="vstep-wrap">
+          <button class="vstep-btn" onclick="VAL.totalFloors=Math.max(1,(parseInt(VAL.totalFloors)||0)-1);document.getElementById('v-total-floors').value=VAL.totalFloors;">−</button>
+          <input type="number" class="vinput vstep-input" id="v-total-floors" value="${VAL.totalFloors}" min="1" max="60" placeholder="0" oninput="VAL.totalFloors=this.value;">
+          <button class="vstep-btn" onclick="VAL.totalFloors=Math.min(60,(parseInt(VAL.totalFloors)||0)+1);document.getElementById('v-total-floors').value=VAL.totalFloors;">+</button>
+        </div>
       </div>
     </div>
 
     <div class="vrow2">
-      <div class="vfield">
-        <label class="vlbl">BULUNDUĞU KAT</label>
-        <input type="number" class="vinput num-input" id="v-floor" value="${VAL.floor}" min="0" max="60" placeholder="3" oninput="VAL.floor=this.value;">
+      <div class="vfield" data-info="floor">
+        <label class="vlbl">BULUNDUĞU KAT *</label>
+        <div class="vstep-wrap">
+          <button class="vstep-btn" onclick="VAL.floor=Math.max(0,(parseInt(VAL.floor)||0)-1);document.getElementById('v-floor').value=VAL.floor;">−</button>
+          <input type="number" class="vinput vstep-input" id="v-floor" value="${VAL.floor}" min="0" max="60" placeholder="0" oninput="VAL.floor=this.value;">
+          <button class="vstep-btn" onclick="VAL.floor=Math.min(60,(parseInt(VAL.floor)||0)+1);document.getElementById('v-floor').value=VAL.floor;">+</button>
+        </div>
       </div>
     </div>
 
-    <div class="vfield">
+    <div class="vfield" data-info="usage">
       <label class="vlbl">KULLANIM DURUMU</label>
       <div class="vchips" id="v-usage-chips">
         ${usages.map(u => `<button class="vchip ${VAL.usage===u?'on':''}" onclick="VAL.usage='${u}';document.querySelectorAll('#v-usage-chips .vchip').forEach(x=>x.classList.remove('on'));this.classList.add('on');">${u}</button>`).join('')}
       </div>
     </div>
 
-    <div class="vfield">
+    <div class="vfield" data-info="condition">
       <label class="vlbl">YAPI DURUMU</label>
       <div class="vchips" id="v-cond-chips">
         ${conditions.map(c => `<button class="vchip vcond${VAL.condition===c?' on':''}" onclick="VAL.condition='${c}';document.querySelectorAll('#v-cond-chips .vchip').forEach(x=>x.classList.remove('on'));this.classList.add('on');">${c}</button>`).join('')}
@@ -239,28 +453,28 @@ function renderStep4() {
     <div class="val-form-title">Ek özellikleri girin</div>
     <p class="val-form-sub">Bu bilgiler değerlemeyi daha doğru hale getirir. İsteğe bağlıdır.</p>
 
-    <div class="vfield">
+    <div class="vfield" data-info="facade">
       <label class="vlbl">CEPHE DURUMU (BİRDEN FAZLA SEÇİLEBİLİR)</label>
       <div class="vchips" id="v-facade-chips">
         ${facades.map(f => `<button class="vchip ${VAL.facades.includes(f)?'on':''}" onclick="const i=VAL.facades.indexOf('${f}');if(i>-1)VAL.facades.splice(i,1);else VAL.facades.push('${f}');this.classList.toggle('on');">${f}</button>`).join('')}
       </div>
     </div>
 
-    <div class="vfield">
+    <div class="vfield" data-info="view">
       <label class="vlbl">MANZARA (BİRDEN FAZLA SEÇİLEBİLİR)</label>
       <div class="vchips" id="v-view-chips">
         ${views.map(v => `<button class="vchip ${VAL.views.includes(v)?'on':''}" onclick="const i=VAL.views.indexOf('${v}');if(i>-1)VAL.views.splice(i,1);else VAL.views.push('${v}');this.classList.toggle('on');">${v}</button>`).join('')}
       </div>
     </div>
 
-    <div class="vfield">
+    <div class="vfield" data-info="heating">
       <label class="vlbl">ISITMA SİSTEMİ</label>
       <div class="vchips" id="v-heat-chips">
         ${heatings.map(h => `<button class="vchip vheat${VAL.heating===h?' on':''}" onclick="VAL.heating='${h}';document.querySelectorAll('#v-heat-chips .vchip').forEach(x=>x.classList.remove('on'));this.classList.add('on');">${h}</button>`).join('')}
       </div>
     </div>
 
-    <div class="vfield">
+    <div class="vfield" data-info="amenities">
       <label class="vlbl">OLANAKLAR (BİRDEN FAZLA SEÇİLEBİLİR)</label>
       <div class="vchips" id="v-amen-chips">
         ${amenities.map(a => `<button class="vchip ${VAL.amenities.includes(a)?'on':''}" onclick="const i=VAL.amenities.indexOf('${a}');if(i>-1)VAL.amenities.splice(i,1);else VAL.amenities.push('${a}');this.classList.toggle('on');">${a}</button>`).join('')}
