@@ -3635,3 +3635,38 @@ img, video, iframe, canvas {
   .team-grid { grid-template-columns: 1fr !important; }
   .mv-card { padding: 24px 18px !important; }
 }
+
+/* ── MOBİL MENÜ Z-INDEX & X BUTONU FIX ── */
+.mob-sheet {
+  z-index: 3000 !important;
+  overflow: visible !important; /* X butonunun taşmasına izin ver */
+}
+.mob-ov { z-index: 2999 !important; }
+
+/* mob-sheet içindeki scroll kısmını overflow:auto yap, sheet'i değil */
+.mob-sheet-scroll {
+  flex: 1;
+  overflow-y: auto;
+}
+
+/* X butonu: sheet dışında, sol kenarda sabit */
+.mob-close {
+  position: fixed !important;
+  top: 14px !important;
+  right: calc(min(300px, 85vw) + 10px) !important; /* sheet genişliği + 10px */
+  width: 36px !important;
+  height: 36px !important;
+  background: var(--d2) !important;
+  border: 1px solid var(--bdh) !important;
+  border-radius: 50% !important;
+  z-index: 3001 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-size: 16px !important;
+  color: var(--tx) !important;
+  cursor: pointer !important;
+  box-shadow: 0 2px 12px rgba(0,0,0,.4) !important;
+  transition: background .15s !important;
+}
+.mob-close:hover { background: var(--d3) !important; }
