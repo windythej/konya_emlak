@@ -4003,3 +4003,132 @@ input:focus, select:focus, textarea:focus {
   .hero-h1 { font-size: clamp(28px, 10vw, 44px) !important; }
   .hero-badge { font-size: 10px !important; letter-spacing: 1.5px !important; }
 }
+
+
+/* ════════════════════════════════════════
+   HERO + YAZALAR TEMIZ FIX
+════════════════════════════════════════ */
+
+/* Particle'ları tamamen kapat */
+.hero-particles { display: none !important; }
+.particle { display: none !important; }
+
+/* Sol üst köşe karanlık gölgeyi kaldır (hero::before animasyonu) */
+.hero::before {
+  animation: none !important;
+  background-image: none !important;
+  display: none !important;
+}
+
+/* Hero arka plan overlay: sadece alt fade, temiz */
+.hero::after {
+  animation: none !important;
+  background:
+    linear-gradient(to bottom, rgba(8,8,8,.35) 0%, transparent 40%, transparent 60%, var(--dark) 100%) !important;
+}
+
+/* ── H1: tek düz gradyan, ikiye bölünmüş görünüm YOK ── */
+.hero-h1 {
+  background: none !important;
+  -webkit-background-clip: unset !important;
+  -webkit-text-fill-color: var(--tx) !important;
+  background-clip: unset !important;
+  animation: fu .7s .1s ease both !important;
+  color: var(--tx) !important;
+}
+
+/* em: tek düz turuncu gradyan, ayrışma yok */
+.hero-h1 em {
+  background: linear-gradient(135deg, #FF6B2B 0%, #FFB347 100%) !important;
+  background-size: 100% auto !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  background-clip: text !important;
+  animation: none !important;
+  font-style: italic !important;
+  display: inline !important;
+}
+
+/* cta-title ve sec-title em de aynı */
+.cta-title em, .sec-title em {
+  background: linear-gradient(135deg, #FF6B2B 0%, #FFB347 100%) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  background-clip: text !important;
+  animation: none !important;
+}
+
+/* hakkimizda cta hero da aynı */
+.cta-sec::before { display: none !important; }
+.cta-sec {
+  background: linear-gradient(160deg, rgba(255,107,43,.06) 0%, transparent 60%) !important;
+}
+
+
+/* ════════════════════════════════════════
+   FINAL CLEAN — tüm çakışmaları sıfırla
+════════════════════════════════════════ */
+
+/* ── H1 TEMİZ: sade beyaz, em turuncu gradyan ── */
+.hero-h1,
+.shimmer-title,
+.cta-title,
+.cta-h {
+  background: none !important;
+  -webkit-background-clip: unset !important;
+  background-clip: unset !important;
+  -webkit-text-fill-color: var(--tx) !important;
+  color: var(--tx) !important;
+  animation: fu .7s ease both !important;
+}
+
+.hero-h1 em,
+.cta-title em,
+.cta-h em,
+.shimmer-title em,
+.sec-title em {
+  background: linear-gradient(110deg, #FF6B2B 0%, #FF9500 50%, #FFB347 100%) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  color: transparent !important;
+  font-style: italic !important;
+  animation: none !important;
+  display: inline !important;
+}
+
+/* inline style ile yazılmış em'ler için de override */
+.hero-h1 em[style],
+.cta-title em[style],
+.shimmer-title em[style] {
+  color: transparent !important;
+  -webkit-text-fill-color: transparent !important;
+}
+
+/* ── CTA SECTION: sarı glow kaldır ── */
+.cta-sec::before { display: none !important; }
+.cta-sec::after  { display: none !important; }
+
+/* ── HERO: sol gölge ve particle kaldır ── */
+.hero-particles { display: none !important; }
+.particle       { display: none !important; }
+.hero::before   { display: none !important; animation: none !important; }
+.hero::after {
+  animation: none !important;
+  background: linear-gradient(
+    to bottom,
+    rgba(0,0,0,.5) 0%,
+    rgba(0,0,0,.1) 35%,
+    rgba(0,0,0,.1) 65%,
+    var(--dark) 100%
+  ) !important;
+}
+
+/* ── Hakkımızda hero em inline fix ── */
+.about-hero-wrap em[style*="color"] {
+  color: transparent !important;
+  -webkit-text-fill-color: transparent !important;
+  background: linear-gradient(110deg, #FF6B2B 0%, #FFB347 100%) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+}
