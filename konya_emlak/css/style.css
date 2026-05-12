@@ -4132,3 +4132,109 @@ input:focus, select:focus, textarea:focus {
   -webkit-background-clip: text !important;
   background-clip: text !important;
 }
+
+
+/* ════════════════════════════════════════
+   SHINE + HOW-NUM + HERO FIX
+════════════════════════════════════════ */
+
+/* ── H1: beyaz→turuncu→beyaz kayma (titleShine) ── */
+.hero-h1 {
+  background: linear-gradient(
+    90deg,
+    var(--tx) 0%,
+    var(--tx) 30%,
+    #FF9500 45%,
+    #FF6B2B 50%,
+    #FF9500 55%,
+    var(--tx) 70%,
+    var(--tx) 100%
+  ) !important;
+  background-size: 250% auto !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  animation: heroShineOrange 5s linear 0.5s 1 forwards !important;
+  color: transparent !important;
+}
+
+@keyframes heroShineOrange {
+  0%   { background-position: 200% center; }
+  100% { background-position: 0% center; }
+}
+
+/* Animasyon bittikten sonra düz beyaz kalsın */
+@keyframes heroShineOrange {
+  0%   { background-position: 200% center; }
+  80%  { background-position: 20% center; }
+  100% { background-position: 0% center; }
+}
+
+/* ── EM: sürekli turuncu→kırmızı kayma ── */
+.hero-h1 em {
+  background: linear-gradient(
+    90deg,
+    #FF6B2B 0%,
+    #FF9500 25%,
+    #FFB347 50%,
+    #FF9500 75%,
+    #FF6B2B 100%
+  ) !important;
+  background-size: 200% auto !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  animation: emShineOrange 3s linear infinite !important;
+  font-style: italic !important;
+}
+
+@keyframes emShineOrange {
+  0%   { background-position: 0% center; }
+  100% { background-position: 200% center; }
+}
+
+/* ── HOW-NUM yuvarlaklar: turuncu border + renk ── */
+.how-num {
+  background: rgba(255,107,43,.08) !important;
+  border: 1px solid rgba(255,107,43,.3) !important;
+  color: #FF6B2B !important;
+  -webkit-text-fill-color: #FF6B2B !important;
+  box-shadow: 0 0 0 6px rgba(255,107,43,.05) !important;
+}
+.how-step:hover .how-num {
+  background: rgba(255,107,43,.15) !important;
+  border-color: rgba(255,107,43,.6) !important;
+  box-shadow: 0 0 0 6px rgba(255,107,43,.1) !important;
+}
+/* Bağlantı çizgisi */
+.how-g::before {
+  background: linear-gradient(90deg, transparent, rgba(255,107,43,.4), rgba(255,107,43,.4), transparent) !important;
+}
+
+/* ── HERO: sol siyah gölgeyi tamamen kapat ── */
+.hero {
+  background-color: transparent !important;
+}
+/* Sol ve sağ kenar karartma (lens/vignette efekti) kapatılıyor */
+.hero::after {
+  background:
+    linear-gradient(to right, rgba(0,0,0,.55) 0%, transparent 22%, transparent 78%, rgba(0,0,0,.45) 100%),
+    linear-gradient(to bottom, rgba(0,0,0,.3) 0%, transparent 30%, transparent 70%, var(--dark) 100%) !important;
+  animation: none !important;
+}
+.hero::before { display: none !important; animation: none !important; }
+
+/* ── HERO SUB: text-shadow ile okunur yap ── */
+.hero-sub {
+  text-shadow: 0 1px 12px rgba(0,0,0,.9), 0 0 40px rgba(0,0,0,.7) !important;
+  color: rgba(237,234,210,.85) !important;
+}
+.hero-sub strong {
+  color: var(--tx) !important;
+  text-shadow: 0 1px 8px rgba(0,0,0,.9) !important;
+}
+
+/* ── HERO badge text shadow ── */
+.hero-badge {
+  text-shadow: 0 1px 8px rgba(0,0,0,.6) !important;
+}
