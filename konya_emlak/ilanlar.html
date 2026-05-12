@@ -401,10 +401,7 @@
 <script src="/js/common.js"></script>
 <script src="/js/main.js"></script>
 <script>
-const SU='https://bknfjyfuzbanhoomooth.supabase.co';
-const SK='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJrbmZqeWZ1emJhbmhvb21vb3RoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc1ODczNDgsImV4cCI6MjA5MzE2MzM0OH0.7Tl3nWspqxDtnhIj2SZju_ObXtjkAsv_n-Joj7vwSx0';
-const H={'apikey':SK,'Authorization':'Bearer '+SK};
-const fp=n=>new Intl.NumberFormat('tr-TR').format(n);
+const _IH={'apikey':SK,'Authorization':'Bearer '+SK};
 
 let allIlanlar=[], filtered=[], currentModal=null, modalImgIdx=0;
 
@@ -413,7 +410,7 @@ const CAT_ICONS={konut:'🏠',arsa:'🌿',ticari:'🏢',kiralik:'🔑'};
 
 async function loadIlanlar(){
   try {
-    const r = await fetch(`${SU}/rest/v1/user_listings?select=*&order=created_at.desc`,{headers:H});
+    const r = await fetch(`${SU}/rest/v1/user_listings?select=*&order=created_at.desc`,{headers:_IH});
     if(!r.ok) throw new Error();
     allIlanlar = await r.json();
   } catch(e) {

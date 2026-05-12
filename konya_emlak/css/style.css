@@ -4387,3 +4387,43 @@ input:focus, select:focus, textarea:focus {
   display: none !important;
   visibility: hidden !important;
 }
+
+
+/* ── NAV RESPONSIVE: dil menüsü + sağ taraf düzeltme ── */
+.nav-right {
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  flex-shrink: 0 !important;
+}
+.nav-lang {
+  position: relative !important;
+  flex-shrink: 0 !important;
+}
+.lang-menu {
+  position: absolute !important;
+  top: calc(100% + 8px) !important;
+  right: 0 !important;
+  left: auto !important;
+  min-width: 130px !important;
+  z-index: 2000 !important;
+}
+/* Nav overflow gizle */
+.nav-links {
+  overflow: visible !important;
+  flex-wrap: nowrap !important;
+}
+/* 1200px altında nav linkleri küçült */
+@media (max-width: 1200px) {
+  .nav-lnk { font-size: 12px !important; padding: 6px 8px !important; }
+  .nav-support { display: none !important; }
+}
+@media (max-width: 1050px) {
+  .nav-links { display: none !important; }
+  .nav-ham { display: flex !important; }
+  .nav-cta { font-size: 12px !important; padding: 8px 14px !important; }
+  .nav-lang span { font-size: 11px !important; }
+}
+@media (max-width: 480px) {
+  .nav-cta { display: none !important; }
+}

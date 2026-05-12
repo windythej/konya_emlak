@@ -721,12 +721,9 @@
 </div>
 
 <script src="/js/common.js"></script>
-<script src="/js/main.js"></script>
 <script>
-const SU='https://bknfjyfuzbanhoomooth.supabase.co';
-const SK='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJrbmZqeWZ1emJhbmhvb21vb3RoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc1ODczNDgsImV4cCI6MjA5MzE2MzM0OH0.7Tl3nWspqxDtnhIj2SZju_ObXtjkAsv_n-Joj7vwSx0';
-const H={'Content-Type':'application/json','apikey':SK,'Authorization':'Bearer '+SK};
-const fp=n=>new Intl.NumberFormat('tr-TR').format(n);
+/* SU, SK, fp main.js'den gelir — burada tekrar tanımlamıyoruz */
+const _H={'Content-Type':'application/json','apikey':SK,'Authorization':'Bearer '+SK};
 
 let currentStep=0;
 let formData={
@@ -958,7 +955,7 @@ async function submitIlan(){
 
     const r=await fetch(`${SU}/rest/v1/user_listings`,{
       method:'POST',
-      headers:{...H,'Prefer':'return=representation'},
+      headers:{..._H,'Prefer':'return=representation'},
       body:JSON.stringify(payload)
     });
 
