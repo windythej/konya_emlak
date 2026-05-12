@@ -62,7 +62,9 @@
     <a class="nav-lnk" href="/fiyatlar">Fiyatlar</a>
     <a class="nav-lnk" href="/danisman">Danışman Bul</a>
     <a class="nav-lnk" href="/hakkimizda">Hakkımızda</a>
-    <a class="nav-lnk" href="/analiz">Analiz</a>
+    <a class="nav-lnk" href="/analiz">📊 Analiz</a>
+    <a class="nav-lnk" href="/ilanlar">🏠 İlanlar</a>
+    <a class="nav-lnk" href="/ilan-ekle">➕ İlan Ekle</a>
   </div>
   <div style="padding:16px 24px;border-top:1px solid var(--bd);flex-shrink:0;">
     <div style="display:flex;gap:8px;margin-bottom:10px;">
@@ -88,7 +90,15 @@
     <a class="nav-lnk" data-page="/fiyatlar" href="/fiyatlar">Fiyatlar</a>
     <a class="nav-lnk" data-page="/danisman" href="/danisman">Danışman Bul</a>
     <a class="nav-lnk" data-page="/hakkimizda" href="/hakkimizda">Hakkımızda</a>
-    <a class="nav-lnk" data-page="/analiz" href="/analiz">Analiz</a>
+    <a class="nav-lnk" data-page="/analiz" href="/analiz">📊 Analiz</a>
+    <div class="nav-drop-wrap" id="ilanlar-wrap">
+      <button class="nav-lnk nav-drop-btn" id="ilanlar-btn" onclick="toggleIlanlarMenu(event)">İlanlar ▾</button>
+      <div class="nav-drop-menu" id="ilanlar-menu">
+        <a class="nav-drop-item" href="/ilanlar">🏠 Tüm İlanlar</a>
+        <div class="nav-drop-sep"></div>
+        <a class="nav-drop-item" href="/ilan-ekle">➕ İlan Ekle</a>
+      </div>
+    </div>
   </div>
   <div style="display:flex;align-items:center;">
     <div style="display:flex;align-items:center;gap:14px;margin-right:14px;">
@@ -153,16 +163,7 @@
         <div class="tc-desc">İlçe, mahalle, oda sayısı ve onlarca filtreyle Konya'daki mevcut ilanları karşılaştırın. Harita görünümü ve detaylı ilan incelemesi.</div>
         <div class="tc-cta">Piyasayı İncele →</div>
       </div>
-      <div class="tc tc-wide rv">
-        <div class="tc-icon">📍</div>
-        <div class="tc-title">Konya Geneli Özet</div>
-        <div class="tc-desc">Platform genelindeki canlı istatistikler</div>
-        <div class="sum-g">
-          <div><div class="sg-v" id="sum-avg">—</div><div class="sg-l">Ortalama Fiyat</div></div>
-          <div><div class="sg-v" id="sum-m2">—</div><div class="sg-l">Ort. m² Fiyatı</div></div>
-          <div><div class="sg-v" id="sum-top">—</div><div class="sg-l">En Aktif İlçe</div></div>
-        </div>
-      </div>
+
     </div>
   </div>
 </section>

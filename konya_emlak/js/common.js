@@ -47,15 +47,17 @@ window.addEventListener('scroll',()=>document.getElementById('main-nav').classLi
 // Mob menü
 function toggleMob(){const s=document.getElementById('mob-sheet');s&&s.classList.contains('on')?closeMob():openMob();}
 function openMob(){
-  const s=document.getElementById('mob-sheet'),ov=document.getElementById('mob-ov'),btn=document.getElementById('nav-ham');
+  const s=document.getElementById('mob-sheet'),ov=document.getElementById('mob-ov'),btn=document.getElementById('nav-ham'),cl=document.querySelector('.mob-close');
   if(!s)return;s.classList.add('on');if(ov)ov.classList.add('on');if(btn)btn.classList.add('is-open');
+  if(cl){cl.style.opacity='1';cl.style.pointerEvents='auto';}
   const sy=window.scrollY;document.body.dataset.scrollY=sy;
   document.body.style.overflow='hidden';document.body.style.position='fixed';
   document.body.style.width='100%';document.body.style.top='-'+sy+'px';
 }
 function closeMob(){
-  const s=document.getElementById('mob-sheet'),ov=document.getElementById('mob-ov'),btn=document.getElementById('nav-ham');
+  const s=document.getElementById('mob-sheet'),ov=document.getElementById('mob-ov'),btn=document.getElementById('nav-ham'),cl=document.querySelector('.mob-close');
   if(!s)return;s.classList.remove('on');if(ov)ov.classList.remove('on');if(btn)btn.classList.remove('is-open');
+  if(cl){cl.style.opacity='0';cl.style.pointerEvents='none';}
   const sy=parseInt(document.body.dataset.scrollY||0);
   document.body.style.overflow='';document.body.style.position='';
   document.body.style.width='';document.body.style.top='';
@@ -298,4 +300,29 @@ document.addEventListener('DOMContentLoaded', () => {
   // Ham butonu her zaman nav'ın üstünde
   const ham = document.getElementById('nav-ham');
   if (ham) ham.style.zIndex = '1001';
+});
+
+// ── İLANLAR DROPDOWN ──
+function toggleIlanlarMenu(e) {
+  e && e.stopPropagation();
+  const menu = document.getElementById('ilanlar-menu');
+  const wrap = document.getElementById('ilanlar-wrap');
+  if (!menu) return;
+  const isOpen = menu.classList.contains('open');
+  // Tüm açık dropdownları kapat
+  document.querySelectorAll('.nav-drop-menu.open').forEach(m => m.classList.remove('open'));
+  document.querySelectorAll('.nav-drop-wrap.open').forEach(w => w.classList.remove('open'));
+  if (!isOpen) {
+    menu.classList.add('open');
+    if (wrap) wrap.classList.add('open');
+  }
+}
+// Dışarı tıklayınca kapat
+document.addEventListener('click', function(e) {
+  if (!e.target.closest('#ilanlar-wrap')) {
+    const menu = document.getElementById('ilanlar-menu');
+    const wrap = document.getElementById('ilanlar-wrap');
+    if (menu) menu.classList.remove('open');
+    if (wrap) wrap.classList.remove('open');
+  }
 });

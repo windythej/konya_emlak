@@ -62,7 +62,9 @@
     <a class="nav-lnk" href="/fiyatlar">Fiyatlar</a>
     <a class="nav-lnk" href="/danisman">Danışman Bul</a>
     <a class="nav-lnk" href="/hakkimizda">Hakkımızda</a>
-    <a class="nav-lnk" href="/analiz">Analiz</a>
+    <a class="nav-lnk" href="/analiz">📊 Analiz</a>
+    <a class="nav-lnk" href="/ilanlar">🏠 İlanlar</a>
+    <a class="nav-lnk" href="/ilan-ekle">➕ İlan Ekle</a>
   </div>
   <div style="padding:16px 24px;border-top:1px solid var(--bd);flex-shrink:0;">
     <div style="display:flex;gap:8px;margin-bottom:10px;">
@@ -88,7 +90,15 @@
     <a class="nav-lnk" data-page="/fiyatlar" href="/fiyatlar">Fiyatlar</a>
     <a class="nav-lnk" data-page="/danisman" href="/danisman">Danışman Bul</a>
     <a class="nav-lnk" data-page="/hakkimizda" href="/hakkimizda">Hakkımızda</a>
-    <a class="nav-lnk" data-page="/analiz" href="/analiz">Analiz</a>
+    <a class="nav-lnk" data-page="/analiz" href="/analiz">📊 Analiz</a>
+    <div class="nav-drop-wrap" id="ilanlar-wrap">
+      <button class="nav-lnk nav-drop-btn" id="ilanlar-btn" onclick="toggleIlanlarMenu(event)">İlanlar ▾</button>
+      <div class="nav-drop-menu" id="ilanlar-menu">
+        <a class="nav-drop-item" href="/ilanlar">🏠 Tüm İlanlar</a>
+        <div class="nav-drop-sep"></div>
+        <a class="nav-drop-item" href="/ilan-ekle">➕ İlan Ekle</a>
+      </div>
+    </div>
   </div>
   <div style="display:flex;align-items:center;">
     <div style="display:flex;align-items:center;gap:14px;margin-right:14px;">
@@ -236,7 +246,7 @@
       </p>
       <div class="read-more-wrap" id="method1-more">
         <p style="font-size:14px;color:var(--txm);line-height:1.8;">
-          Sahibinden.com başta olmak üzere Türkiye'nin önde gelen emlak platformlarından toplanan veriler, makine öğrenmesi destekli bir ön işleme sürecinden geçirilir. Yinelenen, hatalı veya aykırı ilanlar filtrelenerek sadece güvenilir veri noktaları analize dahil edilir.
+          Öğren-Sat başta olmak üzere Türkiye'nin önde gelen emlak platformlarından toplanan veriler, makine öğrenmesi destekli bir ön işleme sürecinden geçirilir. Yinelenen, hatalı veya aykırı ilanlar filtrelenerek sadece güvenilir veri noktaları analize dahil edilir.
         </p>
       </div>
       <button class="read-more-btn" onclick="toggleReadMore('method1-more',this)">Devamını oku ↓</button>

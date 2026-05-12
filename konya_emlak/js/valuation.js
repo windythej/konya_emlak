@@ -84,7 +84,7 @@ const VAL_INFO_CARDS = {
   1: [
     { id:'konut',   icon:'🏠', title:'Konut',       badge:'En Popüler',  badgeColor:'var(--gold)',
       body:'Daire, müstakil ev ve villa gibi konutlar için piyasa değeri analizi yapılır. Oda sayısı, metrekare ve bina yaşı gibi kriterler hesaba katılır.',
-      bullets:['Sahibinden.com verileri baz alınır','Benzer ilanlarla karşılaştırılır','±%12 sapma bandı ile değer aralığı verilir'] },
+      bullets:['Konya piyasası verileri baz alınır','Benzer ilanlarla karşılaştırılır','±%12 sapma bandı ile değer aralığı verilir'] },
     { id:'arsa',    icon:'🌿', title:'Arsa / Arazi', badge:'İmar Bazlı',   badgeColor:'var(--ok)',
       body:'İmarlı arsa, tarla, bağ ve bahçe gibi taşınmazlar için konum ve imar durumuna göre değerleme yapılır.',
       bullets:['İmar durumu fiyatı doğrudan etkiler','Bölge emsal satışları incelenir','Yatırım getiri tahmini sunulur'] },

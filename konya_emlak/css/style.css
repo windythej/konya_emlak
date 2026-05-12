@@ -3670,3 +3670,130 @@ img, video, iframe, canvas {
   transition: background .15s !important;
 }
 .mob-close:hover { background: var(--d3) !important; }
+
+
+/* ════════════════════════════════════════
+   TURUNCU TEMA — renk değişkenleri override
+   Tüm altın → canlı turuncu/amber
+════════════════════════════════════════ */
+:root {
+  --gold:   #FF6B2B !important;  /* canlı turuncu */
+  --gold-l: #FF8F5A !important;  /* açık turuncu */
+  --gold-d: #CC4800 !important;  /* koyu turuncu */
+  --grad: linear-gradient(135deg, #FF6B2B, #FF9500, #FFB347) !important;
+  --bd:  rgba(255,107,43,.15) !important;
+  --bdh: rgba(255,107,43,.38) !important;
+}
+
+/* ── TÜM SITE FONTU: MONTSERRAT ── */
+*,
+body, button, input, select, textarea, label,
+h1, h2, h3, h4, h5, h6, p, span, div, a, li {
+  font-family: 'Montserrat', sans-serif !important;
+}
+/* Serif başlıklar da Montserrat olsun */
+.sec-title, .hero-h1, [style*="Cormorant"], [style*="serif"],
+[class*="serif"], .val-form-title, .vis-title,
+[style*="font-family:var(--serif)"] {
+  font-family: 'Montserrat', sans-serif !important;
+}
+
+/* ── İLANLAR DROPDOWN ── */
+.nav-drop-wrap {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+.nav-drop-btn {
+  background: none !important;
+  border: none !important;
+  cursor: pointer !important;
+}
+.nav-drop-menu {
+  position: absolute;
+  top: calc(100% + 10px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--d2);
+  border: 1px solid var(--bd);
+  border-radius: var(--r);
+  min-width: 180px;
+  padding: 8px 0;
+  z-index: 2000;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateX(-50%) translateY(-6px);
+  transition: all .18s ease;
+  box-shadow: 0 16px 40px rgba(0,0,0,.5);
+}
+.nav-drop-menu.open {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(-50%) translateY(0);
+}
+.nav-drop-item {
+  display: block;
+  padding: 10px 18px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--txm);
+  text-decoration: none;
+  transition: all .15s;
+  white-space: nowrap;
+}
+.nav-drop-item:hover {
+  color: var(--gold);
+  background: rgba(255,107,43,.06);
+}
+.nav-drop-sep {
+  height: 1px;
+  background: var(--bd);
+  margin: 6px 0;
+}
+
+/* ── DEĞERLEMESonuç: benzer ilanlar mobilde alt kutu ── */
+@media (max-width: 900px) {
+  .val-container.val-result-wide {
+    grid-template-columns: 1fr !important;
+  }
+  #val-info-area {
+    order: 10 !important; /* en alta */
+    position: static !important;
+    height: auto !important;
+    max-height: none !important;
+    margin-top: 24px !important;
+  }
+  .val-info-panel {
+    max-height: 500px !important;
+    height: auto !important;
+  }
+}
+
+/* ── MOBİL MENÜ X BUTONU (kesin fix) ── */
+.mob-close {
+  position: fixed !important;
+  top: 14px !important;
+  right: calc(min(300px, 85vw) + 10px) !important;
+  width: 36px !important;
+  height: 36px !important;
+  background: #1a1a1a !important;
+  border: 1px solid rgba(255,107,43,.4) !important;
+  border-radius: 50% !important;
+  z-index: 3100 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-size: 16px !important;
+  color: #fff !important;
+  cursor: pointer !important;
+  box-shadow: 0 2px 16px rgba(0,0,0,.6) !important;
+}
+.mob-sheet { z-index: 3000 !important; overflow: visible !important; }
+.mob-ov    { z-index: 2999 !important; }
+
+/* mob-close sadece mob-sheet açıkken görünsün */
+.mob-close { opacity: 0; pointer-events: none; transition: opacity .2s; }
+.mob-sheet.on ~ * .mob-close,
+.mob-sheet.on .mob-close,
+body.mob-open .mob-close { opacity: 1; pointer-events: auto; }
+
