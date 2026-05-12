@@ -721,12 +721,12 @@
 </div>
 
 <script src="/js/common.js"></script>
+<script src="/js/main.js"></script>
 <script>
-/* SU, SK, fp main.js'den gelir — burada tekrar tanımlamıyoruz */
-const _H={'Content-Type':'application/json','apikey':SK,'Authorization':'Bearer '+SK};
+/* ilan-ekle.html — kendi scope'unda çalışır */
+/* SU, SK, fp, main.js'den global olarak gelir */
 
-let currentStep=0;
-let formData={
+var formData={
   category:'', apt_type:'', title:'', district:'', quarter:'', address:'',
   rooms:'', gross_m2:0, net_m2:0, building_age:0, floor:0, total_floors:1,
   bathrooms:1, heating:'', features:[], usage_status:'', deed_status:'',
@@ -736,6 +736,10 @@ let formData={
   owner_name:'', owner_phone:'', owner_whatsapp:'', owner_email:'',
   discount:false
 };
+
+var currentStep=0;
+
+function getH(){ return {'Content-Type':'application/json','apikey':SK,'Authorization':'Bearer '+SK}; }
 
 // Chip seçici (tek seçim)
 function selectChip(groupId,el,val){
@@ -955,7 +959,7 @@ async function submitIlan(){
 
     const r=await fetch(`${SU}/rest/v1/user_listings`,{
       method:'POST',
-      headers:{..._H,'Prefer':'return=representation'},
+      headers:{...getH(),'Prefer':'return=representation'},
       body:JSON.stringify(payload)
     });
 

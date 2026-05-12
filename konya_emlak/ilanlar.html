@@ -401,16 +401,16 @@
 <script src="/js/common.js"></script>
 <script src="/js/main.js"></script>
 <script>
-const _IH={'apikey':SK,'Authorization':'Bearer '+SK};
+function getH(){ return {'apikey':SK,'Authorization':'Bearer '+SK}; }
 
-let allIlanlar=[], filtered=[], currentModal=null, modalImgIdx=0;
+var allIlanlar=[], filtered=[], currentModal=null, modalImgIdx=0;
 
 const CAT_LABELS={konut:'Konut',arsa:'Arsa / Arazi',ticari:'Ticari',kiralik:'Kiralık'};
 const CAT_ICONS={konut:'🏠',arsa:'🌿',ticari:'🏢',kiralik:'🔑'};
 
 async function loadIlanlar(){
   try {
-    const r = await fetch(`${SU}/rest/v1/user_listings?select=*&order=created_at.desc`,{headers:_IH});
+    const r = await fetch(`${SU}/rest/v1/user_listings?select=*&order=created_at.desc`,{headers:getH()});
     if(!r.ok) throw new Error();
     allIlanlar = await r.json();
   } catch(e) {
