@@ -3797,3 +3797,209 @@ h1, h2, h3, h4, h5, h6, p, span, div, a, li {
 .mob-sheet.on .mob-close,
 body.mob-open .mob-close { opacity: 1; pointer-events: auto; }
 
+
+
+/* ════════════════════════════════════════
+   HERO REDESIGN + GLOBAL TURUNCU TEMA
+════════════════════════════════════════ */
+
+/* ── HERO: boyut ve layout düzelt ── */
+.hero {
+  min-height: 100vh !important;
+  max-height: 100vh !important;
+  padding: clamp(100px,12vh,140px) clamp(20px,6vw,80px) clamp(60px,8vh,100px) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  overflow: hidden !important;
+}
+
+/* Arka plan: turuncu gradyan overlay */
+.hero::after {
+  background:
+    radial-gradient(ellipse 70% 55% at 50% 30%, rgba(255,107,43,.09) 0%, transparent 65%),
+    linear-gradient(160deg, rgba(255,107,43,.04) 0%, transparent 50%),
+    linear-gradient(to bottom, transparent 45%, var(--dark) 100%) !important;
+}
+
+/* Grid çizgiler: turuncu tonda */
+.hero::before {
+  background-image:
+    linear-gradient(rgba(255,107,43,.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,107,43,.04) 1px, transparent 1px) !important;
+  background-size: 72px 72px !important;
+}
+
+.hero-inner {
+  max-width: 800px !important;
+  width: 100% !important;
+}
+
+/* Badge */
+.hero-badge {
+  background: rgba(255,107,43,.08) !important;
+  border-color: rgba(255,107,43,.22) !important;
+  color: var(--o, #FF6B2B) !important;
+  font-size: 11px !important;
+  letter-spacing: 2.5px !important;
+  margin-bottom: 28px !important;
+}
+.bdot { background: var(--o, #FF6B2B) !important; }
+
+/* H1: boyut kısalt */
+.hero-h1 {
+  font-size: clamp(38px, 5.5vw, 72px) !important;
+  font-weight: 800 !important;
+  line-height: 1.07 !important;
+  margin-bottom: 20px !important;
+  letter-spacing: -1px !important;
+}
+.hero-h1 em {
+  font-style: italic !important;
+  background: linear-gradient(135deg, #FF6B2B, #FF9500, #FFB347) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  background-clip: text !important;
+}
+
+/* Sub metin */
+.hero-sub {
+  font-size: clamp(14px, 1.6vw, 16px) !important;
+  color: var(--txm) !important;
+  max-width: 520px !important;
+  margin: 0 auto 40px !important;
+  line-height: 1.8 !important;
+}
+.hero-sub strong { color: var(--tx) !important; }
+
+/* Butonlar */
+.hero-btns { margin-bottom: 0 !important; gap: 12px !important; }
+
+/* ── GLOBAL BUTONLAR: turuncu gradyan ── */
+.btn-g {
+  background: linear-gradient(135deg, #FF6B2B, #FF9500) !important;
+  color: #fff !important;
+  border: none !important;
+  box-shadow: 0 4px 20px rgba(255,107,43,.25) !important;
+}
+.btn-g:hover {
+  background: linear-gradient(135deg, #FF8F5A, #FFB347) !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 12px 32px rgba(255,107,43,.35) !important;
+}
+
+.btn-o {
+  border-color: rgba(255,107,43,.3) !important;
+  color: var(--tx) !important;
+}
+.btn-o:hover {
+  border-color: rgba(255,107,43,.7) !important;
+  background: rgba(255,107,43,.06) !important;
+  color: #FF8F5A !important;
+}
+
+/* ── TC KARTLAR: turuncu hover ── */
+.tc::after {
+  background: linear-gradient(90deg, transparent, #FF6B2B, transparent) !important;
+}
+.tc:hover { box-shadow: 0 24px 70px rgba(255,107,43,.12) !important; }
+.tc:hover .tc-icon {
+  background: rgba(255,107,43,.1) !important;
+  border-color: rgba(255,107,43,.3) !important;
+}
+.tc-cta { color: #FF6B2B !important; }
+.tc-badge {
+  background: rgba(255,107,43,.1) !important;
+  border-color: rgba(255,107,43,.25) !important;
+  color: #FF6B2B !important;
+}
+
+/* ── NAV: turuncu hover ── */
+.nav-lnk:hover, .nav-lnk.act {
+  color: #FF6B2B !important;
+}
+.nav-lnk::after { background: #FF6B2B !important; }
+.nav-cta {
+  background: linear-gradient(135deg, #FF6B2B, #FF9500) !important;
+  border: none !important;
+  color: #fff !important;
+  box-shadow: 0 4px 16px rgba(255,107,43,.2) !important;
+}
+.nav-cta:hover {
+  box-shadow: 0 8px 24px rgba(255,107,43,.35) !important;
+  opacity: .9 !important;
+}
+
+/* ── EY (etiquette) LABEL ── */
+.ey {
+  color: #FF6B2B !important;
+  border-left-color: #FF6B2B !important;
+}
+
+/* ── HOW STEPS ── */
+.how-num {
+  background: linear-gradient(135deg, #FF6B2B, #FF9500) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  background-clip: text !important;
+}
+
+/* ── STAT KPI KARTLAR ── */
+.stat-kpi-val {
+  background: linear-gradient(135deg, #FF6B2B, #FFB347) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  background-clip: text !important;
+}
+
+/* ── İLÇE CHIP'LER ── */
+.dist-chip.on, .dist-chip:hover,
+.q-chip.on, .q-chip:hover {
+  background: rgba(255,107,43,.1) !important;
+  border-color: rgba(255,107,43,.4) !important;
+  color: #FF6B2B !important;
+}
+
+/* ── VCHIP (değerleme) ── */
+.vchip.on {
+  background: linear-gradient(135deg, #FF6B2B, #FF9500) !important;
+  color: #fff !important;
+  border-color: transparent !important;
+}
+.vchip:hover:not(.on) {
+  border-color: rgba(255,107,43,.4) !important;
+  color: #FF6B2B !important;
+}
+
+/* ── SCROLL REVEAL LINK renkler ── */
+.tc-cta:hover { color: #FF8F5A !important; }
+
+/* ── NAV DROPDOWN: turuncu ── */
+.nav-drop-item:hover { color: #FF6B2B !important; }
+.nav-drop-menu { border-color: rgba(255,107,43,.2) !important; }
+
+/* ── INPUT FOCUS: turuncu ── */
+input:focus, select:focus, textarea:focus {
+  border-color: #FF6B2B !important;
+  box-shadow: 0 0 0 3px rgba(255,107,43,.08) !important;
+}
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar-thumb { background: rgba(255,107,43,.3) !important; }
+
+/* ── MOBİL HERO ── */
+@media (max-width: 900px) {
+  .hero {
+    padding: 90px 20px 60px !important;
+    min-height: 100svh !important;
+    max-height: none !important;
+  }
+  .hero-h1 { font-size: clamp(32px, 9vw, 52px) !important; letter-spacing: -.5px !important; }
+  .hero-sub { font-size: 14px !important; margin-bottom: 32px !important; }
+  .hero-btns { flex-direction: column !important; align-items: stretch !important; }
+  .btn-g, .btn-o { justify-content: center !important; width: 100% !important; }
+}
+@media (max-width: 600px) {
+  .hero-h1 { font-size: clamp(28px, 10vw, 44px) !important; }
+  .hero-badge { font-size: 10px !important; letter-spacing: 1.5px !important; }
+}
