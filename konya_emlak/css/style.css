@@ -4323,3 +4323,67 @@ input:focus, select:focus, textarea:focus {
   transform: scale(1.1) !important;
   box-shadow: 0 12px 32px rgba(255,107,43,.5) !important;
 }
+
+
+/* ── SHIMMER FINAL: akıcı soldan sağa turuncu geçiş ── */
+@keyframes shimmerFlow {
+  0%   { background-position: 200% center; }
+  100% { background-position: -200% center; }
+}
+
+.shimmer-title,
+.sec-title,
+.about-sec-title,
+.pricing-title,
+.adv-title-h,
+.cta-h,
+.cta-title,
+#page-about .about-h1,
+#page-about h1,
+.hero-h1,
+.val-form-title {
+  background: linear-gradient(
+    90deg,
+    #CC4800 0%,
+    #FF6B2B 12%,
+    #FF9500 25%,
+    #FFD580 40%,
+    #FFFFFF 50%,
+    #FFD580 60%,
+    #FF9500 75%,
+    #FF6B2B 88%,
+    #CC4800 100%
+  ) !important;
+  background-size: 300% auto !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  animation: shimmerFlow 4s linear infinite !important;
+}
+
+.hero-h1 em,
+.cta-title em,
+.cta-h em,
+.shimmer-title em,
+.sec-title em {
+  background: linear-gradient(
+    90deg,
+    #FF6B2B 0%,
+    #FF9500 25%,
+    #FFD580 50%,
+    #FF9500 75%,
+    #FF6B2B 100%
+  ) !important;
+  background-size: 200% auto !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  animation: shimmerFlow 3s linear infinite !important;
+  font-style: italic !important;
+}
+
+/* float-orb tamamen kapat */
+.float-orb, .float-orb-1, .float-orb-2 {
+  display: none !important;
+  visibility: hidden !important;
+}
