@@ -4238,3 +4238,88 @@ input:focus, select:focus, textarea:focus {
 .hero-badge {
   text-shadow: 0 1px 8px rgba(0,0,0,.6) !important;
 }
+
+
+/* ════════════════════════════════════════
+   SHIMMER TURUNCU PALET — tüm başlıklar
+   Eski altın shimmer → turuncu/amber shimmer
+════════════════════════════════════════ */
+
+/* Turuncu shimmer renk durağı seti:
+   koyu-turuncu → turuncu → amber → beyaz → amber → turuncu → koyu-turuncu
+   Birebir eski altın yapısının aynısı, sadece renkler değişti */
+
+.shimmer-title,
+.sec-title,
+.about-sec-title,
+.pricing-title,
+.adv-title-h,
+.cta-h,
+.cta-title,
+#page-about .about-h1,
+#page-about h1,
+.hero-h1 {
+  background: linear-gradient(
+    100deg,
+    #CC4800 0%,
+    #FF6B2B 15%,
+    #FF8F00 28%,
+    #FFB347 38%,
+    #FFFFFF 50%,
+    #FFB347 62%,
+    #FF8F00 72%,
+    #FF6B2B 85%,
+    #CC4800 100%
+  ) !important;
+  background-size: 300% auto !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  animation: shimmerFlow 5s linear infinite !important;
+}
+
+/* em içindeki vurgular da aynı turuncu shimmer */
+.hero-h1 em,
+.cta-title em,
+.cta-h em,
+.shimmer-title em,
+.sec-title em,
+.sec-content em,
+#page-about h1 em,
+[style*="font-style:italic"][style*="color:var(--gold)"] {
+  background: linear-gradient(
+    100deg,
+    #FF6B2B 0%,
+    #FF8F00 20%,
+    #FFB347 35%,
+    #FFFFFF 50%,
+    #FFB347 65%,
+    #FF8F00 80%,
+    #FF6B2B 100%
+  ) !important;
+  background-size: 300% auto !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  animation: shimmerFlow 4s linear infinite !important;
+  font-style: italic !important;
+}
+
+/* ── FLOAT ORB: kapat — sol üst siyah yuvarlak ── */
+.float-orb { display: none !important; }
+
+
+
+/* ── HOW-NUM: içi dolu turuncu gradyan yuvarlak ── */
+.how-num {
+  background: linear-gradient(135deg, #FF6B2B, #FF9500, #FFB347) !important;
+  border: none !important;
+  color: #fff !important;
+  -webkit-text-fill-color: #fff !important;
+  box-shadow: 0 8px 24px rgba(255,107,43,.35) !important;
+}
+.how-step:hover .how-num {
+  background: linear-gradient(135deg, #FF8F5A, #FFB347) !important;
+  transform: scale(1.1) !important;
+  box-shadow: 0 12px 32px rgba(255,107,43,.5) !important;
+}
