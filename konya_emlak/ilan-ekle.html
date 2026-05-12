@@ -1,0 +1,987 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>İlan Ver — Öğren-Sat</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/style.css">
+<style>
+/* ── İLAN EKLE SAYFA ── */
+.ia-page { padding-top: 80px; min-height: 100vh; }
+
+/* Hero band */
+.ia-hero {
+  background: linear-gradient(135deg, var(--d2), var(--d3));
+  border-bottom: 1px solid var(--bd);
+  padding: 40px clamp(16px,5vw,64px) 32px;
+  position: relative; overflow: hidden;
+}
+.ia-hero::before {
+  content: ''; position: absolute; inset: 0;
+  background: radial-gradient(ellipse 40% 100% at 100% 50%, rgba(255,107,43,.07), transparent);
+  pointer-events: none;
+}
+.ia-hero-inner { max-width: 900px; margin: 0 auto; position: relative; }
+.ia-hero-label { font-size: 10px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: var(--o,#FF6B2B); margin-bottom: 10px; }
+.ia-hero-title { font-size: clamp(26px,3vw,38px); font-weight: 800; color: var(--tx); }
+.ia-hero-sub { font-size: 14px; color: var(--txm); margin-top: 8px; }
+
+/* Steps progress bar */
+.ia-steps {
+  display: flex; gap: 0; margin-top: 28px;
+  background: var(--d4); border-radius: 100px; padding: 4px;
+  max-width: 560px;
+}
+.ia-step {
+  flex: 1; padding: 8px 12px; border-radius: 100px;
+  font-size: 12px; font-weight: 600; color: var(--txm);
+  text-align: center; transition: all .2s; cursor: default;
+  display: flex; align-items: center; justify-content: center; gap: 6px;
+}
+.ia-step.done { color: var(--ok); }
+.ia-step.act { background: linear-gradient(135deg,#FF6B2B,#FF9500); color: #fff; box-shadow: 0 4px 12px rgba(255,107,43,.3); }
+.ia-step-num { width: 18px; height: 18px; border-radius: 50%; background: rgba(255,255,255,.15); display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 800; flex-shrink: 0; }
+.ia-step.done .ia-step-num { background: var(--ok); color: #fff; }
+
+/* Form container */
+.ia-wrap { max-width: 900px; margin: 0 auto; padding: 32px clamp(16px,5vw,64px) 80px; }
+
+/* Form kartları */
+.ia-section {
+  background: var(--d2); border: 1px solid var(--bd); border-radius: var(--r);
+  margin-bottom: 16px; overflow: hidden; display: none;
+}
+.ia-section.act { display: block; }
+.ia-sec-head {
+  padding: 20px 24px; border-bottom: 1px solid var(--bd);
+  display: flex; align-items: center; gap: 12px;
+}
+.ia-sec-icon { font-size: 22px; }
+.ia-sec-title { font-size: 16px; font-weight: 800; color: var(--tx); }
+.ia-sec-sub { font-size: 12px; color: var(--txm); margin-top: 2px; }
+.ia-sec-body { padding: 24px; }
+
+/* Form elemanları */
+.ia-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.ia-grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+.ia-full { grid-column: 1/-1; }
+.ia-group { display: flex; flex-direction: column; gap: 7px; }
+.ia-lbl {
+  font-size: 10px; font-weight: 700; letter-spacing: 1.5px;
+  text-transform: uppercase; color: var(--txm);
+  display: flex; align-items: center; gap: 6px;
+}
+.ia-req { color: #FF6B2B; }
+.ia-input, .ia-sel, .ia-txt {
+  background: var(--d3); border: 1px solid var(--bd);
+  border-radius: var(--rs); padding: 12px 14px;
+  color: var(--tx); font-size: 14px; font-family: var(--font);
+  outline: none; transition: all .2s; width: 100%;
+}
+.ia-input:focus, .ia-sel:focus, .ia-txt:focus {
+  border-color: rgba(255,107,43,.5);
+  box-shadow: 0 0 0 3px rgba(255,107,43,.08);
+}
+.ia-sel option { background: var(--d3); }
+.ia-txt { resize: vertical; min-height: 110px; line-height: 1.6; }
+
+/* Chip seçici */
+.ia-chips { display: flex; gap: 8px; flex-wrap: wrap; }
+.ia-chip {
+  padding: 8px 16px; border-radius: 100px;
+  border: 1px solid var(--bd); background: var(--d3);
+  color: var(--txm); font-size: 13px; font-weight: 500;
+  cursor: pointer; transition: all .15s; font-family: var(--font);
+  display: flex; align-items: center; gap: 6px;
+}
+.ia-chip:hover { border-color: rgba(255,107,43,.35); color: var(--tx); }
+.ia-chip.on {
+  background: linear-gradient(135deg,#FF6B2B,#FF9500);
+  border-color: transparent; color: #fff;
+  box-shadow: 0 4px 12px rgba(255,107,43,.25);
+}
+
+/* Stepper */
+.ia-stepper {
+  display: flex; align-items: center;
+  background: var(--d3); border: 1px solid var(--bd); border-radius: var(--rs);
+  overflow: hidden; transition: border-color .2s;
+}
+.ia-stepper:focus-within { border-color: rgba(255,107,43,.5); }
+.ia-step-btn {
+  width: 44px; height: 46px; background: transparent; border: none;
+  color: var(--txm); font-size: 20px; cursor: pointer; transition: all .15s;
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+.ia-step-btn:hover { background: rgba(255,107,43,.08); color: var(--o,#FF6B2B); }
+.ia-step-input {
+  flex: 1; text-align: center; background: transparent; border: none;
+  border-left: 1px solid var(--bd); border-right: 1px solid var(--bd);
+  color: var(--tx); font-size: 16px; font-weight: 700; font-family: var(--font);
+  padding: 10px 6px; outline: none;
+  -moz-appearance: textfield;
+}
+.ia-step-input::-webkit-outer-spin-button,
+.ia-step-input::-webkit-inner-spin-button { -webkit-appearance: none; }
+
+/* Fiyat alanı özel */
+.ia-price-wrap { position: relative; }
+.ia-price-input {
+  padding-right: 50px !important;
+  font-size: 18px !important; font-weight: 800 !important;
+  color: var(--tx) !important;
+}
+.ia-price-suffix {
+  position: absolute; right: 14px; top: 50%; transform: translateY(-50%);
+  font-size: 14px; font-weight: 700; color: var(--txm);
+}
+.ia-discount-toggle {
+  display: flex; align-items: center; gap: 10px; cursor: pointer;
+  padding: 10px 14px; background: var(--d3); border: 1px solid var(--bd);
+  border-radius: var(--rs); transition: border-color .15s;
+}
+.ia-discount-toggle:hover { border-color: rgba(255,107,43,.35); }
+.ia-toggle-dot {
+  width: 36px; height: 20px; border-radius: 10px; background: var(--d4);
+  border: 1px solid var(--bd); position: relative; transition: background .2s; flex-shrink: 0;
+}
+.ia-toggle-dot::after {
+  content: ''; position: absolute; width: 14px; height: 14px;
+  border-radius: 50%; background: var(--txm); top: 2px; left: 2px; transition: all .2s;
+}
+.ia-toggle-dot.on { background: rgba(255,107,43,.2); border-color: rgba(255,107,43,.4); }
+.ia-toggle-dot.on::after { left: 18px; background: var(--o,#FF6B2B); }
+.ia-discount-fields { display: none; margin-top: 12px; }
+.ia-discount-fields.on { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+/* Görsel yükleme */
+.ia-img-zone {
+  border: 2px dashed var(--bd); border-radius: var(--r);
+  padding: 36px 20px; text-align: center; cursor: pointer;
+  transition: all .2s; background: var(--d3); position: relative;
+}
+.ia-img-zone:hover, .ia-img-zone.drag { border-color: rgba(255,107,43,.5); background: rgba(255,107,43,.03); }
+.ia-img-zone input { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; }
+.ia-img-icon { font-size: 36px; margin-bottom: 12px; opacity: .5; }
+.ia-img-title { font-size: 15px; font-weight: 700; color: var(--tx); margin-bottom: 6px; }
+.ia-img-sub { font-size: 12px; color: var(--txm); line-height: 1.6; }
+.ia-img-limit { display: inline-block; margin-top: 8px; padding: 3px 10px; background: rgba(255,107,43,.08); border-radius: 100px; font-size: 11px; color: var(--o,#FF6B2B); font-weight: 600; }
+
+/* Görsel önizleme grid */
+.ia-previews { display: grid; grid-template-columns: repeat(auto-fill,minmax(110px,1fr)); gap: 10px; margin-top: 16px; }
+.ia-preview {
+  position: relative; border-radius: var(--rs); overflow: hidden;
+  aspect-ratio: 1; background: var(--d3);
+}
+.ia-preview img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.ia-preview-rm {
+  position: absolute; top: 4px; right: 4px;
+  width: 22px; height: 22px; border-radius: 50%;
+  background: rgba(0,0,0,.7); border: none; color: #fff;
+  cursor: pointer; font-size: 12px; display: flex; align-items: center; justify-content: center;
+  transition: background .15s;
+}
+.ia-preview-rm:hover { background: var(--err); }
+.ia-preview-main {
+  position: absolute; bottom: 4px; left: 4px;
+  padding: 2px 7px; background: linear-gradient(135deg,#FF6B2B,#FF9500);
+  border-radius: 100px; font-size: 9px; font-weight: 700; color: #fff;
+}
+
+/* URL giriş alanları */
+.ia-url-list { display: flex; flex-direction: column; gap: 8px; }
+.ia-url-item { display: flex; gap: 8px; }
+.ia-url-item .ia-input { flex: 1; }
+.ia-url-rm { background: rgba(224,90,75,.1); border: 1px solid rgba(224,90,75,.2); border-radius: var(--rs); width: 40px; height: 44px; color: var(--err); cursor: pointer; font-size: 16px; transition: background .15s; display: flex; align-items: center; justify-content: center; }
+.ia-url-rm:hover { background: rgba(224,90,75,.2); }
+.ia-url-add { display: flex; align-items: center; gap: 6px; padding: 10px 14px; background: transparent; border: 1px dashed var(--bd); border-radius: var(--rs); color: var(--txm); font-size: 13px; cursor: pointer; font-family: var(--font); transition: all .15s; width: 100%; }
+.ia-url-add:hover { border-color: rgba(255,107,43,.4); color: var(--o,#FF6B2B); }
+
+/* Hint kutu */
+.ia-hint { display: flex; gap: 10px; padding: 12px 16px; background: rgba(255,107,43,.06); border: 1px solid rgba(255,107,43,.15); border-radius: var(--rs); margin-bottom: 16px; }
+.ia-hint-icon { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+.ia-hint p { font-size: 13px; color: var(--txm); line-height: 1.6; }
+
+/* Özet önizleme */
+.ia-preview-card {
+  background: var(--d3); border: 1px solid var(--bd); border-radius: var(--r);
+  padding: 20px; margin-bottom: 20px;
+}
+.ia-prev-title { font-size: 16px; font-weight: 800; color: var(--tx); margin-bottom: 4px; }
+.ia-prev-loc { font-size: 12px; color: var(--o,#FF6B2B); margin-bottom: 12px; }
+.ia-prev-specs { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; }
+.ia-prev-spec { font-size: 12px; color: var(--txm); padding: 4px 10px; background: var(--d2); border-radius: 100px; }
+.ia-prev-price { font-size: 24px; font-weight: 800; color: var(--tx); }
+
+/* Nav butonlar */
+.ia-nav-btns { display: flex; justify-content: space-between; gap: 12px; margin-top: 24px; }
+.ia-back-btn {
+  padding: 13px 24px; background: transparent; border: 1px solid var(--bd);
+  border-radius: var(--rs); color: var(--txm); font-size: 14px; font-weight: 600;
+  cursor: pointer; font-family: var(--font); transition: all .15s;
+}
+.ia-back-btn:hover { border-color: rgba(255,107,43,.35); color: var(--tx); }
+.ia-next-btn {
+  flex: 1; max-width: 280px; padding: 13px 24px;
+  background: linear-gradient(135deg,#FF6B2B,#FF9500);
+  border: none; border-radius: var(--rs); color: #fff;
+  font-size: 14px; font-weight: 700; cursor: pointer; font-family: var(--font);
+  transition: all .2s; box-shadow: 0 4px 16px rgba(255,107,43,.25);
+}
+.ia-next-btn:hover { opacity: .88; transform: translateY(-1px); }
+.ia-submit-btn {
+  flex: 1; max-width: 320px; padding: 15px 24px;
+  background: linear-gradient(135deg,#FF6B2B,#FF9500);
+  border: none; border-radius: var(--rs); color: #fff;
+  font-size: 15px; font-weight: 800; cursor: pointer; font-family: var(--font);
+  transition: all .2s; box-shadow: 0 4px 20px rgba(255,107,43,.3);
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+}
+.ia-submit-btn:hover { opacity: .88; transform: translateY(-1px); box-shadow: 0 8px 28px rgba(255,107,43,.4); }
+.ia-submit-btn:disabled { opacity: .5; pointer-events: none; }
+
+/* Başarı ekranı */
+.ia-success {
+  text-align: center; padding: 60px 20px;
+  background: var(--d2); border: 1px solid var(--bd); border-radius: var(--r);
+  display: none;
+}
+.ia-success.on { display: block; animation: fu .5s ease; }
+.ia-success-icon { font-size: 56px; margin-bottom: 20px; }
+.ia-success-title { font-size: 26px; font-weight: 800; color: var(--tx); margin-bottom: 10px; }
+.ia-success-sub { font-size: 15px; color: var(--txm); margin-bottom: 28px; line-height: 1.7; max-width: 440px; margin-left: auto; margin-right: auto; }
+
+/* Responsive */
+@media(max-width:900px) {
+  .ia-hero { padding: 28px 16px 24px; }
+  .ia-wrap { padding: 20px 16px 60px; }
+  .ia-grid { grid-template-columns: 1fr; }
+  .ia-grid-3 { grid-template-columns: 1fr 1fr; }
+  .ia-full { grid-column: auto; }
+  .ia-steps { max-width: 100%; }
+  .ia-step span:not(.ia-step-num) { display: none; }
+  .ia-discount-fields.on { grid-template-columns: 1fr; }
+}
+@media(max-width:500px) {
+  .ia-grid-3 { grid-template-columns: 1fr; }
+  .ia-previews { grid-template-columns: repeat(3,1fr); }
+}
+</style>
+</head>
+<body>
+
+<!-- POPUP -->
+<div class="popup-overlay" id="popup-overlay">
+  <div class="popup-box">
+    <div class="popup-icon" id="popup-icon">ℹ️</div>
+    <div class="popup-title" id="popup-title">Bilgi</div>
+    <div class="popup-msg" id="popup-msg"></div>
+    <div style="display:flex;gap:10px;justify-content:center;">
+      <button class="popup-btn" onclick="closePopup()">Tamam</button>
+    </div>
+  </div>
+</div>
+
+<!-- GİRİŞ GEREKLİ -->
+<div id="login-req-overlay" style="position:fixed;inset:0;background:rgba(0,0,0,.82);z-index:9998;display:none;align-items:center;justify-content:center;backdrop-filter:blur(8px);">
+  <div class="lrp-box">
+    <div class="lrp-icon">🔒</div>
+    <div class="lrp-title">Önce Giriş Yapın</div>
+    <div class="lrp-sub">İlan vermek için giriş yapmanız gerekiyor.</div>
+    <button class="lrp-btn" onclick="location.href='/giris'">Giriş Yap</button>
+    <button class="lrp-cancel" onclick="this.closest('#login-req-overlay').style.display='none'">İptal</button>
+  </div>
+</div>
+
+<!-- LOADER -->
+<div id="page-loader"><div class="ldr-brand">Öğren-Sat</div><div class="ldr-spinner"></div></div>
+
+<!-- MOBİL MENÜ -->
+<div class="mob-ov" id="mob-ov" onclick="closeMob()"></div>
+<div class="mob-sheet" id="mob-sheet">
+  <div style="padding:14px 20px 12px;border-bottom:1px solid var(--bd);flex-shrink:0;">
+    <div style="display:flex;align-items:center;justify-content:space-between;">
+      <span style="font-size:15px;font-weight:700;color:var(--o,#FF6B2B);">Öğren-Sat</span>
+      <button onclick="closeMob()" style="background:none;border:none;color:var(--txm);font-size:22px;cursor:pointer;">×</button>
+    </div>
+  </div>
+  <div style="flex:1;overflow-y:auto;padding:12px 8px;">
+    <a class="nav-lnk" href="/">Ana Sayfa</a>
+    <a class="nav-lnk" href="/degerleme">Değerleme</a>
+    <a class="nav-lnk" href="/karsilastirma">Karşılaştırma</a>
+    <a class="nav-lnk" href="/fiyatlar">Fiyatlar</a>
+    <a class="nav-lnk" href="/danisman">Danışman Bul</a>
+    <a class="nav-lnk" href="/hakkimizda">Hakkımızda</a>
+    <a class="nav-lnk" href="/analiz">Analiz</a>
+    <a class="nav-lnk" href="/ilanlar">İlanlar</a>
+    <a class="nav-lnk act" href="/ilan-ekle">İlan Ekle</a>
+  </div>
+  <div style="padding:16px;border-top:1px solid var(--bd);display:flex;flex-direction:column;gap:10px;">
+    <button onclick="location.href='/giris'" style="padding:12px;background:linear-gradient(135deg,#FF6B2B,#FF9500);border:none;border-radius:var(--rs);color:#fff;font-weight:700;font-family:var(--font);font-size:14px;cursor:pointer;">Giriş Yap / Kayıt Ol</button>
+  </div>
+</div>
+
+<!-- NAV -->
+<nav class="nav" id="main-nav">
+  <a class="nav-brand" href="/"><div class="nav-logo">ö</div><span class="nav-brand-t">Öğren-Sat</span></a>
+  <div class="nav-links">
+    <a class="nav-lnk" href="/">Ana Sayfa</a>
+    <a class="nav-lnk" href="/degerleme">Değerleme</a>
+    <a class="nav-lnk" href="/karsilastirma">Karşılaştırma</a>
+    <a class="nav-lnk" href="/fiyatlar">Fiyatlar</a>
+    <a class="nav-lnk" href="/danisman">Danışman Bul</a>
+    <a class="nav-lnk" href="/hakkimizda">Hakkımızda</a>
+    <a class="nav-lnk" href="/analiz">Analiz</a>
+    <div class="nav-drop-wrap" id="ilanlar-wrap">
+      <button class="nav-lnk nav-drop-btn act" id="ilanlar-btn" onclick="toggleIlanlarMenu(event)">İlanlar ▾</button>
+      <div class="nav-drop-menu" id="ilanlar-menu">
+        <a class="nav-drop-item" href="/ilanlar">Tüm İlanlar</a>
+        <div class="nav-drop-sep"></div>
+        <a class="nav-drop-item" href="/ilan-ekle">İlan Ekle</a>
+      </div>
+    </div>
+  </div>
+  <div class="nav-right">
+    <div class="nav-lang" id="lang-btn" onclick="toggleLangMenu()"><span id="lang-txt">🇹🇷 TR</span><div class="lang-menu" id="lang-menu"><button onclick="setLang('tr')">🇹🇷 Türkçe</button><button onclick="setLang('en')">🇬🇧 English</button></div></div>
+    <button class="nav-support" onclick="openSupport()">💬 Destek</button>
+    <button class="nav-cta" id="nav-auth-btn" onclick="location.href='/giris'">Giriş Yap / Kayıt Ol</button>
+  </div>
+  <button class="nav-ham" id="nav-ham" onclick="toggleMob()"><span></span><span></span><span></span></button>
+</nav>
+
+<!-- SAYFA -->
+<div class="ia-page">
+
+  <!-- HERO -->
+  <div class="ia-hero">
+    <div class="ia-hero-inner">
+      <div class="ia-hero-label">Ücretsiz İlan Ver</div>
+      <div class="ia-hero-title">Mülkünü binlerce kişiye ulaştır</div>
+      <div class="ia-hero-sub">Doğrudan alıcıyla buluş. Komisyon yok, aracı yok.</div>
+      <div class="ia-steps" id="ia-steps">
+        <div class="ia-step act" id="step-ind-0"><div class="ia-step-num">1</div><span>Kategori</span></div>
+        <div class="ia-step" id="step-ind-1"><div class="ia-step-num">2</div><span>Detaylar</span></div>
+        <div class="ia-step" id="step-ind-2"><div class="ia-step-num">3</div><span>Fiyat</span></div>
+        <div class="ia-step" id="step-ind-3"><div class="ia-step-num">4</div><span>Görseller</span></div>
+        <div class="ia-step" id="step-ind-4"><div class="ia-step-num">5</div><span>İletişim</span></div>
+        <div class="ia-step" id="step-ind-5"><div class="ia-step-num">6</div><span>Özet</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FORM CONTAINER -->
+  <div class="ia-wrap">
+
+    <!-- ADIM 1: KATEGORİ -->
+    <div class="ia-section act" id="sec-0">
+      <div class="ia-sec-head">
+        <div class="ia-sec-icon">🏷️</div>
+        <div><div class="ia-sec-title">Ne tür bir mülk?</div><div class="ia-sec-sub">İlan kategorisi seçin</div></div>
+      </div>
+      <div class="ia-sec-body">
+        <div class="ia-chips" id="cat-chips" style="gap:12px;margin-bottom:28px;">
+          <button class="ia-chip" onclick="selectChip('cat-chips',this,'konut')">🏠 Satılık Konut</button>
+          <button class="ia-chip" onclick="selectChip('cat-chips',this,'arsa')">🌿 Satılık Arsa / Arazi</button>
+          <button class="ia-chip" onclick="selectChip('cat-chips',this,'ticari')">🏢 Satılık Ticari</button>
+          <button class="ia-chip" onclick="selectChip('cat-chips',this,'kiralik')">🔑 Kiralık</button>
+        </div>
+        <div id="apt-type-wrap" style="display:none;margin-bottom:20px;">
+          <div class="ia-group">
+            <label class="ia-lbl">Konut Tipi</label>
+            <div class="ia-chips" id="apt-chips">
+              <button class="ia-chip" onclick="selectChip('apt-chips',this,'Daire')">Daire</button>
+              <button class="ia-chip" onclick="selectChip('apt-chips',this,'Müstakil')">Müstakil</button>
+              <button class="ia-chip" onclick="selectChip('apt-chips',this,'Villa')">Villa</button>
+              <button class="ia-chip" onclick="selectChip('apt-chips',this,'Teras Dubleks')">Teras Dubleks</button>
+              <button class="ia-chip" onclick="selectChip('apt-chips',this,'Ara Kat Dubleks')">Ara Kat Dubleks</button>
+              <button class="ia-chip" onclick="selectChip('apt-chips',this,'Bahçe Dubleks')">Bahçe Dubleks</button>
+            </div>
+          </div>
+        </div>
+        <div class="ia-nav-btns" style="justify-content:flex-end;">
+          <button class="ia-next-btn" onclick="nextStep(0)">Devam Et →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ADIM 2: DETAYLAR -->
+    <div class="ia-section" id="sec-1">
+      <div class="ia-sec-head">
+        <div class="ia-sec-icon">📋</div>
+        <div><div class="ia-sec-title">Mülk Detayları</div><div class="ia-sec-sub">Konum ve özellikler</div></div>
+      </div>
+      <div class="ia-sec-body">
+        <div class="ia-grid" style="margin-bottom:16px;">
+          <div class="ia-group ia-full">
+            <label class="ia-lbl">İlan Başlığı <span class="ia-req">*</span></label>
+            <input class="ia-input" id="f-title" placeholder="örn. Selçuklu'da 3+1 Sıfır Daire" maxlength="100">
+          </div>
+          <div class="ia-group">
+            <label class="ia-lbl">İlçe <span class="ia-req">*</span></label>
+            <select class="ia-sel" id="f-district">
+              <option value="">Seçin</option>
+              <option>Selçuklu</option><option>Meram</option><option>Karatay</option>
+              <option>Ereğli</option><option>Akşehir</option><option>Beyşehir</option>
+              <option>Cihanbeyli</option><option>Çumra</option><option>Doğanhisar</option>
+              <option>Emirgazi</option><option>Güneysınır</option><option>Hadim</option>
+              <option>Hüyük</option><option>Ilgın</option><option>Kadınhanı</option>
+              <option>Karapınar</option><option>Kulu</option><option>Sarayönü</option>
+              <option>Seydişehir</option><option>Taşkent</option><option>Tuzlukçu</option>
+              <option>Yalıhüyük</option><option>Altınekin</option><option>Bozkır</option>
+              <option>Derbent</option><option>Derebucak</option><option>Akören</option>
+              <option>Halkapınar</option><option>Yunak</option><option>Ahırlı</option><option>Çeltik</option>
+            </select>
+          </div>
+          <div class="ia-group">
+            <label class="ia-lbl">Mahalle</label>
+            <input class="ia-input" id="f-quarter" placeholder="Mahalle adı">
+          </div>
+          <div class="ia-group">
+            <label class="ia-lbl">Adres / Cadde</label>
+            <input class="ia-input" id="f-address" placeholder="Cadde, sokak vb.">
+          </div>
+        </div>
+
+        <div id="konut-fields">
+          <div class="ia-hint"><div class="ia-hint-icon">💡</div><p>Oda, banyo ve m² bilgileri değerleme sistemimizde de kullanılır.</p></div>
+          <div class="ia-grid-3" style="margin-bottom:16px;">
+            <div class="ia-group">
+              <label class="ia-lbl">Oda Sayısı <span class="ia-req">*</span></label>
+              <div class="ia-chips" id="rooms-chips" style="flex-wrap:wrap;">
+                <button class="ia-chip" onclick="selectChip('rooms-chips',this,'1+0')">1+0</button>
+                <button class="ia-chip" onclick="selectChip('rooms-chips',this,'1+1')">1+1</button>
+                <button class="ia-chip" onclick="selectChip('rooms-chips',this,'2+1')">2+1</button>
+                <button class="ia-chip" onclick="selectChip('rooms-chips',this,'3+1')">3+1</button>
+                <button class="ia-chip" onclick="selectChip('rooms-chips',this,'4+1')">4+1</button>
+                <button class="ia-chip" onclick="selectChip('rooms-chips',this,'5+1')">5+1</button>
+                <button class="ia-chip" onclick="selectChip('rooms-chips',this,'5+2')">5+2+</button>
+              </div>
+            </div>
+            <div class="ia-group">
+              <label class="ia-lbl">Brüt M² <span class="ia-req">*</span></label>
+              <div class="ia-stepper">
+                <button type="button" class="ia-step-btn" onclick="stepVal('f-gross',-5,0)">−</button>
+                <input class="ia-step-input" id="f-gross" type="number" value="0" min="0" max="5000">
+                <button type="button" class="ia-step-btn" onclick="stepVal('f-gross',5,0)">+</button>
+              </div>
+            </div>
+            <div class="ia-group">
+              <label class="ia-lbl">Net M²</label>
+              <div class="ia-stepper">
+                <button type="button" class="ia-step-btn" onclick="stepVal('f-net',-5,0)">−</button>
+                <input class="ia-step-input" id="f-net" type="number" value="0" min="0" max="5000">
+                <button type="button" class="ia-step-btn" onclick="stepVal('f-net',5,0)">+</button>
+              </div>
+            </div>
+            <div class="ia-group">
+              <label class="ia-lbl">Bina Yaşı <span class="ia-req">*</span></label>
+              <div class="ia-stepper">
+                <button type="button" class="ia-step-btn" onclick="stepVal('f-age',-1,0)">−</button>
+                <input class="ia-step-input" id="f-age" type="number" value="0" min="0" max="100">
+                <button type="button" class="ia-step-btn" onclick="stepVal('f-age',1,0)">+</button>
+              </div>
+            </div>
+            <div class="ia-group">
+              <label class="ia-lbl">Kat</label>
+              <div class="ia-stepper">
+                <button type="button" class="ia-step-btn" onclick="stepVal('f-floor',-1,0)">−</button>
+                <input class="ia-step-input" id="f-floor" type="number" value="0" min="0" max="100">
+                <button type="button" class="ia-step-btn" onclick="stepVal('f-floor',1,0)">+</button>
+              </div>
+            </div>
+            <div class="ia-group">
+              <label class="ia-lbl">Top. Kat</label>
+              <div class="ia-stepper">
+                <button type="button" class="ia-step-btn" onclick="stepVal('f-tfloor',-1,1)">−</button>
+                <input class="ia-step-input" id="f-tfloor" type="number" value="1" min="1" max="100">
+                <button type="button" class="ia-step-btn" onclick="stepVal('f-tfloor',1,1)">+</button>
+              </div>
+            </div>
+          </div>
+          <div class="ia-grid" style="margin-bottom:16px;">
+            <div class="ia-group">
+              <label class="ia-lbl">Banyo Sayısı</label>
+              <div class="ia-stepper">
+                <button type="button" class="ia-step-btn" onclick="stepVal('f-bath',-1,1)">−</button>
+                <input class="ia-step-input" id="f-bath" type="number" value="1" min="1" max="10">
+                <button type="button" class="ia-step-btn" onclick="stepVal('f-bath',1,1)">+</button>
+              </div>
+            </div>
+            <div class="ia-group">
+              <label class="ia-lbl">Isıtma</label>
+              <select class="ia-sel" id="f-heat">
+                <option value="">Belirtilmemiş</option>
+                <option>Kombi (Doğalgaz)</option><option>Merkezi (Doğalgaz)</option>
+                <option>Yerden Isıtma</option><option>Klima</option>
+                <option>Soba</option><option>Yok</option>
+              </select>
+            </div>
+          </div>
+          <div style="margin-bottom:16px;">
+            <label class="ia-lbl" style="margin-bottom:10px;">Özellikler (birden fazla seçilebilir)</label>
+            <div class="ia-chips" id="features-chips">
+              <button class="ia-chip" onclick="toggleMulti('features-chips',this,'Balkon')">🏗 Balkon</button>
+              <button class="ia-chip" onclick="toggleMulti('features-chips',this,'Asansör')">🛗 Asansör</button>
+              <button class="ia-chip" onclick="toggleMulti('features-chips',this,'Otopark')">🅿️ Otopark</button>
+              <button class="ia-chip" onclick="toggleMulti('features-chips',this,'Güvenlik')">🔐 24 Saat Güvenlik</button>
+              <button class="ia-chip" onclick="toggleMulti('features-chips',this,'Havuz')">🏊 Havuz</button>
+              <button class="ia-chip" onclick="toggleMulti('features-chips',this,'Spor Salonu')">🏋 Spor Salonu</button>
+              <button class="ia-chip" onclick="toggleMulti('features-chips',this,'Çocuk Parkı')">🛝 Çocuk Parkı</button>
+              <button class="ia-chip" onclick="toggleMulti('features-chips',this,'Jeneratör')">⚡ Jeneratör</button>
+              <button class="ia-chip" onclick="toggleMulti('features-chips',this,'Isı Yalıtım')">🌡 Isı Yalıtım</button>
+              <button class="ia-chip" onclick="toggleMulti('features-chips',this,'Ebeveyn Banyosu')">🚿 Ebeveyn Banyosu</button>
+            </div>
+          </div>
+          <div class="ia-grid">
+            <div class="ia-group">
+              <label class="ia-lbl">Kullanım Durumu</label>
+              <div class="ia-chips" id="usage-chips">
+                <button class="ia-chip" onclick="selectChip('usage-chips',this,'Boş')">Boş</button>
+                <button class="ia-chip" onclick="selectChip('usage-chips',this,'Mülk Sahibi')">Mülk Sahibi</button>
+                <button class="ia-chip" onclick="selectChip('usage-chips',this,'Kiracı')">Kiracı</button>
+              </div>
+            </div>
+            <div class="ia-group">
+              <label class="ia-lbl">Tapu Durumu</label>
+              <div class="ia-chips" id="deed-chips">
+                <button class="ia-chip" onclick="selectChip('deed-chips',this,'Kat Mülkiyeti')">Kat Mülkiyeti</button>
+                <button class="ia-chip" onclick="selectChip('deed-chips',this,'Kat İrtifakı')">Kat İrtifakı</button>
+                <button class="ia-chip" onclick="selectChip('deed-chips',this,'Hisseli Tapu')">Hisseli</button>
+                <button class="ia-chip" onclick="selectChip('deed-chips',this,'Arsa Tapusu')">Arsa</button>
+              </div>
+            </div>
+            <div class="ia-group ia-full" style="flex-direction:row;align-items:center;gap:12px;flex-wrap:wrap;">
+              <label style="display:flex;align-items:center;gap:8px;cursor:pointer;">
+                <input type="checkbox" id="f-loan" style="accent-color:#FF6B2B;width:16px;height:16px;">
+                <span style="font-size:13px;color:var(--txm);">Krediye uygun</span>
+              </label>
+              <label style="display:flex;align-items:center;gap:8px;cursor:pointer;">
+                <input type="checkbox" id="f-exchange" style="accent-color:#FF6B2B;width:16px;height:16px;">
+                <span style="font-size:13px;color:var(--txm);">Takas kabul edilir</span>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <div class="ia-group" style="margin-top:16px;">
+          <label class="ia-lbl">Açıklama</label>
+          <textarea class="ia-txt" id="f-desc" placeholder="Mülk hakkında ek bilgiler, öne çıkan özellikler, çevre bilgisi..."></textarea>
+        </div>
+
+        <div class="ia-nav-btns">
+          <button class="ia-back-btn" onclick="prevStep(1)">← Geri</button>
+          <button class="ia-next-btn" onclick="nextStep(1)">Devam Et →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ADIM 3: FİYAT -->
+    <div class="ia-section" id="sec-2">
+      <div class="ia-sec-head">
+        <div class="ia-sec-icon">💰</div>
+        <div><div class="ia-sec-title">Fiyat Bilgisi</div><div class="ia-sec-sub">Satış veya kira fiyatı</div></div>
+      </div>
+      <div class="ia-sec-body">
+        <div class="ia-hint"><div class="ia-hint-icon">📊</div><p>Piyasa değerini bilmiyorsanız <a href="/degerleme" style="color:var(--o,#FF6B2B);">ücretsiz değerleme</a> yapabilirsiniz.</p></div>
+        <div class="ia-group" style="margin-bottom:20px;">
+          <label class="ia-lbl">Fiyat (₺) <span class="ia-req">*</span></label>
+          <div class="ia-price-wrap">
+            <input class="ia-input ia-price-input" id="f-price" type="number" placeholder="5.000.000" min="0">
+            <span class="ia-price-suffix">₺</span>
+          </div>
+          <div id="f-price-m2" style="font-size:12px;color:var(--txm);margin-top:6px;"></div>
+        </div>
+
+        <!-- İndirim toggle -->
+        <div class="ia-discount-toggle" onclick="toggleDiscount()" style="margin-bottom:8px;">
+          <div class="ia-toggle-dot" id="discount-dot"></div>
+          <span style="font-size:13px;color:var(--txm);">İndirimli fiyat tanımla (eski fiyat göster)</span>
+        </div>
+        <div class="ia-discount-fields" id="discount-fields">
+          <div class="ia-group">
+            <label class="ia-lbl">Eski / Liste Fiyatı (₺)</label>
+            <div class="ia-price-wrap">
+              <input class="ia-input ia-price-input" id="f-orig-price" type="number" placeholder="6.000.000" min="0">
+              <span class="ia-price-suffix">₺</span>
+            </div>
+          </div>
+          <div class="ia-group">
+            <label class="ia-lbl">İndirim Nedeni</label>
+            <input class="ia-input" id="f-discount-reason" placeholder="Hızlı satış, taşınma zorunluluğu...">
+          </div>
+        </div>
+
+        <div class="ia-nav-btns" style="margin-top:24px;">
+          <button class="ia-back-btn" onclick="prevStep(2)">← Geri</button>
+          <button class="ia-next-btn" onclick="nextStep(2)">Devam Et →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ADIM 4: GÖRSELLER -->
+    <div class="ia-section" id="sec-3">
+      <div class="ia-sec-head">
+        <div class="ia-sec-icon">📸</div>
+        <div><div class="ia-sec-title">Fotoğraflar</div><div class="ia-sec-sub">URL ile ekle (max 10 görsel)</div></div>
+      </div>
+      <div class="ia-sec-body">
+        <div class="ia-hint"><div class="ia-hint-icon">💡</div><p>Görselleri Google Drive, ImgBB veya benzeri servislere yükleyip URL'lerini girin. İlk URL kapak fotoğrafı olacaktır.</p></div>
+
+        <div class="ia-url-list" id="url-list">
+          <div class="ia-url-item">
+            <input class="ia-input" type="url" placeholder="https://... (Kapak fotoğrafı)" oninput="updatePreviews()">
+          </div>
+        </div>
+        <button class="ia-url-add" onclick="addUrlField()" style="margin-top:8px;">+ URL ekle</button>
+
+        <div id="img-previews" class="ia-previews" style="margin-top:20px;"></div>
+
+        <div class="ia-nav-btns" style="margin-top:24px;">
+          <button class="ia-back-btn" onclick="prevStep(3)">← Geri</button>
+          <button class="ia-next-btn" onclick="nextStep(3)">Devam Et →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ADIM 5: İLETİŞİM -->
+    <div class="ia-section" id="sec-4">
+      <div class="ia-sec-head">
+        <div class="ia-sec-icon">📞</div>
+        <div><div class="ia-sec-title">İletişim Bilgileri</div><div class="ia-sec-sub">Alıcılar sizinle bu bilgilerle iletişime geçer</div></div>
+      </div>
+      <div class="ia-sec-body">
+        <div class="ia-grid">
+          <div class="ia-group">
+            <label class="ia-lbl">Ad Soyad <span class="ia-req">*</span></label>
+            <input class="ia-input" id="f-name" placeholder="Adınız Soyadınız">
+          </div>
+          <div class="ia-group">
+            <label class="ia-lbl">Telefon <span class="ia-req">*</span></label>
+            <input class="ia-input" id="f-phone" type="tel" placeholder="+90 5XX XXX XX XX">
+          </div>
+          <div class="ia-group">
+            <label class="ia-lbl">WhatsApp (isteğe bağlı)</label>
+            <input class="ia-input" id="f-whatsapp" type="tel" placeholder="+90 5XX XXX XX XX">
+          </div>
+          <div class="ia-group">
+            <label class="ia-lbl">E-posta (isteğe bağlı)</label>
+            <input class="ia-input" id="f-email" type="email" placeholder="mail@ornek.com">
+          </div>
+        </div>
+        <div style="margin-top:16px;padding:14px 16px;background:rgba(76,175,130,.07);border:1px solid rgba(76,175,130,.2);border-radius:var(--rs);">
+          <div style="font-size:12px;color:var(--ok);font-weight:600;margin-bottom:4px;">🔒 Gizlilik</div>
+          <div style="font-size:12px;color:var(--txm);">İletişim bilgileriniz yalnızca ilgilenenlere gösterilir, üçüncü taraflarla paylaşılmaz.</div>
+        </div>
+        <div class="ia-nav-btns" style="margin-top:24px;">
+          <button class="ia-back-btn" onclick="prevStep(4)">← Geri</button>
+          <button class="ia-next-btn" onclick="nextStep(4)">Devam Et →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ADIM 6: ÖZET & YAYINLA -->
+    <div class="ia-section" id="sec-5">
+      <div class="ia-sec-head">
+        <div class="ia-sec-icon">✅</div>
+        <div><div class="ia-sec-title">İlanı Gözden Geçir</div><div class="ia-sec-sub">Her şey doğruysa yayınla</div></div>
+      </div>
+      <div class="ia-sec-body">
+        <div class="ia-preview-card" id="summary-card">
+          <div style="font-size:13px;color:var(--txm);">Özet yükleniyor...</div>
+        </div>
+        <div style="padding:14px 16px;background:rgba(255,107,43,.06);border:1px solid rgba(255,107,43,.15);border-radius:var(--rs);margin-bottom:20px;">
+          <div style="font-size:12px;color:var(--o,#FF6B2B);font-weight:700;margin-bottom:4px;">📋 Yayın Koşulları</div>
+          <div style="font-size:12px;color:var(--txm);line-height:1.7;">İlanınız yayınlandıktan sonra 30 gün aktif kalır. Gerçek mülk bilgilerini girin. Yanıltıcı içerik ilanın kaldırılmasına yol açar.</div>
+        </div>
+        <label style="display:flex;align-items:flex-start;gap:10px;cursor:pointer;margin-bottom:20px;">
+          <input type="checkbox" id="f-terms" style="accent-color:#FF6B2B;width:16px;height:16px;margin-top:2px;flex-shrink:0;">
+          <span style="font-size:13px;color:var(--txm);line-height:1.6;">Kullanım koşullarını ve gizlilik politikasını okudum, kabul ediyorum.</span>
+        </label>
+        <div class="ia-nav-btns">
+          <button class="ia-back-btn" onclick="prevStep(5)">← Geri</button>
+          <button class="ia-submit-btn" id="submit-btn" onclick="submitIlan()">🚀 İlanı Yayınla</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- BAŞARI -->
+    <div class="ia-success" id="ia-success">
+      <div class="ia-success-icon">🎉</div>
+      <div class="ia-success-title">İlanınız Yayınlandı!</div>
+      <div class="ia-success-sub">İlanınız onay sürecine alındı. Genellikle 1-2 saat içinde yayına girer. Verdiğiniz telefon numarasına bildirim gönderilecektir.</div>
+      <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
+        <a href="/ilanlar" style="padding:13px 28px;background:linear-gradient(135deg,#FF6B2B,#FF9500);border:none;border-radius:var(--rs);color:#fff;font-weight:700;font-family:var(--font);font-size:14px;cursor:pointer;text-decoration:none;">İlanları Gör</a>
+        <button onclick="resetForm()" style="padding:13px 28px;background:transparent;border:1px solid var(--bd);border-radius:var(--rs);color:var(--txm);font-weight:600;font-family:var(--font);font-size:14px;cursor:pointer;">Yeni İlan Ver</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script src="/js/common.js"></script>
+<script src="/js/main.js"></script>
+<script>
+const SU='https://bknfjyfuzbanhoomooth.supabase.co';
+const SK='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJrbmZqeWZ1emJhbmhvb21vb3RoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc1ODczNDgsImV4cCI6MjA5MzE2MzM0OH0.7Tl3nWspqxDtnhIj2SZju_ObXtjkAsv_n-Joj7vwSx0';
+const H={'Content-Type':'application/json','apikey':SK,'Authorization':'Bearer '+SK};
+const fp=n=>new Intl.NumberFormat('tr-TR').format(n);
+
+let currentStep=0;
+let formData={
+  category:'', apt_type:'', title:'', district:'', quarter:'', address:'',
+  rooms:'', gross_m2:0, net_m2:0, building_age:0, floor:0, total_floors:1,
+  bathrooms:1, heating:'', features:[], usage_status:'', deed_status:'',
+  loan_eligible:false, exchange:false, description:'',
+  price:0, original_price:0, discount_reason:'',
+  images:[],
+  owner_name:'', owner_phone:'', owner_whatsapp:'', owner_email:'',
+  discount:false
+};
+
+// Chip seçici (tek seçim)
+function selectChip(groupId,el,val){
+  document.querySelectorAll(`#${groupId} .ia-chip`).forEach(c=>c.classList.remove('on'));
+  el.classList.add('on');
+  // Veri kaydet
+  const map={
+    'cat-chips':'category','apt-chips':'apt_type',
+    'rooms-chips':'rooms','usage-chips':'usage_status','deed-chips':'deed_status'
+  };
+  if(map[groupId]) formData[map[groupId]]=val;
+  if(groupId==='cat-chips') toggleKonutFields(val);
+}
+
+// Çoklu seçim chip
+function toggleMulti(groupId,el,val){
+  el.classList.toggle('on');
+  const idx=formData.features.indexOf(val);
+  if(idx>-1) formData.features.splice(idx,1);
+  else formData.features.push(val);
+}
+
+function toggleKonutFields(cat){
+  const kf=document.getElementById('konut-fields');
+  const aptw=document.getElementById('apt-type-wrap');
+  kf.style.display=cat==='arsa'?'none':'block';
+  aptw.style.display=cat==='konut'?'block':'none';
+}
+
+// Stepper
+function stepVal(id,delta,min){
+  const el=document.getElementById(id);
+  const v=Math.max(min,parseInt(el.value||min)+delta);
+  el.value=v;
+  // m² fiyat güncelle
+  if(id==='f-gross') updateM2Price();
+}
+
+// İndirim toggle
+function toggleDiscount(){
+  formData.discount=!formData.discount;
+  document.getElementById('discount-dot').classList.toggle('on',formData.discount);
+  document.getElementById('discount-fields').classList.toggle('on',formData.discount);
+}
+
+// m² fiyat hesapla
+function updateM2Price(){
+  const price=parseInt(document.getElementById('f-price').value||0);
+  const gross=parseInt(document.getElementById('f-gross').value||0);
+  const el=document.getElementById('f-price-m2');
+  if(el && price>0 && gross>0) el.textContent=`≈ ${fp(Math.round(price/gross))} ₺/m²`;
+  else if(el) el.textContent='';
+}
+document.addEventListener('input',e=>{if(e.target.id==='f-price'||e.target.id==='f-gross')updateM2Price();});
+
+// URL alanları
+function addUrlField(){
+  const list=document.getElementById('url-list');
+  if(list.children.length>=10){showInfo('Maksimum 10 görsel URL eklenebilir.');return;}
+  const div=document.createElement('div');
+  div.className='ia-url-item';
+  div.innerHTML=`<input class="ia-input" type="url" placeholder="https://..." oninput="updatePreviews()">
+    <button class="ia-url-rm" onclick="this.closest('.ia-url-item').remove();updatePreviews()">×</button>`;
+  list.appendChild(div);
+}
+
+function updatePreviews(){
+  const urls=[...document.querySelectorAll('#url-list .ia-url-item input')].map(i=>i.value.trim()).filter(Boolean);
+  formData.images=urls;
+  const prev=document.getElementById('img-previews');
+  prev.innerHTML=urls.map((url,i)=>`
+    <div class="ia-preview">
+      <img src="${url}" alt="Görsel ${i+1}" onerror="this.parentElement.innerHTML='<div style=\\'width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:20px;color:var(--txm);\\'>❌</div>'">
+      ${i===0?'<div class="ia-preview-main">Kapak</div>':''}
+    </div>`).join('');
+}
+
+// Step navigasyon
+function nextStep(from){
+  if(!validateStep(from)) return;
+  collectStepData(from);
+  goToStep(from+1);
+}
+function prevStep(from){
+  goToStep(from-1);
+}
+function goToStep(step){
+  document.querySelectorAll('.ia-section').forEach((s,i)=>{
+    s.classList.toggle('act',i===step);
+  });
+  document.querySelectorAll('.ia-step').forEach((s,i)=>{
+    s.classList.remove('act','done');
+    if(i===step) s.classList.add('act');
+    if(i<step) s.classList.add('done');
+  });
+  currentStep=step;
+  window.scrollTo({top:0,behavior:'smooth'});
+  if(step===5) buildSummary();
+}
+
+function validateStep(step){
+  if(step===0){
+    if(!formData.category){showError('Lütfen kategori seçin.','Eksik Alan');return false;}
+  }
+  if(step===1){
+    if(!document.getElementById('f-title').value.trim()){showError('İlan başlığı zorunludur.','Eksik Alan');return false;}
+    if(!document.getElementById('f-district').value){showError('İlçe seçimi zorunludur.','Eksik Alan');return false;}
+  }
+  if(step===2){
+    if(!document.getElementById('f-price').value||parseInt(document.getElementById('f-price').value)<=0){showError('Geçerli bir fiyat girin.','Eksik Alan');return false;}
+  }
+  if(step===4){
+    if(!document.getElementById('f-name').value.trim()){showError('Ad Soyad zorunludur.','Eksik Alan');return false;}
+    if(!document.getElementById('f-phone').value.trim()){showError('Telefon numarası zorunludur.','Eksik Alan');return false;}
+  }
+  return true;
+}
+
+function collectStepData(step){
+  if(step===1){
+    formData.title=document.getElementById('f-title').value.trim();
+    formData.district=document.getElementById('f-district').value;
+    formData.quarter=document.getElementById('f-quarter').value.trim();
+    formData.address=document.getElementById('f-address').value.trim();
+    formData.gross_m2=parseInt(document.getElementById('f-gross').value)||0;
+    formData.net_m2=parseInt(document.getElementById('f-net').value)||0;
+    formData.building_age=parseInt(document.getElementById('f-age').value)||0;
+    formData.floor=parseInt(document.getElementById('f-floor').value)||0;
+    formData.total_floors=parseInt(document.getElementById('f-tfloor').value)||1;
+    formData.bathrooms=parseInt(document.getElementById('f-bath').value)||1;
+    formData.heating=document.getElementById('f-heat').value;
+    formData.description=document.getElementById('f-desc').value.trim();
+    formData.loan_eligible=document.getElementById('f-loan').checked;
+    formData.exchange=document.getElementById('f-exchange').checked;
+  }
+  if(step===2){
+    formData.price=parseInt(document.getElementById('f-price').value)||0;
+    formData.original_price=parseInt(document.getElementById('f-orig-price').value)||0;
+    formData.discount_reason=document.getElementById('f-discount-reason').value.trim();
+  }
+  if(step===3){
+    updatePreviews();
+  }
+  if(step===4){
+    formData.owner_name=document.getElementById('f-name').value.trim();
+    formData.owner_phone=document.getElementById('f-phone').value.trim();
+    formData.owner_whatsapp=document.getElementById('f-whatsapp').value.trim();
+    formData.owner_email=document.getElementById('f-email').value.trim();
+  }
+}
+
+function buildSummary(){
+  const d=formData;
+  document.getElementById('summary-card').innerHTML=`
+    <div style="display:flex;gap:16px;flex-wrap:wrap;align-items:flex-start;">
+      ${d.images[0]?`<img src="${d.images[0]}" style="width:100px;height:80px;object-fit:cover;border-radius:var(--rs);flex-shrink:0;" onerror="this.style.display='none'">`:''}
+      <div style="flex:1;min-width:200px;">
+        <div style="font-size:11px;color:var(--o,#FF6B2B);margin-bottom:4px;">${d.district||'—'}${d.quarter?' · '+d.quarter:''}</div>
+        <div style="font-size:17px;font-weight:800;color:var(--tx);margin-bottom:8px;">${d.title||'—'}</div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px;">
+          ${d.category?`<span style="font-size:11px;color:var(--txm);padding:3px 10px;background:var(--d2);border-radius:100px;">${d.category}</span>`:''}
+          ${d.rooms?`<span style="font-size:11px;color:var(--txm);padding:3px 10px;background:var(--d2);border-radius:100px;">${d.rooms}</span>`:''}
+          ${d.gross_m2?`<span style="font-size:11px;color:var(--txm);padding:3px 10px;background:var(--d2);border-radius:100px;">${d.gross_m2} m²</span>`:''}
+          ${d.building_age!=null?`<span style="font-size:11px;color:var(--txm);padding:3px 10px;background:var(--d2);border-radius:100px;">${d.building_age} yaş</span>`:''}
+        </div>
+        <div style="font-size:22px;font-weight:800;color:var(--tx);">${d.price?fp(d.price)+' ₺':'—'}</div>
+        ${d.discount&&d.original_price?`<div style="font-size:12px;color:var(--txm);text-decoration:line-through;">${fp(d.original_price)} ₺</div>`:''}
+        <div style="font-size:12px;color:var(--txm);margin-top:6px;">📞 ${d.owner_name||'—'} · ${d.owner_phone||'—'}</div>
+        ${d.images.length?`<div style="font-size:12px;color:var(--ok);margin-top:4px;">📷 ${d.images.length} görsel eklendi</div>`:''}
+      </div>
+    </div>`;
+}
+
+async function submitIlan(){
+  if(!document.getElementById('f-terms').checked){
+    showError('Kullanım koşullarını kabul etmeniz gerekiyor.','Koşullar');
+    return;
+  }
+  collectStepData(currentStep);
+  const btn=document.getElementById('submit-btn');
+  btn.disabled=true;
+  btn.textContent='⏳ Yayınlanıyor...';
+
+  try {
+    const payload={
+      title:formData.title,
+      category:formData.category,
+      apt_type:formData.apt_type||null,
+      district:formData.district,
+      quarter:formData.quarter||null,
+      address:formData.address||null,
+      city:'Konya',
+      rooms:formData.rooms||null,
+      gross_m2:formData.gross_m2||null,
+      net_m2:formData.net_m2||null,
+      building_age:formData.building_age,
+      floor:formData.floor,
+      total_floors:formData.total_floors,
+      bathrooms:formData.bathrooms,
+      heating:formData.heating||null,
+      features:formData.features,
+      usage_status:formData.usage_status||null,
+      deed_status:formData.deed_status||null,
+      loan_eligible:formData.loan_eligible,
+      exchange_ok:formData.exchange,
+      description:formData.description||null,
+      price:formData.price,
+      original_price:formData.discount&&formData.original_price?formData.original_price:null,
+      discount_reason:formData.discount_reason||null,
+      images:formData.images,
+      owner_name:formData.owner_name,
+      owner_phone:formData.owner_phone,
+      owner_whatsapp:formData.owner_whatsapp||null,
+      owner_email:formData.owner_email||null,
+      status:'pending'
+    };
+
+    const r=await fetch(`${SU}/rest/v1/user_listings`,{
+      method:'POST',
+      headers:{...H,'Prefer':'return=representation'},
+      body:JSON.stringify(payload)
+    });
+
+    if(!r.ok){
+      const err=await r.json().catch(()=>({}));
+      throw new Error(err.message||'Sunucu hatası');
+    }
+
+    // Başarı
+    document.querySelectorAll('.ia-section').forEach(s=>s.classList.remove('act'));
+    document.getElementById('ia-success').classList.add('on');
+    window.scrollTo({top:0,behavior:'smooth'});
+
+  } catch(e) {
+    btn.disabled=false;
+    btn.innerHTML='🚀 İlanı Yayınla';
+    showError('İlan kaydedilemedi: '+e.message,'Hata');
+  }
+}
+
+function resetForm(){
+  location.reload();
+}
+</script>
+</body>
+</html>

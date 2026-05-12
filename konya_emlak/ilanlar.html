@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>İlanlar — Öğren-Sat</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/style.css">
+<style>
+/* ── İLANLAR SAYFA ÖZGÜN STİL ── */
+.il-page { padding-top: 80px; min-height: 100vh; }
+
+/* Hero band */
+.il-hero {
+  background: linear-gradient(135deg, var(--d2) 0%, var(--d3) 100%);
+  border-bottom: 1px solid var(--bd);
+  padding: 48px clamp(16px,5vw,64px) 36px;
+  position: relative;
+  overflow: hidden;
+}
+.il-hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 60% 100% at 80% 50%, rgba(255,107,43,.06), transparent);
+  pointer-events: none;
+}
+.il-hero-inner { max-width: 1400px; margin: 0 auto; position: relative; }
+.il-hero-top { display: flex; align-items: flex-end; justify-content: space-between; gap: 20px; flex-wrap: wrap; margin-bottom: 28px; }
+.il-hero-label { font-size: 10px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: var(--o,#FF6B2B); margin-bottom: 10px; }
+.il-hero-title { font-size: clamp(28px,3.5vw,44px); font-weight: 800; color: var(--tx); line-height: 1.1; }
+.il-hero-sub { font-size: 14px; color: var(--txm); margin-top: 8px; }
+.il-hero-cta { display: flex; gap: 10px; flex-shrink: 0; }
+.il-add-btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 13px 24px; background: linear-gradient(135deg,#FF6B2B,#FF9500);
+  border: none; border-radius: var(--rs); color: #fff;
+  font-size: 14px; font-weight: 700; font-family: var(--font);
+  cursor: pointer; transition: all .2s;
+  box-shadow: 0 4px 20px rgba(255,107,43,.3);
+  text-decoration: none;
+}
+.il-add-btn:hover { opacity: .88; transform: translateY(-1px); box-shadow: 0 8px 28px rgba(255,107,43,.4); }
+.il-add-btn .icon { font-size: 16px; }
+
+/* Filtre bar */
+.il-filter-wrap { max-width: 1400px; margin: 0 auto; }
+.il-filters {
+  display: flex; gap: 10px; flex-wrap: wrap; align-items: center;
+}
+.il-search {
+  flex: 1; min-width: 200px; max-width: 320px;
+  background: var(--d4); border: 1px solid var(--bd); border-radius: var(--rs);
+  padding: 10px 16px; color: var(--tx); font-size: 13px; font-family: var(--font);
+  outline: none; transition: border-color .2s;
+}
+.il-search:focus { border-color: rgba(255,107,43,.5); }
+.il-sel {
+  background: var(--d4); border: 1px solid var(--bd); border-radius: var(--rs);
+  padding: 10px 14px; color: var(--tx); font-size: 13px; font-family: var(--font);
+  outline: none; cursor: pointer; transition: border-color .2s; min-width: 140px;
+}
+.il-sel:focus { border-color: rgba(255,107,43,.5); }
+.il-sel option { background: var(--d3); }
+.il-filter-count {
+  margin-left: auto; font-size: 12px; color: var(--txm);
+  padding: 8px 14px; background: var(--d4); border: 1px solid var(--bd); border-radius: var(--rs);
+}
+.il-filter-count span { color: var(--o,#FF6B2B); font-weight: 700; }
+
+/* Grid */
+.il-main { max-width: 1400px; margin: 0 auto; padding: 28px clamp(16px,5vw,64px) 80px; }
+.il-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(340px,1fr));
+  gap: 20px;
+}
+
+/* KART — kullanıcı ilanı */
+.ul-card {
+  background: var(--d2);
+  border: 1px solid var(--bd);
+  border-radius: var(--r);
+  overflow: hidden;
+  transition: all .25s;
+  cursor: pointer;
+  position: relative;
+}
+.ul-card:hover {
+  border-color: rgba(255,107,43,.35);
+  transform: translateY(-3px);
+  box-shadow: 0 16px 48px rgba(0,0,0,.4), 0 0 0 1px rgba(255,107,43,.08);
+}
+
+/* Kullanıcı ilanı badge — Sahibinden ilanlarından ayırt eder */
+.ul-badge {
+  position: absolute; top: 12px; left: 12px; z-index: 2;
+  display: flex; align-items: center; gap: 5px;
+  padding: 4px 10px;
+  background: linear-gradient(135deg,#FF6B2B,#FF9500);
+  border-radius: 100px;
+  font-size: 10px; font-weight: 700; color: #fff; letter-spacing: .5px;
+}
+.ul-badge-dot { width: 5px; height: 5px; border-radius: 50%; background: rgba(255,255,255,.7); }
+
+/* İndirim badge */
+.ul-discount {
+  position: absolute; top: 12px; right: 12px; z-index: 2;
+  padding: 4px 10px;
+  background: rgba(224,90,75,.9);
+  border-radius: 100px;
+  font-size: 11px; font-weight: 700; color: #fff;
+}
+
+/* Görsel */
+.ul-img {
+  width: 100%; height: 220px; object-fit: cover; display: block;
+  transition: transform .4s;
+  background: var(--d3);
+}
+.ul-card:hover .ul-img { transform: scale(1.03); }
+.ul-img-wrap { overflow: hidden; position: relative; height: 220px; }
+.ul-img-count {
+  position: absolute; bottom: 10px; right: 10px;
+  background: rgba(0,0,0,.65); color: #fff;
+  font-size: 11px; font-weight: 600; padding: 3px 9px; border-radius: 100px;
+  backdrop-filter: blur(4px);
+}
+.ul-no-img {
+  width: 100%; height: 220px; background: var(--d3);
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 8px; color: var(--txm); font-size: 13px;
+}
+.ul-no-img .ni { font-size: 36px; opacity: .3; }
+
+/* Body */
+.ul-body { padding: 18px 20px 20px; }
+.ul-meta { display: flex; align-items: center; gap: 6px; margin-bottom: 10px; }
+.ul-loc { font-size: 12px; color: var(--o,#FF6B2B); font-weight: 600; }
+.ul-dot { width: 3px; height: 3px; border-radius: 50%; background: var(--txm); }
+.ul-district { font-size: 12px; color: var(--txm); }
+.ul-title {
+  font-size: 15px; font-weight: 700; color: var(--tx);
+  margin-bottom: 12px; line-height: 1.4;
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+}
+.ul-tags { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 14px; }
+.ul-tag {
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 4px 10px; background: var(--d3); border: 1px solid rgba(255,255,255,.06);
+  border-radius: 100px; font-size: 11px; color: var(--txm); font-weight: 500;
+}
+.ul-foot {
+  display: flex; align-items: flex-end; justify-content: space-between;
+  padding-top: 14px; border-top: 1px solid rgba(255,255,255,.05);
+}
+.ul-price-wrap {}
+.ul-orig-price { font-size: 11px; color: var(--txm); text-decoration: line-through; margin-bottom: 2px; }
+.ul-price { font-size: 22px; font-weight: 800; color: var(--tx); line-height: 1; }
+.ul-price-sub { font-size: 11px; color: var(--txm); margin-top: 3px; }
+.ul-contact {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 9px 16px; background: rgba(255,107,43,.1);
+  border: 1px solid rgba(255,107,43,.2); border-radius: var(--rs);
+  color: var(--o,#FF6B2B); font-size: 12px; font-weight: 700;
+  transition: all .15s; cursor: pointer; font-family: var(--font);
+}
+.ul-contact:hover { background: rgba(255,107,43,.18); border-color: rgba(255,107,43,.4); }
+
+/* Boş durum */
+.il-empty { text-align: center; padding: 80px 20px; color: var(--txm); }
+.il-empty-icon { font-size: 48px; margin-bottom: 16px; opacity: .4; }
+.il-empty-t { font-size: 18px; font-weight: 700; color: var(--tx); margin-bottom: 8px; }
+
+/* Yüklenme skeleton */
+.ul-skel { background: var(--d2); border: 1px solid var(--bd); border-radius: var(--r); overflow: hidden; }
+.skel-img { height: 220px; background: linear-gradient(90deg, var(--d3) 25%, var(--d4) 50%, var(--d3) 75%); background-size: 200% 100%; animation: skl 1.5s infinite; }
+.skel-line { height: 12px; border-radius: 6px; background: linear-gradient(90deg, var(--d3) 25%, var(--d4) 50%, var(--d3) 75%); background-size: 200% 100%; animation: skl 1.5s infinite; margin: 14px 18px 8px; }
+.skel-line.w70 { width: 70%; }.skel-line.w50 { width: 50%; }.skel-line.w85 { width: 85%; }
+@keyframes skl { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
+
+/* Detay modal */
+.il-modal-ov { position: fixed; inset: 0; background: rgba(0,0,0,.8); z-index: 9000; display: none; align-items: center; justify-content: center; padding: 20px; backdrop-filter: blur(6px); }
+.il-modal-ov.on { display: flex; }
+.il-modal {
+  background: var(--d2); border: 1px solid var(--bd); border-radius: var(--r);
+  width: min(760px,100%); max-height: 90vh; overflow-y: auto;
+  box-shadow: 0 40px 100px rgba(0,0,0,.7);
+  animation: modalIn .25s ease;
+}
+@keyframes modalIn { from{opacity:0;transform:scale(.96) translateY(10px)} to{opacity:1;transform:none} }
+.il-modal-imgs { position: relative; height: 300px; overflow: hidden; border-radius: var(--r) var(--r) 0 0; }
+.il-modal-imgs img { width: 100%; height: 100%; object-fit: cover; }
+.il-modal-nav {
+  position: absolute; inset: 0; display: flex; align-items: center; justify-content: space-between; padding: 0 14px;
+}
+.il-modal-arr {
+  width: 36px; height: 36px; border-radius: 50%; background: rgba(0,0,0,.6);
+  border: 1px solid rgba(255,255,255,.15); color: #fff; cursor: pointer;
+  display: flex; align-items: center; justify-content: center; font-size: 16px;
+  backdrop-filter: blur(4px); transition: background .15s;
+}
+.il-modal-arr:hover { background: rgba(255,107,43,.5); }
+.il-modal-body { padding: 28px; }
+.il-modal-close {
+  position: absolute; top: 14px; right: 14px; z-index: 1;
+  width: 34px; height: 34px; border-radius: 50%; background: rgba(0,0,0,.6);
+  border: 1px solid rgba(255,255,255,.15); color: #fff; cursor: pointer;
+  display: flex; align-items: center; justify-content: center; font-size: 18px;
+  backdrop-filter: blur(4px);
+}
+.il-modal-specs { display: grid; grid-template-columns: repeat(3,1fr); gap: 12px; margin: 20px 0; }
+.il-spec { background: var(--d3); border-radius: var(--rs); padding: 14px; text-align: center; }
+.il-spec-val { font-size: 18px; font-weight: 800; color: var(--o,#FF6B2B); }
+.il-spec-lbl { font-size: 10px; color: var(--txm); margin-top: 4px; text-transform: uppercase; letter-spacing: 1px; }
+
+/* Responsive */
+@media(max-width:900px) {
+  .il-hero { padding: 32px 16px 24px; }
+  .il-main { padding: 20px 16px 60px; }
+  .il-grid { grid-template-columns: 1fr; }
+  .il-hero-top { flex-direction: column; align-items: flex-start; }
+  .il-modal-specs { grid-template-columns: 1fr 1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- POPUP -->
+<div class="popup-overlay" id="popup-overlay">
+  <div class="popup-box">
+    <div class="popup-icon" id="popup-icon">ℹ️</div>
+    <div class="popup-title" id="popup-title">Bilgi</div>
+    <div class="popup-msg" id="popup-msg"></div>
+    <div style="display:flex;gap:10px;justify-content:center;">
+      <button class="popup-btn" onclick="closePopup()">Tamam</button>
+    </div>
+  </div>
+</div>
+
+<!-- GİRİŞ GEREKLİ -->
+<div id="login-req-overlay" style="position:fixed;inset:0;background:rgba(0,0,0,.82);z-index:9998;display:none;align-items:center;justify-content:center;backdrop-filter:blur(8px);">
+  <div class="lrp-box">
+    <div class="lrp-icon">🔒</div>
+    <div class="lrp-title">Önce Giriş Yapın</div>
+    <div class="lrp-sub">Devam etmek için giriş yapın.</div>
+    <button class="lrp-btn" onclick="location.href='/giris'">Giriş Yap</button>
+    <button class="lrp-cancel" onclick="this.closest('#login-req-overlay').style.display='none'">İptal</button>
+  </div>
+</div>
+
+<!-- LOADER -->
+<div id="page-loader"><div class="ldr-brand">Öğren-Sat</div><div class="ldr-spinner"></div></div>
+
+<!-- MOBİL MENÜ -->
+<div class="mob-ov" id="mob-ov" onclick="closeMob()"></div>
+<div class="mob-sheet" id="mob-sheet">
+  <div style="padding:14px 20px 12px;border-bottom:1px solid var(--bd);flex-shrink:0;">
+    <div style="display:flex;align-items:center;justify-content:space-between;">
+      <span style="font-size:15px;font-weight:700;color:var(--o,#FF6B2B);">Öğren-Sat</span>
+      <button onclick="closeMob()" class="mob-close" style="background:none;border:none;color:var(--txm);font-size:22px;cursor:pointer;">×</button>
+    </div>
+  </div>
+  <div style="flex:1;overflow-y:auto;padding:12px 8px;">
+    <a class="nav-lnk" href="/">Ana Sayfa</a>
+    <a class="nav-lnk" href="/degerleme">Değerleme</a>
+    <a class="nav-lnk" href="/karsilastirma">Karşılaştırma</a>
+    <a class="nav-lnk" href="/fiyatlar">Fiyatlar</a>
+    <a class="nav-lnk" href="/danisman">Danışman Bul</a>
+    <a class="nav-lnk" href="/hakkimizda">Hakkımızda</a>
+    <a class="nav-lnk" href="/analiz">Analiz</a>
+    <a class="nav-lnk act" href="/ilanlar">İlanlar</a>
+    <a class="nav-lnk" href="/ilan-ekle">İlan Ekle</a>
+  </div>
+  <div style="padding:16px;border-top:1px solid var(--bd);display:flex;flex-direction:column;gap:10px;">
+    <div style="display:flex;gap:8px;">
+      <button onclick="setLang('tr')" style="flex:1;padding:10px;background:var(--d3);border:1px solid var(--bd);border-radius:var(--rs);color:var(--tx);font-family:var(--font);font-size:13px;cursor:pointer;">🇹🇷 Türkçe</button>
+      <button onclick="setLang('en')" style="flex:1;padding:10px;background:var(--d3);border:1px solid var(--bd);border-radius:var(--rs);color:var(--txm);font-family:var(--font);font-size:13px;cursor:pointer;">🇬🇧 English</button>
+    </div>
+    <button onclick="location.href='/giris'" style="padding:12px;background:linear-gradient(135deg,#FF6B2B,#FF9500);border:none;border-radius:var(--rs);color:#fff;font-weight:700;font-family:var(--font);font-size:14px;cursor:pointer;">Giriş Yap / Kayıt Ol</button>
+  </div>
+</div>
+
+<!-- NAV -->
+<nav class="nav" id="main-nav">
+  <a class="nav-brand" href="/"><div class="nav-logo">ö</div><span class="nav-brand-t">Öğren-Sat</span></a>
+  <div class="nav-links">
+    <a class="nav-lnk" href="/">Ana Sayfa</a>
+    <a class="nav-lnk" href="/degerleme">Değerleme</a>
+    <a class="nav-lnk" href="/karsilastirma">Karşılaştırma</a>
+    <a class="nav-lnk" href="/fiyatlar">Fiyatlar</a>
+    <a class="nav-lnk" href="/danisman">Danışman Bul</a>
+    <a class="nav-lnk" href="/hakkimizda">Hakkımızda</a>
+    <a class="nav-lnk" href="/analiz">Analiz</a>
+    <div class="nav-drop-wrap" id="ilanlar-wrap">
+      <button class="nav-lnk nav-drop-btn act" id="ilanlar-btn" onclick="toggleIlanlarMenu(event)">İlanlar ▾</button>
+      <div class="nav-drop-menu" id="ilanlar-menu">
+        <a class="nav-drop-item" href="/ilanlar">Tüm İlanlar</a>
+        <div class="nav-drop-sep"></div>
+        <a class="nav-drop-item" href="/ilan-ekle">İlan Ekle</a>
+      </div>
+    </div>
+  </div>
+  <div class="nav-right">
+    <div class="nav-lang" id="lang-btn" onclick="toggleLangMenu()">
+      <span id="lang-txt">🇹🇷 TR</span>
+      <div class="lang-menu" id="lang-menu">
+        <button onclick="setLang('tr')">🇹🇷 Türkçe</button>
+        <button onclick="setLang('en')">🇬🇧 English</button>
+      </div>
+    </div>
+    <button class="nav-support" onclick="openSupport()">💬 Destek</button>
+    <button class="nav-cta" id="nav-auth-btn" onclick="location.href='/giris'">Giriş Yap / Kayıt Ol</button>
+  </div>
+  <button class="nav-ham" id="nav-ham" onclick="toggleMob()">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- SAYFA -->
+<div class="il-page">
+
+  <!-- HERO BAND -->
+  <div class="il-hero">
+    <div class="il-hero-inner">
+      <div class="il-hero-top">
+        <div>
+          <div class="il-hero-label">Öğren-Sat İlanları</div>
+          <div class="il-hero-title">Konya'da Satılık & Kiralık</div>
+          <div class="il-hero-sub">Doğrudan sahiplerden, komisyonsuz ilanlar.</div>
+        </div>
+        <div class="il-hero-cta">
+          <a href="/ilan-ekle" class="il-add-btn"><span class="icon">+</span>İlan Ver</a>
+        </div>
+      </div>
+      <div class="il-filter-wrap">
+        <div class="il-filters">
+          <input class="il-search" id="il-search" type="text" placeholder="Başlık, ilçe veya mahalle ara..." oninput="filterIlanlar()">
+          <select class="il-sel" id="il-cat" onchange="filterIlanlar()">
+            <option value="">Tüm Kategoriler</option>
+            <option value="konut">Konut</option>
+            <option value="arsa">Arsa / Arazi</option>
+            <option value="ticari">Ticari</option>
+            <option value="kiralik">Kiralık</option>
+          </select>
+          <select class="il-sel" id="il-ilce" onchange="filterIlanlar()">
+            <option value="">Tüm İlçeler</option>
+          </select>
+          <select class="il-sel" id="il-sort" onchange="filterIlanlar()">
+            <option value="new">En Yeni</option>
+            <option value="low">Düşük Fiyat</option>
+            <option value="high">Yüksek Fiyat</option>
+            <option value="m2">Büyük M²</option>
+          </select>
+          <div class="il-filter-count"><span id="il-count">0</span> ilan</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- İLAN GRİD -->
+  <div class="il-main">
+    <div class="il-grid" id="il-grid">
+      <!-- Skeletonlar -->
+      <div class="ul-skel"><div class="skel-img"></div><div class="skel-line w85"></div><div class="skel-line w70"></div><div class="skel-line w50"></div></div>
+      <div class="ul-skel"><div class="skel-img"></div><div class="skel-line w85"></div><div class="skel-line w70"></div><div class="skel-line w50"></div></div>
+      <div class="ul-skel"><div class="skel-img"></div><div class="skel-line w85"></div><div class="skel-line w70"></div><div class="skel-line w50"></div></div>
+    </div>
+  </div>
+
+</div>
+
+<!-- DETAY MODAL -->
+<div class="il-modal-ov" id="il-modal">
+  <div class="il-modal" id="il-modal-inner">
+    <div class="il-modal-imgs" id="modal-imgs">
+      <button class="il-modal-close" onclick="closeIlanModal()">×</button>
+      <div class="il-modal-nav">
+        <button class="il-modal-arr" onclick="modalPrev()">‹</button>
+        <button class="il-modal-arr" onclick="modalNext()">›</button>
+      </div>
+    </div>
+    <div class="il-modal-body" id="modal-body"></div>
+  </div>
+</div>
+
+<!-- SUPPORT -->
+<div id="support-modal" style="display:none;position:fixed;bottom:80px;right:20px;width:320px;background:var(--d2);border:1px solid var(--bd);border-radius:var(--r);z-index:8998;box-shadow:0 20px 60px rgba(0,0,0,.5);overflow:hidden;">
+  <div style="padding:16px 20px;background:linear-gradient(135deg,#FF6B2B,#FF9500);display:flex;align-items:center;justify-content:space-between;">
+    <span style="font-weight:700;color:#fff;font-size:14px;">Destek</span>
+    <button onclick="document.getElementById('support-modal').style.display='none'" style="background:none;border:none;color:rgba(255,255,255,.8);cursor:pointer;font-size:18px;">×</button>
+  </div>
+  <div style="padding:16px;"><div id="support-msgs" style="min-height:120px;max-height:200px;overflow-y:auto;font-size:13px;color:var(--txm);">Merhaba! Size nasıl yardımcı olabiliriz?</div></div>
+  <div style="padding:10px 16px 16px;display:flex;gap:8px;">
+    <input id="support-input" type="text" placeholder="Mesajınız..." style="flex:1;background:var(--d3);border:1px solid var(--bd);border-radius:var(--rs);padding:9px 12px;color:var(--tx);font-family:var(--font);font-size:13px;outline:none;">
+    <button onclick="sendSupport()" style="padding:9px 16px;background:linear-gradient(135deg,#FF6B2B,#FF9500);border:none;border-radius:var(--rs);color:#fff;font-weight:700;cursor:pointer;font-family:var(--font);">→</button>
+  </div>
+</div>
+
+<script src="/js/common.js"></script>
+<script src="/js/main.js"></script>
+<script>
+const SU='https://bknfjyfuzbanhoomooth.supabase.co';
+const SK='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJrbmZqeWZ1emJhbmhvb21vb3RoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc1ODczNDgsImV4cCI6MjA5MzE2MzM0OH0.7Tl3nWspqxDtnhIj2SZju_ObXtjkAsv_n-Joj7vwSx0';
+const H={'apikey':SK,'Authorization':'Bearer '+SK};
+const fp=n=>new Intl.NumberFormat('tr-TR').format(n);
+
+let allIlanlar=[], filtered=[], currentModal=null, modalImgIdx=0;
+
+const CAT_LABELS={konut:'Konut',arsa:'Arsa / Arazi',ticari:'Ticari',kiralik:'Kiralık'};
+const CAT_ICONS={konut:'🏠',arsa:'🌿',ticari:'🏢',kiralik:'🔑'};
+
+async function loadIlanlar(){
+  try {
+    const r = await fetch(`${SU}/rest/v1/user_listings?select=*&order=created_at.desc`,{headers:H});
+    if(!r.ok) throw new Error();
+    allIlanlar = await r.json();
+  } catch(e) {
+    // Demo veriler — DB tablosu yoksa
+    allIlanlar = [];
+  }
+  buildIlceFilter();
+  filterIlanlar();
+}
+
+function buildIlceFilter(){
+  const ilceler=[...new Set(allIlanlar.map(i=>i.district).filter(Boolean))].sort();
+  const sel=document.getElementById('il-ilce');
+  sel.innerHTML='<option value="">Tüm İlçeler</option>'+ilceler.map(d=>`<option>${d}</option>`).join('');
+}
+
+function filterIlanlar(){
+  const q=document.getElementById('il-search').value.toLowerCase();
+  const cat=document.getElementById('il-cat').value;
+  const ilce=document.getElementById('il-ilce').value;
+  const sort=document.getElementById('il-sort').value;
+
+  filtered=allIlanlar.filter(i=>{
+    if(q && !i.title?.toLowerCase().includes(q) && !i.district?.toLowerCase().includes(q) && !i.quarter?.toLowerCase().includes(q)) return false;
+    if(cat && i.category!==cat) return false;
+    if(ilce && i.district!==ilce) return false;
+    return true;
+  });
+
+  if(sort==='low') filtered.sort((a,b)=>(a.price||0)-(b.price||0));
+  else if(sort==='high') filtered.sort((a,b)=>(b.price||0)-(a.price||0));
+  else if(sort==='m2') filtered.sort((a,b)=>(b.gross_m2||0)-(a.gross_m2||0));
+
+  document.getElementById('il-count').textContent=filtered.length;
+  renderGrid(filtered);
+}
+
+function renderGrid(data){
+  const grid=document.getElementById('il-grid');
+  if(!data.length){
+    grid.innerHTML=`<div class="il-empty" style="grid-column:1/-1;">
+      <div class="il-empty-icon">🏠</div>
+      <div class="il-empty-t">Henüz ilan yok</div>
+      <p style="font-size:14px;color:var(--txm);margin-bottom:20px;">İlk ilanı sen ekle!</p>
+      <a href="/ilan-ekle" class="il-add-btn" style="display:inline-flex;">+ İlan Ver</a>
+    </div>`;
+    return;
+  }
+
+  grid.innerHTML=data.map((il,i)=>{
+    const imgs=Array.isArray(il.images)?il.images:(il.images?JSON.parse(il.images):[]);
+    const hasImg=imgs.length>0;
+    const discountPct=il.original_price&&il.price?Math.round((1-il.price/il.original_price)*100):0;
+
+    return `<div class="ul-card" onclick="openIlan(${i})" style="animation:fu .5s ${i*.05}s ease both;">
+      <div class="ul-badge"><div class="ul-badge-dot"></div>Öğren-Sat İlanı</div>
+      ${discountPct>0?`<div class="ul-discount">-%${discountPct}</div>`:''}
+      <div class="ul-img-wrap">
+        ${hasImg
+          ? `<img class="ul-img" src="${imgs[0]}" alt="${il.title||''}" loading="lazy" onerror="this.parentElement.innerHTML='<div class=\\'ul-no-img\\'><div class=\\'ni\\'>🏠</div><span>Görsel yok</span></div>'">${imgs.length>1?`<div class="ul-img-count">📷 ${imgs.length}</div>`:''}`
+          : `<div class="ul-no-img"><div class="ni">🏠</div><span>Görsel eklenmemiş</span></div>`
+        }
+      </div>
+      <div class="ul-body">
+        <div class="ul-meta">
+          <span class="ul-loc">${il.district||'Konya'}</span>
+          ${il.quarter?`<div class="ul-dot"></div><span class="ul-district">${il.quarter}</span>`:''}
+        </div>
+        <div class="ul-title">${il.title||'İsimsiz İlan'}</div>
+        <div class="ul-tags">
+          ${il.category?`<span class="ul-tag">${CAT_ICONS[il.category]||'🏠'} ${CAT_LABELS[il.category]||il.category}</span>`:''}
+          ${il.rooms?`<span class="ul-tag">🛏 ${il.rooms}</span>`:''}
+          ${il.gross_m2?`<span class="ul-tag">📐 ${il.gross_m2} m²</span>`:''}
+          ${il.building_age!=null?`<span class="ul-tag">📅 ${il.building_age} yaş</span>`:''}
+          ${il.floor!=null?`<span class="ul-tag">🪜 ${il.floor}. kat</span>`:''}
+        </div>
+        <div class="ul-foot">
+          <div class="ul-price-wrap">
+            ${discountPct>0?`<div class="ul-orig-price">${fp(il.original_price)} ₺</div>`:''}
+            <div class="ul-price">${il.price?fp(il.price)+' ₺':'Fiyat Sorun'}</div>
+            ${il.gross_m2&&il.price?`<div class="ul-price-sub">${fp(Math.round(il.price/il.gross_m2))} ₺/m²</div>`:''}
+          </div>
+          <button class="ul-contact" onclick="event.stopPropagation();contactOwner('${il.owner_phone||''}','${il.title||''}')">İletişim →</button>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function openIlan(idx){
+  currentModal=filtered[idx]; modalImgIdx=0;
+  renderModal();
+  document.getElementById('il-modal').classList.add('on');
+  document.body.style.overflow='hidden';
+}
+function closeIlanModal(){
+  document.getElementById('il-modal').classList.remove('on');
+  document.body.style.overflow='';
+}
+document.getElementById('il-modal').addEventListener('click',e=>{if(e.target===e.currentTarget)closeIlanModal();});
+
+function renderModal(){
+  const il=currentModal; if(!il) return;
+  const imgs=Array.isArray(il.images)?il.images:(il.images?JSON.parse(il.images):[]);
+  const discountPct=il.original_price&&il.price?Math.round((1-il.price/il.original_price)*100):0;
+
+  const imgWrap=document.getElementById('modal-imgs');
+  if(imgs.length>0){
+    imgWrap.innerHTML=`
+      <button class="il-modal-close" onclick="closeIlanModal()">×</button>
+      <img src="${imgs[modalImgIdx]}" style="width:100%;height:100%;object-fit:cover;">
+      ${imgs.length>1?`<div class="il-modal-nav">
+        <button class="il-modal-arr" onclick="event.stopPropagation();modalPrev()">‹</button>
+        <button class="il-modal-arr" onclick="event.stopPropagation();modalNext()">›</button>
+      </div>
+      <div style="position:absolute;bottom:12px;left:50%;transform:translateX(-50%);display:flex;gap:5px;">
+        ${imgs.map((_,i)=>`<div style="width:${i===modalImgIdx?'18px':'6px'};height:6px;border-radius:3px;background:${i===modalImgIdx?'#FF6B2B':'rgba(255,255,255,.4)'};transition:all .2s;"></div>`).join('')}
+      </div>`:''}`; 
+  } else {
+    imgWrap.innerHTML=`<button class="il-modal-close" onclick="closeIlanModal()">×</button><div class="ul-no-img" style="height:100%;"><div class="ni">🏠</div></div>`;
+  }
+
+  document.getElementById('modal-body').innerHTML=`
+    <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:16px;">
+      <div>
+        <div style="font-size:11px;color:var(--o,#FF6B2B);font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:6px;">${il.district||'Konya'}${il.quarter?' · '+il.quarter:''}</div>
+        <div style="font-size:20px;font-weight:800;color:var(--tx);line-height:1.3;">${il.title||'İsimsiz İlan'}</div>
+      </div>
+      <div style="text-align:right;flex-shrink:0;">
+        ${discountPct>0?`<div style="font-size:12px;color:var(--txm);text-decoration:line-through;">${fp(il.original_price)} ₺</div>`:''}
+        <div style="font-size:26px;font-weight:800;color:var(--tx);">${il.price?fp(il.price)+' ₺':'—'}</div>
+        ${il.gross_m2&&il.price?`<div style="font-size:12px;color:var(--txm);">${fp(Math.round(il.price/il.gross_m2))} ₺/m²</div>`:''}
+      </div>
+    </div>
+    <div class="il-modal-specs">
+      ${il.rooms?`<div class="il-spec"><div class="il-spec-val">${il.rooms}</div><div class="il-spec-lbl">Oda</div></div>`:''}
+      ${il.gross_m2?`<div class="il-spec"><div class="il-spec-val">${il.gross_m2}</div><div class="il-spec-lbl">Brüt M²</div></div>`:''}
+      ${il.net_m2?`<div class="il-spec"><div class="il-spec-val">${il.net_m2}</div><div class="il-spec-lbl">Net M²</div></div>`:''}
+      ${il.building_age!=null?`<div class="il-spec"><div class="il-spec-val">${il.building_age}</div><div class="il-spec-lbl">Bina Yaşı</div></div>`:''}
+      ${il.floor!=null?`<div class="il-spec"><div class="il-spec-val">${il.floor}</div><div class="il-spec-lbl">Kat</div></div>`:''}
+      ${il.total_floors?`<div class="il-spec"><div class="il-spec-val">${il.total_floors}</div><div class="il-spec-lbl">Top. Kat</div></div>`:''}
+    </div>
+    ${il.description?`<div style="font-size:14px;color:var(--txm);line-height:1.8;margin-bottom:20px;padding:16px;background:var(--d3);border-radius:var(--rs);">${il.description.replace(/\n/g,'<br>')}</div>`:''}
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px;">
+      ${il.heating?`<div style="font-size:12px;color:var(--txm);">🔥 ${il.heating}</div>`:''}
+      ${il.usage_status?`<div style="font-size:12px;color:var(--txm);">👤 ${il.usage_status}</div>`:''}
+      ${il.deed_status?`<div style="font-size:12px;color:var(--txm);">📋 ${il.deed_status}</div>`:''}
+      ${il.loan_eligible?`<div style="font-size:12px;color:var(--ok);">✓ Krediye Uygun</div>`:''}
+    </div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;">
+      <button onclick="contactOwner('${il.owner_phone||''}','${il.title||''}')" style="flex:1;padding:13px;background:linear-gradient(135deg,#FF6B2B,#FF9500);border:none;border-radius:var(--rs);color:#fff;font-weight:700;cursor:pointer;font-family:var(--font);font-size:14px;">📞 Satıcıyla İletişime Geç</button>
+      ${il.owner_whatsapp?`<button onclick="window.open('https://wa.me/${il.owner_whatsapp.replace(/\D/g,'')}','_blank')" style="padding:13px 18px;background:rgba(37,211,102,.1);border:1px solid rgba(37,211,102,.25);border-radius:var(--rs);color:#25D366;font-weight:700;cursor:pointer;font-family:var(--font);">WhatsApp</button>`:''}
+    </div>`;
+}
+
+function modalPrev(){
+  const imgs=Array.isArray(currentModal.images)?currentModal.images:(currentModal.images?JSON.parse(currentModal.images):[]);
+  modalImgIdx=(modalImgIdx-1+imgs.length)%imgs.length;
+  renderModal();
+}
+function modalNext(){
+  const imgs=Array.isArray(currentModal.images)?currentModal.images:(currentModal.images?JSON.parse(currentModal.images):[]);
+  modalImgIdx=(modalImgIdx+1)%imgs.length;
+  renderModal();
+}
+
+function contactOwner(phone,title){
+  if(!phone){showInfo('Bu ilanın iletişim bilgisi henüz girilmemiş.','İletişim');return;}
+  showInfo(`<div style="text-align:center;"><div style="font-size:28px;margin-bottom:12px;">📞</div><div style="font-size:16px;font-weight:700;margin-bottom:6px;">${title}</div><div style="font-size:22px;font-weight:800;color:var(--o,#FF6B2B);">${phone}</div></div>`,'Satıcıyla İletişim');
+}
+
+loadIlanlar();
+</script>
+</body>
+</html>

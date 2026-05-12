@@ -9,6 +9,8 @@
     {"source": "/danisman", "destination": "/danisman.html"},
     {"source": "/hakkimizda", "destination": "/hakkimizda.html"},
     {"source": "/analiz", "destination": "/analiz.html"},
+    {"source": "/ilanlar", "destination": "/ilanlar.html"},
+    {"source": "/ilan-ekle", "destination": "/ilan-ekle.html"},
     {"source": "/en", "destination": "/en/index.html"},
     {"source": "/en/", "destination": "/en/index.html"},
     {"source": "/en/about", "destination": "/en/about.html"},
